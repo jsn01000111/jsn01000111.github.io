@@ -1,1 +1,215 @@
 
+<!DOCTYPE html>
+<html> 
+  <head> 
+  
+    <script type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="index.css">
+
+<style>
+body {
+	background-color: #000
+}
+
+#console {
+	font-family: courier, monospace;
+	color: #fff;
+	width:750px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:100px;
+	font-size:14px;
+}
+
+a {
+	color: #0bc;
+	text-decoration: none;
+}
+
+#a {
+	color: #0f0;
+}
+
+#c {
+	color: #0bc;
+}
+
+#b {
+	color: #ff0096;
+}
+
+#k {
+    	animation: change 1s;
+}
+
+#op{
+    	color: #888888
+}
+
+@keyframes change {
+    	0%  { color:  #0f0; }
+    	50% { color:  #0f0; }
+    	99% { color: black; }
+}
+	
+</style>
+
+</head> 
+
+ <body> 
+ 
+ <div id="console">
+<span id="a">superuser@root</span>:<span id="b">~</span><span id="c">$</span> cd jsnamr/<!-- laglaglaglaglaglag -->about<br/>
+<span id="a">superuser@root</span>:<span id="b">~</span><span id="c">$</span> cat <!-- laglaglaglaglaglaglaglaglag -->jsnamr.txt<br/><br/>
+decode quote, "<span id="k">while(!(succeed = try ()));</span>".<br/><br/> <!-- sjkfhskjf -->
+
+<span id="a">superuser@root</span>:<span id="b">~</span><span id="c">$</span> cd jsnamr/<!-- laglaglaglaglaglag -->Portfolio<br/>
+<span id="a">superuser@root</span>:<span id="b">~</span><span id="c">$</span> cat <!-- laglaglaglaglaglaglaglaglag -->profile.txt<br/><br/>
+
+<!-- laglaglaglaglaglaglaglaglaglaglaglag --><p>Entry Level Front End Developer</p>
+<p>HELLO WORLD!</p> <!-- bitlagbitlagbitlagbitlagbitlagbitlag -->
+<p>I am an Beginner Web Developer Integer a lacus at sem suscripit euismod a eu elit. Donec dapibus mauris nec sapien convallis vanenatis. Nullam sagittis feugiat sepien ut suscripit. Nullam tristique sodales ipsum, in blandit massa. Morbi sollicitudin lorem est, sed iaculis tortor luctus eget. Proin sem tellus, consectetur vel venenatis quis, consequat nec nibh. Ut sit amet turpis non libro sodales rhoncus et non sem. Proin dapibus eleifend nisi, gravida hendrerit enim consectetur eu.</p><!-- delaydelaydelaydelaydelaydelaydelay -->
+
+<br/>
+<p> PROJECTS</p>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<span style="font-size: 50px; color: white;">
+  <i class="fa fa-laptop" aria-hidden="true"></i>	
+</span>
+<span style="font-size: 50px; color: white;">
+  <i class="fa fa-github" aria-hidden="true"></i>
+</span>
+<span style="font-size: 50px; color: white;">
+  <i class="fa fa-android" aria-hidden="true"></i>	
+</span>
+<span style="font-size: 50px; color: white;">
+  <i class="fa fa-gamepad" aria-hidden="white"></i>
+  </span>
+
+<!-- moredelaymoredelaymoredelaymoredelaymoredelaymoredelay--><br/><br/>
+<p> Blogspot <a href="https://jasonamr.blogspot.com/">https://jasonamr.blogspot.com/</a> <br> </p>
+<p> Facebook <a href="https://www.facebook.com/jsnamr">https://www.facebook.com/jsnamr</a> <br> </p>
+
+<!-- slightdelayhere-->Feel free to send me an email at<!-- longlonglongcomment --><a href="mailto:jsnamorav3.0@gmail.com"> jsnamorav3.0@gmail.com</a>.<br/><br/>
+
+<span id="a">superuser@root</span>:<span id="b">~</span><span id="c">$</span> cd CodeNerve<!-- laglaglaglaglaglag --></div> 
+
+<script>
+var Typer={
+	text: null,
+	accessCountimer:null,
+	index:0, 
+	speed:2,
+	file:"", 
+	accessCount:0,
+	deniedCount:0, 
+	init: function(){
+		accessCountimer=setInterval(function(){Typer.updLstChr();},500); 
+		$.get(Typer.file,function(data){
+			Typer.text=data;
+			Typer.text = Typer.text.slice(0, Typer.text.length-1);
+		});
+	},
+ 
+	content:function(){
+		return $("#console").html();
+	},
+ 
+	write:function(str){
+		$("#console").append(str);
+		return false;
+	},
+ 
+	addText:function(key){
+		
+		if(key.keyCode==18){
+			Typer.accessCount++; 
+			
+			if(Typer.accessCount>=3){
+				Typer.makeAccess(); 
+			}
+		}
+		
+    		else if(key.keyCode==20){
+			Typer.deniedCount++; 
+			
+			if(Typer.deniedCount>=3){
+				Typer.makeDenied(); 
+			}
+		}
+		
+    		else if(key.keyCode==27){ 
+			Typer.hidepop(); 
+		}
+		
+    		else if(Typer.text){ 
+			var cont=Typer.content(); 
+			if(cont.substring(cont.length-1,cont.length)=="_") 
+				$("#console").html($("#console").html().substring(0,cont.length-1)); 
+			if(key.keyCode!=8){ 
+				Typer.index+=Typer.speed;	
+			}
+      		else {
+			if(Typer.index>0) 
+				Typer.index-=Typer.speed;
+			}
+			var text=Typer.text.substring(0,Typer.index)
+			var rtn= new RegExp("\n", "g"); 
+	
+			$("#console").html(text.replace(rtn,"<br/>"));
+			window.scrollBy(0,50); 
+		}
+		
+		if (key.preventDefault && key.keyCode != 122) { 
+			key.preventDefault()
+		};  
+		
+		if(key.keyCode != 122){ // otherway prevent keys default behavior
+			key.returnValue = false;
+		}
+	},
+ 
+	updLstChr:function(){ 
+		var cont=this.content(); 
+		
+		if(cont.substring(cont.length-1,cont.length)=="|") 
+			$("#console").html($("#console").html().substring(0,cont.length-1)); 
+		
+		else
+			this.write("|"); // else write it
+	}
+}
+</script>
+
+<script>
+function replaceUrls(text) {
+	var http = text.indexOf("http://");
+	var space = text.indexOf(".me ", http);
+	
+	if (space != -1) { 
+		var url = text.slice(http, space-1);
+		return text.replace(url, "<a href=\""  + url + "\">" + url + "</a>");
+	} 
+	
+	else {
+		return text
+	}
+}
+
+Typer.speed=3;
+Typer.file="[your-name].txt"; // add your own name here
+Typer.init();
+ 
+var timer = setInterval("t();", 30);
+function t() {
+	Typer.addText({"keyCode": 123748});
+	
+	if (Typer.index > Typer.text.length) {
+		clearInterval(timer);
+	}
+}
+</script>
+
+</body> 
+</html>
