@@ -637,6 +637,42 @@ transition: .5s all ease-in-out;
  -o-box-shadow: 0 0 2px 2px #9f9f9f;
 }
 
+/* Social Follow */
+.socialfollow {
+ display: flex;
+ justify-content: center;
+}
+
+.socialfollow a {
+ text-decoration: none;
+ color: #222;
+ box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+ border: 2px solid #f3f3f3;
+}
+
+.sfbutton {
+ display: inline-flex;
+ align-items: center;
+ margin: 15px 15px 15px 0;
+ padding: 5px 10px;
+ outline: 0;
+ border: 0;
+ border-radius: 8px;
+ color: #f3f3f3;
+ font-size: 17px;
+ font-family: inherit;
+ font-weight: 500;
+ white-space: nowrap;
+ overflow: hidden;
+ max-width: 100%;
+}
+
+.socialfollow svg {
+ width: 22px;
+ height: 22px;
+ fill: #222;
+}
+
 /* Dropdown-Nav */
 .widget ul {
  margin: 0px;
