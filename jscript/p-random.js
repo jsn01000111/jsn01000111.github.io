@@ -1,4 +1,3 @@
-//<![CDATA[
 function showLucky(root){
     var feed = root.feed;
     var entries = feed.entry || [];
@@ -29,4 +28,3 @@ function feelingLucky(){
     script.src = '/feeds/posts/summary?max-results=0&alt=json-in-script&callback=readLucky';
     document.getElementsByTagName('head')[0].appendChild(script);
     }
-//]]>
