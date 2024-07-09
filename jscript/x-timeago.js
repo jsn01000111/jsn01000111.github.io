@@ -1,4 +1,3 @@
-        // Function to convert timestamp to "X minutes ago" or formatted date
 function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
     
@@ -23,7 +22,6 @@ function timeSince(date) {
         return interval + " days ago";
     }
 
-    // Handle years
     interval = Math.floor(interval / 7);
     if (interval < 52) {
         return interval + " weeks ago";
@@ -34,7 +32,6 @@ function timeSince(date) {
         return "1 year ago";
     }
 
-    // For older dates, return the actual date
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = date.getMonth();
     var day = date.getDate();
@@ -42,8 +39,7 @@ function timeSince(date) {
 
     return months[month] + ' ' + day + ', ' + year;
 }
-        
-        // Apply this function to each timestamp element
+                
         document.addEventListener('DOMContentLoaded', function() {
             var elements = document.getElementsByClassName('published');
             for (var i = 0; i < elements.length; i++) {
@@ -51,36 +47,3 @@ function timeSince(date) {
                 elements[i].textContent = timeSince(timestamp);
             }
         });
-
-//<![CDATA[
-function showLucky(root){
-    var feed = root.feed;
-    var entries = feed.entry || [];
-    var entry = feed.entry[0];
-      for (var j = 0; j < entry.link.length; ++j) {
-       if (entry.link[j].rel == "alternate") {
-       window.location = entry.link[j].href;
-       }
-      }
-   }
-
-function fetchLuck(luck){
-    script = document.createElement('script');
-    script.src = '/feeds/posts/summary?start-index='+luck+'&max-results=1&alt=json-in-script&callback=showLucky';
-    script.type = 'text/javascript';
-    document.getElementsByTagName('head')[0].appendChild(script);
-   }
-function readLucky(root){
-    var feed = root.feed;
-    var total = parseInt(feed.openSearch$totalResults.$t,10);
-    var luckyNumber = Math.floor(Math.random()*total);
-    luckyNumber++;
-    fetchLuck(luckyNumber);
-    }
-function feelingLucky(){
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '/feeds/posts/summary?max-results=0&alt=json-in-script&callback=readLucky';
-    document.getElementsByTagName('head')[0].appendChild(script);
-    }
-//]]>
