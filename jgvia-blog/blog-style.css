@@ -938,6 +938,21 @@ transition: .5s all ease-in-out;
  border-radius: 8px;
 }
 
+/*  Post-text  Backgroud */
+.container-post {
+ text-align: center; /* center the child */
+ font-weight: bold;
+ font-size: 1em;
+}
+
+text {
+display: inline-flex; /* keep the background color wrapped tight */
+padding:40px;font-size:20px;background-color:lightgrey;color:#222222;
+border-radius: 8px;
+text-indent: 1em;
+text-shadow: 0px .0px #000;
+}
+
 /*  See more  */
 #myrBtn, #dots{
  opacity: 0.5;
