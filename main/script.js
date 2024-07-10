@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-            const text = document.querySelector('.hello');
+            const text = document.querySelector('.container');
 
             text.addEventListener('click', function() {
                 let initialY = 0;           // Initial vertical position
