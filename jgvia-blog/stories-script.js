@@ -21,7 +21,7 @@
         id: 3,
         author: "Jason G",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhaQeiaAtrzmXBIs4n8BgDTFraTvIpCD4AG_v2sOi0xJhMf3BHoWMLbW5n42HoMv-qv1OoZKVm9rYzs8yC7imkUmFxsW3jpDOEF7QLmKhGE5kWTtW8OCit-ZaEk0kwahEx2EyxDRED_rcWIAs-vtv_3rH_X2jOsqiY3f-_ohuTHzNdz_szszxk1EAnKsLg/s1600/Music%20error%20404.jpg",
-        imageLink: "https://jasongvia.blogspot.com/2024/05/Best%20Anime%20of%20All%20Time.html",
+        imageLink: "https://www.jasongvia.blog/search/label/Music",
       },
       {
         id: 4,
