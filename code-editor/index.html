@@ -3,54 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <title>Text Code Editor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <!-- CodeMirror Core & Theme -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/lib/codemirror.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/theme/material.css" />
+  <!--
+    Copyright © 2025 JSN01000111
+    Licensed for educational and personal use only.
+  -->
 
-  <!-- Linting Addon -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/addon/lint/lint.css" />
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/addon/lint/lint.js"></script>
-
-  <!-- Language Modes -->
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/mode/javascript/javascript.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/mode/xml/xml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/mode/css/css.js"></script>
-
-  <!-- JavaScript Linter -->
-  <script src="https://cdn.jsdelivr.net/npm/jshint@2.13.6/dist/jshint.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/addon/lint/javascript-lint.js"></script>
-
-  <!-- HTML Linter -->
-  <script src="https://cdn.jsdelivr.net/npm/htmlhint@0.11.0/dist/htmlhint.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/addon/lint/html-lint.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/material.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
 
   <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      background: #1e1e1e;
-      color: white;
-      font-family: sans-serif;
+    * {
+      box-sizing: border-box;
     }
 
-    .editor-container {
-      display: flex;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background: #1e1e1e;
+      color: white;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: #333;
+      color: white;
+      border: none;
+      border-bottom: 1px solid #444;
+    }
+
+    .editor-container,
+    .preview-container {
+      display: none;
       flex-direction: column;
-      height: 100vh;
+      height: calc(100vh - 50px); /* Account for dropdown + button */
+    }
+
+    .editor-container.active,
+    .preview-container.active {
+      display: flex;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      overflow: auto;
     }
 
     .CodeMirror {
-      flex: 1;
+      height: 100%;
       font-size: 14px;
-      background: #1e1e1e;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .CodeMirror-scroll {
+      overflow: auto !important;
     }
 
     .button-bar {
       display: flex;
+      position: sticky;
+      bottom: 0;
       background: #1e1e1e;
+      z-index: 999;
     }
 
     button {
@@ -62,45 +87,93 @@
       border: none;
       border-top: 1px solid #555;
     }
-  </style>
 
-  <script>
-    // Assign linters to global scope
-    window.JSHINT = JSHINT;
-    window.HTMLHint = HTMLHint;
-  </script>
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    .output-title {
+      text-align: center;
+      padding: 10px;
+      background: #222;
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      padding: 6px;
+    }
+  </style>
 </head>
 <body>
-  <div class="editor-container">
-    <textarea id="editor">
 
-    </textarea>
+  <select onchange="changeMode(this.value)">
+    <option value="htmlmixed">HTML</option>
+    <option value="css">CSS</option>
+    <option value="javascript">JavaScript</option>
+    <option value="null">Plain Text</option>
+  </select>
+
+  <!-- Editor -->
+  <div class="editor-container active" id="editorBox">
+    <div class="editor-wrapper">
+      <textarea id="editor">
+
+      </textarea>
+    </div>
     <div class="button-bar">
-      <button onclick="formatCode()">Format</button>
+      <button onclick="handleRun()">Run Code</button>
     </div>
   </div>
 
-  <!-- CodeMirror Library -->
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.13/lib/codemirror.js"></script>
-
-  <!-- Beautify Library -->
-  <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.7/js/lib/beautify-html.js"></script>
+  <!-- Preview -->
+  <div class="preview-container" id="previewBox">
+    <div class="output-title">Live Output</div>
+    <iframe id="preview"></iframe>
+    <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
+    <div class="button-bar">
+      <button onclick="toggleView('editor')">Back to Editor</button>
+    </div>
+  </div>
 
   <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       lineNumbers: true,
       mode: "htmlmixed",
       theme: "material",
-      lineWrapping: true,
-      gutters: ["CodeMirror-lint-markers"],
-      lint: true
+      lineWrapping: false,
+      viewportMargin: Infinity
     });
 
-    function formatCode() {
+    function changeMode(mode) {
+      editor.setOption("mode", mode);
+    }
+
+    function handleRun() {
       const code = editor.getValue();
       const formatted = html_beautify(code, { indent_size: 2 });
       editor.setValue(formatted);
+      runCode(formatted);
+      toggleView("preview");
+    }
+
+    function runCode(code) {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+    }
+
+    function toggleView(view) {
+      document.getElementById("editorBox").classList.toggle("active", view === "editor");
+      document.getElementById("previewBox").classList.toggle("active", view === "preview");
     }
   </script>
+
 </body>
 </html>
