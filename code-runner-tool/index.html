@@ -146,8 +146,7 @@ console.log("JS is working!");
 
     modeToggle.addEventListener('change', () => {
       if (modeToggle.checked) {
-        // Switch to combined mode
-        // Combine split editors content into combined editor for convenience
+        // Combine split editors into combined editor
         const html = document.getElementById('htmlCode').value;
         const css = document.getElementById('cssCode').value;
         const js = document.getElementById('jsCode').value;
@@ -171,19 +170,15 @@ ${js}
         splitEditors.style.display = 'none';
         combinedEditor.style.display = 'block';
       } else {
-        // Switch to split mode
-        // Parse combined editor content into parts (simple heuristic)
+        // Parse combined editor back to split editors
         const combined = document.getElementById('combinedCode').value;
 
-        // Extract content between <style>...</style>
         const cssMatch = combined.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
         const css = cssMatch ? cssMatch[1].trim() : '';
 
-        // Extract content between <script>...</script>
         const jsMatch = combined.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
         const js = jsMatch ? jsMatch[1].trim() : '';
 
-        // Extract content inside <body>...</body>
         const bodyMatch = combined.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
         const html = bodyMatch ? bodyMatch[1].trim() : '';
 
@@ -198,11 +193,9 @@ ${js}
 
     function runCode() {
       if (modeToggle.checked) {
-        // Combined mode — output as is
         const code = document.getElementById('combinedCode').value;
         document.getElementById('resultFrame').srcdoc = code;
       } else {
-        // Split mode — build output
         const html = document.getElementById('htmlCode').value;
         const css = document.getElementById('cssCode').value;
         const js = document.getElementById('jsCode').value;
@@ -214,7 +207,9 @@ ${js}
 </head>
 <body>
 ${html}
-<script>${js}<\/script>
+<script>
+${js}
+<\/script>
 </body>
 </html>`;
 
