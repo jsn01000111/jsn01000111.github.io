@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Smart Live Code Editor</title>
+  <title>Text Code Editor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- CodeMirror + Beautify -->
@@ -13,7 +13,6 @@
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
 
   <style>
@@ -78,14 +77,15 @@
 
   <div class="editor-container active" id="editorBox">
     <textarea id="editor">
-// Start coding here...
+
     </textarea>
     <button onclick="handleRun()">Run Code</button>
   </div>
 
   <div class="preview-container" id="previewBox">
-    <div class="output-title">Live Output (swipe → or backspace to return)</div>
+    <div class="output-title">Live Output</div>
     <iframe id="preview"></iframe>
+    <button onclick="toggleView('editor')">Back to Editor</button>
   </div>
 
   <script>
@@ -103,19 +103,10 @@
 
     function handleRun() {
       const code = editor.getValue();
-      const hasHTML = /<html[\s\S]*?>[\s\S]*<\/html>/i.test(code) &&
-                      /<body[\s\S]*?>[\s\S]*<\/body>/i.test(code);
-
-      if (hasHTML) {
-        if (confirm("Full HTML code detected. Run it?")) {
-          const formatted = html_beautify(code, { indent_size: 2 });
-          editor.setValue(formatted); // beautify before run
-          runCode(formatted);
-          toggleView("preview");
-        }
-      } else {
-        alert("Please paste full HTML code with <html> and <body>.");
-      }
+      const formatted = html_beautify(code, { indent_size: 2 });
+      editor.setValue(formatted);
+      runCode(formatted);
+      toggleView("preview");
     }
 
     function runCode(code) {
@@ -127,36 +118,9 @@
     }
 
     function toggleView(view) {
-      document.getElementById("editorBox").classList.remove("active");
-      document.getElementById("previewBox").classList.remove("active");
-
-      if (view === "preview") {
-        document.getElementById("previewBox").classList.add("active");
-      } else {
-        document.getElementById("editorBox").classList.add("active");
-      }
+      document.getElementById("editorBox").classList.toggle("active", view === "editor");
+      document.getElementById("previewBox").classList.toggle("active", view === "preview");
     }
-
-    // Backspace (desktop)
-    document.addEventListener("keydown", function(e) {
-      if (e.key === "Backspace" && document.getElementById("previewBox").classList.contains("active")) {
-        e.preventDefault();
-        toggleView("editor");
-      }
-    });
-
-    // Swipe detection (mobile)
-    let startX = 0;
-    document.addEventListener("touchstart", (e) => {
-      startX = e.touches[0].clientX;
-    });
-
-    document.addEventListener("touchend", (e) => {
-      const endX = e.changedTouches[0].clientX;
-      if (startX - endX < -60 && document.getElementById("previewBox").classList.contains("active")) {
-        toggleView("editor");
-      }
-    });
   </script>
 
 </body>
