@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Code Editor</title>
+  <title>Text Code Editor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- CodeMirror CSS & Theme -->
@@ -17,53 +17,56 @@
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       background: #1e1e1e;
       font-family: sans-serif;
       color: white;
-      padding: 10px;
     }
 
-    h2 {
-      text-align: center;
-      font-weight: normal;
+    body {
+      display: flex;
+      flex-direction: column;
     }
 
     select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
-      margin-bottom: 10px;
       background: #333;
       color: white;
-      border: 1px solid #555;
-      border-radius: 4px;
+      border: none;
+      border-bottom: 1px solid #444;
+      appearance: none;
+      outline: none;
+    }
+
+    .editor-container {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .CodeMirror {
+      height: 100%;
+      width: 100%;
+      font-size: 14px;
+      background: #263238;
+      color: #fff;
+    }
+
+    .CodeMirror pre {
+      user-select: text;
+      -webkit-user-select: text;
     }
 
     textarea {
       display: none;
     }
-
-    .CodeMirror {
-      height: 300px;
-      font-size: 14px;
-      border: 1px solid #444;
-      border-radius: 6px;
-      background: #263238;
-      color: #fff;
-    }
-
-    /* Mobile: Allow text selection */
-    .CodeMirror pre {
-      user-select: text;
-      -webkit-user-select: text;
-    }
   </style>
 </head>
 <body>
-
-  <h2>Text Code Editor</h2>
 
   <select onchange="changeMode(this.value)">
     <option value="htmlmixed">HTML</option>
@@ -72,14 +75,12 @@
     <option value="null">Plain Text</option>
   </select>
 
-  <textarea id="editor">
-// Type or paste your code here...
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;&lt;/head&gt;
-  &lt;body&gt;&lt;h1&gt;Hello World&lt;/h1&gt;&lt;/body&gt;
-&lt;/html&gt;
-  </textarea>
+  <div class="editor-container">
+    <textarea id="editor">
+// Start coding here...
+
+    </textarea>
+  </div>
 
   <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
