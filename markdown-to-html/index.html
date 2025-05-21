@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Markdown to HTML Converter</title>
+  <title>Markdown ↔ HTML Converter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/turndown@7.1.1/lib/turndown.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,8 +14,9 @@
     }
     h2 {
       text-align: center;
+      margin-bottom: 8px;
     }
-    textarea, pre, .preview {
+    textarea, pre {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -36,7 +38,7 @@
       display: block;
       width: 100%;
       padding: 12px;
-      margin-top: 10px;
+      margin: 10px 0;
       background-color: #007bff;
       color: white;
       border: none;
@@ -47,6 +49,12 @@
     button:hover {
       background-color: #0056b3;
     }
+    .toggle {
+      background-color: #28a745;
+    }
+    .toggle:hover {
+      background-color: #1e7e34;
+    }
     .instructions {
       background: #ffffff;
       border: 1px solid #ccc;
@@ -54,70 +62,78 @@
       border-radius: 8px;
       margin-top: 20px;
     }
-    .instructions h3 {
-      margin-top: 0;
-    }
-    ul {
-      margin-top: 0;
-      padding-left: 20px;
-    }
   </style>
 </head>
 <body>
 
-  <h2>Markdown to HTML Converter</h2>
+  <h2 id="modeTitle">Markdown to HTML Converter</h2>
 
-  <label for="markdownInput"><strong>Enter Markdown:</strong></label>
-  <textarea id="markdownInput" rows="10"># Hello Markdown
+  <button class="toggle" onclick="toggleMode()">Switch to HTML → Markdown</button>
 
-This is a **GitHub-style** Markdown converter.
+  <label for="inputBox"><strong>Input:</strong></label>
+  <textarea id="inputBox" rows="10"></textarea>
 
-- Supports lists
-- [Links](https://example.com)
-- `inline code` and blocks:
+  <button onclick="convert()">Convert</button>
+  <button onclick="copyOutput()">Copy Output</button>
 
- </textarea>
+  <label><strong>Output:</strong></label>
+  <pre id="outputBox" style="white-space: pre-wrap;"></pre>
 
-  <button onclick="convertMarkdown()">Convert to HTML</button>
-  <button onclick="copyToClipboard()">Copy HTML to Clipboard</button>
-
-  <label for="htmlOutput"><strong>Generated HTML:</strong></label>
-  <pre id="htmlOutput" style="white-space: pre-wrap;"></pre>
-
-  <label><strong>Live Preview:</strong></label>
-  <div class="preview" id="previewOutput"></div>
+  <div class="preview" id="previewBox"></div>
 
   <div class="instructions">
-    <h3>Markdown Tips:</h3>
+    <strong>Instructions:</strong>
     <ul>
-      <li><code>#</code>, <code>##</code>, <code>###</code> for headings</li>
-      <li><code>**bold**</code>, <code>*italic*</code>, <code>`inline`</code> for styles</li>
-      <li><code>```code blocks```</code>, <code>-</code> for lists</li>
-      <li><code>[text](url)</code> for links</li>
-      <li>Images, tables, and more supported (GitHub-style)</li>
+      <li>Use the toggle to switch modes (Markdown ↔ HTML)</li>
+      <li>Paste your content in the box and click Convert</li>
+      <li>Copy the result using the button</li>
+      <li>Preview is shown for Markdown → HTML mode only</li>
     </ul>
-    <p>Copy the HTML and use it anywhere in your blog or site.</p>
   </div>
 
   <script>
-    function convertMarkdown() {
-      const md = document.getElementById('markdownInput').value;
-      const html = marked.parse(md);
-      document.getElementById('htmlOutput').textContent = html.trim();
-      document.getElementById('previewOutput').innerHTML = html.trim();
+    let mode = 'markdown'; // or 'html'
+
+    function toggleMode() {
+      mode = mode === 'markdown' ? 'html' : 'markdown';
+      document.getElementById('modeTitle').innerText =
+        mode === 'markdown' ? 'Markdown to HTML Converter' : 'HTML to Markdown Converter';
+      document.querySelector('.toggle').innerText =
+        mode === 'markdown' ? 'Switch to HTML → Markdown' : 'Switch to Markdown → HTML';
+      document.getElementById('inputBox').value = '';
+      document.getElementById('outputBox').textContent = '';
+      document.getElementById('previewBox').innerHTML = '';
     }
 
-    function copyToClipboard() {
-      const html = document.getElementById('htmlOutput').textContent;
-      navigator.clipboard.writeText(html).then(() => {
-        alert("HTML copied to clipboard!");
+    function convert() {
+      const input = document.getElementById('inputBox').value;
+      if (mode === 'markdown') {
+        const html = marked.parse(input);
+        document.getElementById('outputBox').textContent = html.trim();
+        document.getElementById('previewBox').innerHTML = html.trim();
+      } else {
+        const turndownService = new TurndownService();
+        const markdown = turndownService.turndown(input);
+        document.getElementById('outputBox').textContent = markdown.trim();
+        document.getElementById('previewBox').innerHTML = '';
+      }
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('outputBox').textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("Output copied to clipboard!");
       }, (err) => {
         alert("Copy failed: " + err);
       });
     }
 
-    window.onload = convertMarkdown;
+    // Auto convert sample on load
+    window.onload = () => {
+      document.getElementById('inputBox').value = '# Hello World\n\nThis is **Markdown**!';
+      convert();
+    };
   </script>
 
 </body>
-</html>   
+</html>
