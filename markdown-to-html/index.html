@@ -28,6 +28,8 @@
       background: #fff;
       border: 1px solid #ccc;
       padding: 15px;
+      overflow-x: auto;
+      min-height: 100px;
     }
     button {
       display: block;
@@ -43,6 +45,20 @@
     }
     button:hover {
       background-color: #0056b3;
+    }
+    .instructions {
+      background: #ffffff;
+      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .instructions h3 {
+      margin-top: 0;
+    }
+    ul {
+      margin-top: 0;
+      padding-left: 20px;
     }
   </style>
 </head>
@@ -62,16 +78,27 @@ This is a **Markdown** example with a [link](https://example.com) and a list:
   <button onclick="convertMarkdown()">Convert to HTML</button>
 
   <label for="htmlOutput"><strong>Generated HTML:</strong></label>
-  <pre id="htmlOutput"></pre>
+  <pre id="htmlOutput" style="white-space: pre-wrap;"></pre>
 
-  <label><strong>Preview:</strong></label>
+  <label><strong>Live Preview:</strong></label>
   <div class="preview" id="previewOutput"></div>
+
+  <div class="instructions">
+    <h3>How to Use Markdown:</h3>
+    <ul>
+      <li><code>#</code>, <code>##</code>, <code>###</code> for headings</li>
+      <li><code>**bold**</code> and <code>*italic*</code> for text styles</li>
+      <li><code>[link text](url)</code> for links</li>
+      <li><code>-</code> for list items</li>
+      <li>Blank lines create breaks</li>
+    </ul>
+    <p>The generated HTML appears above. You can copy and paste it anywhere!</p>
+  </div>
 
   <script>
     function convertMarkdown() {
       const md = document.getElementById('markdownInput').value;
 
-      // Minimal Markdown parser
       let html = md
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
@@ -82,7 +109,7 @@ This is a **Markdown** example with a [link](https://example.com) and a list:
         .replace(/^\- (.*$)/gim, '<li>$1</li>')
         .replace(/^\s*[\r\n]/gim, '<br>');
 
-      // Wrap list items
+      // Wrap <li> items in <ul>
       if (html.includes('<li>')) {
         html = html.replace(/(<li>[\s\S]*?<\/li>)/gim, '<ul>$1</ul>');
       }
@@ -91,7 +118,6 @@ This is a **Markdown** example with a [link](https://example.com) and a list:
       document.getElementById('previewOutput').innerHTML = html.trim();
     }
 
-    // Run on load
     window.onload = convertMarkdown;
   </script>
 
