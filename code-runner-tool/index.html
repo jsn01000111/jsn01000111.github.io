@@ -1,116 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Code Runner Tool</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 10px;
+      margin: 10px;
       background: #f5f5f5;
     }
-
     h2 {
       text-align: center;
-      font-size: 1.4rem;
       margin-bottom: 10px;
     }
-
+    .toggle-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    label.toggle-label {
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+    }
+    input[type="checkbox"] {
+      margin-left: 10px;
+      transform: scale(1.2);
+      vertical-align: middle;
+    }
+    .editor {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    .editor > div {
+      display: flex;
+      flex-direction: column;
+    }
     label {
       font-weight: bold;
-      margin-top: 15px;
-      display: block;
+      margin-bottom: 6px;
     }
-
     textarea {
-      width: 100%;
-      height: 120px;
       font-family: monospace;
       font-size: 14px;
-      padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 6px;
+      padding: 8px;
       resize: vertical;
-      background: #fff;
+      min-height: 120px;
+      background: white;
     }
-
     button {
       width: 100%;
       padding: 12px;
       font-size: 16px;
-      background: #007bff;
-      color: white;
+      background-color: #007bff;
       border: none;
       border-radius: 8px;
-      margin-top: 15px;
+      color: white;
       cursor: pointer;
     }
-
     button:hover {
-      background: #0056b3;
+      background-color: #0056b3;
     }
-
     iframe {
       width: 100%;
       height: 300px;
-      margin-top: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      background: #fff;
+      background: white;
     }
-
     @media (min-width: 768px) {
-      body {
-        padding: 20px;
+      .editor {
+        flex-direction: row;
       }
-
-      h2 {
-        font-size: 1.8rem;
+      .editor > div {
+        flex: 1;
       }
-
       textarea {
-        height: 150px;
-        font-size: 15px;
+        min-height: 180px;
       }
-
       button {
         width: auto;
-        padding: 10px 30px;
+        padding: 12px 30px;
       }
     }
   </style>
 </head>
 <body>
 
-  <h2>Mobile-Friendly Code Runner</h2>
+  <h2>Code Runner Tool</h2>
 
-  <label for="htmlCode">HTML</label>
-  <textarea id="htmlCode"><h1>Hello Mobile!</h1></textarea>
+  <div class="toggle-container">
+    <label class="toggle-label" for="modeToggle">
+      Use Combined Editor
+      <input type="checkbox" id="modeToggle" />
+    </label>
+  </div>
 
-  <label for="cssCode">CSS</label>
-  <textarea id="cssCode">h1 { color: green; text-align: center; }</textarea>
+  <!-- Split Editors -->
+  <div id="splitEditors" class="editor">
+    <div>
+      <label for="htmlCode">HTML</label>
+      <textarea id="htmlCode">&lt;h1&gt;Hello World&lt;/h1&gt;</textarea>
+    </div>
+    <div>
+      <label for="cssCode">CSS</label>
+      <textarea id="cssCode">h1 { color: red; text-align: center; }</textarea>
+    </div>
+    <div>
+      <label for="jsCode">JavaScript</label>
+      <textarea id="jsCode">console.log("JS is working!");</textarea>
+    </div>
+  </div>
 
-  <label for="jsCode">JavaScript</label>
-  <textarea id="jsCode">console.log("JS works!");</textarea>
+  <!-- Combined Editor -->
+  <div id="combinedEditor" style="display:none;">
+    <label for="combinedCode">Full HTML + CSS + JS</label>
+    <textarea id="combinedCode"><!DOCTYPE html>
+<html>
+<head>
+<style>
+h1 { color: red; text-align: center; }
+</style>
+</head>
+<body>
+<h1>Hello World</h1>
+<script>
+console.log("JS is working!");
+</script>
+</body>
+</html></textarea>
+  </div>
 
   <button onclick="runCode()">Run Code</button>
 
-  <iframe id="resultFrame" title="Code Output"></iframe>
+  <iframe id="resultFrame" title="Output"></iframe>
 
   <script>
-    function runCode() {
-      const html = document.getElementById("htmlCode").value;
-      const css = document.getElementById("cssCode").value;
-      const js = document.getElementById("jsCode").value;
+    const modeToggle = document.getElementById('modeToggle');
+    const splitEditors = document.getElementById('splitEditors');
+    const combinedEditor = document.getElementById('combinedEditor');
 
-      const output = `
-<!DOCTYPE html>
+    modeToggle.addEventListener('change', () => {
+      if (modeToggle.checked) {
+        // Switch to combined mode
+        // Combine split editors content into combined editor for convenience
+        const html = document.getElementById('htmlCode').value;
+        const css = document.getElementById('cssCode').value;
+        const js = document.getElementById('jsCode').value;
+
+        const combined = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+${css}
+</style>
+</head>
+<body>
+${html}
+<script>
+${js}
+<\/script>
+</body>
+</html>`;
+
+        document.getElementById('combinedCode').value = combined;
+        splitEditors.style.display = 'none';
+        combinedEditor.style.display = 'block';
+      } else {
+        // Switch to split mode
+        // Parse combined editor content into parts (simple heuristic)
+        const combined = document.getElementById('combinedCode').value;
+
+        // Extract content between <style>...</style>
+        const cssMatch = combined.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+        const css = cssMatch ? cssMatch[1].trim() : '';
+
+        // Extract content between <script>...</script>
+        const jsMatch = combined.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+        const js = jsMatch ? jsMatch[1].trim() : '';
+
+        // Extract content inside <body>...</body>
+        const bodyMatch = combined.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        const html = bodyMatch ? bodyMatch[1].trim() : '';
+
+        document.getElementById('htmlCode').value = html;
+        document.getElementById('cssCode').value = css;
+        document.getElementById('jsCode').value = js;
+
+        combinedEditor.style.display = 'none';
+        splitEditors.style.display = 'flex';
+      }
+    });
+
+    function runCode() {
+      if (modeToggle.checked) {
+        // Combined mode — output as is
+        const code = document.getElementById('combinedCode').value;
+        document.getElementById('resultFrame').srcdoc = code;
+      } else {
+        // Split mode — build output
+        const html = document.getElementById('htmlCode').value;
+        const css = document.getElementById('cssCode').value;
+        const js = document.getElementById('jsCode').value;
+
+        const output = `<!DOCTYPE html>
 <html>
 <head>
 <style>${css}</style>
@@ -119,11 +216,10 @@
 ${html}
 <script>${js}<\/script>
 </body>
-</html>
-      `;
+</html>`;
 
-      const frame = document.getElementById("resultFrame");
-      frame.srcdoc = output;
+        document.getElementById('resultFrame').srcdoc = output;
+      }
     }
   </script>
 
