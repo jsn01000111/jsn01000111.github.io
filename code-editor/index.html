@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Text Code Editor</title>
+  <title>Smart Live Code Editor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- CodeMirror CSS & Theme -->
+  <!-- CodeMirror + Beautify -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/material.css">
-
-  <!-- CodeMirror JS & Modes -->
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
 
   <style>
     html, body {
@@ -24,45 +24,46 @@
       background: #1e1e1e;
       font-family: sans-serif;
       color: white;
-    }
-
-    body {
       display: flex;
       flex-direction: column;
     }
 
-    select {
+    select, button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       font-size: 16px;
       background: #333;
       color: white;
       border: none;
       border-bottom: 1px solid #444;
-      appearance: none;
-      outline: none;
     }
 
-    .editor-container {
+    .editor-container, .preview-container {
       flex: 1;
-      overflow: hidden;
+      display: none;
+      flex-direction: column;
+    }
+
+    .editor-container.active, .preview-container.active {
+      display: flex;
     }
 
     .CodeMirror {
-      height: 100%;
-      width: 100%;
+      flex: 1;
       font-size: 14px;
-      background: #263238;
-      color: #fff;
     }
 
-    .CodeMirror pre {
-      user-select: text;
-      -webkit-user-select: text;
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
     }
 
-    textarea {
-      display: none;
+    .output-title {
+      text-align: center;
+      padding: 10px;
+      background: #222;
     }
   </style>
 </head>
@@ -75,11 +76,16 @@
     <option value="null">Plain Text</option>
   </select>
 
-  <div class="editor-container">
+  <div class="editor-container active" id="editorBox">
     <textarea id="editor">
 // Start coding here...
-
     </textarea>
+    <button onclick="handleRun()">Run Code</button>
+  </div>
+
+  <div class="preview-container" id="previewBox">
+    <div class="output-title">Live Output (swipe → or backspace to return)</div>
+    <iframe id="preview"></iframe>
   </div>
 
   <script>
@@ -94,6 +100,63 @@
     function changeMode(mode) {
       editor.setOption("mode", mode);
     }
+
+    function handleRun() {
+      const code = editor.getValue();
+      const hasHTML = /<html[\s\S]*?>[\s\S]*<\/html>/i.test(code) &&
+                      /<body[\s\S]*?>[\s\S]*<\/body>/i.test(code);
+
+      if (hasHTML) {
+        if (confirm("Full HTML code detected. Run it?")) {
+          const formatted = html_beautify(code, { indent_size: 2 });
+          editor.setValue(formatted); // beautify before run
+          runCode(formatted);
+          toggleView("preview");
+        }
+      } else {
+        alert("Please paste full HTML code with <html> and <body>.");
+      }
+    }
+
+    function runCode(code) {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+    }
+
+    function toggleView(view) {
+      document.getElementById("editorBox").classList.remove("active");
+      document.getElementById("previewBox").classList.remove("active");
+
+      if (view === "preview") {
+        document.getElementById("previewBox").classList.add("active");
+      } else {
+        document.getElementById("editorBox").classList.add("active");
+      }
+    }
+
+    // Backspace (desktop)
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Backspace" && document.getElementById("previewBox").classList.contains("active")) {
+        e.preventDefault();
+        toggleView("editor");
+      }
+    });
+
+    // Swipe detection (mobile)
+    let startX = 0;
+    document.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    document.addEventListener("touchend", (e) => {
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX < -60 && document.getElementById("previewBox").classList.contains("active")) {
+        toggleView("editor");
+      }
+    });
   </script>
 
 </body>
