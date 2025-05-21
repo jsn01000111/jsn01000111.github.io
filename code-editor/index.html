@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Code Editor with Highlighting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    #editor {
+      border: 1px solid #ccc;
+      height: 300px;
+    }
+    select, button {
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    .CodeMirror {
+      height: auto;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Blog Code Editor</h2>
+  <select id="modeSelect" onchange="changeMode(this.value)">
+    <option value="htmlmixed">HTML</option>
+    <option value="css">CSS</option>
+    <option value="javascript">JavaScript</option>
+    <option value="null">Plain Text</option>
+  </select>
+
+  <textarea id="editor">// Start typing your code here...</textarea>
+
+  <script>
+    let editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      lineNumbers: true,
+      mode: "htmlmixed",
+      theme: "default",
+      lineWrapping: true
+    });
+
+    function changeMode(mode) {
+      editor.setOption("mode", mode);
+    }
+  </script>
+
+</body>
+</html>
