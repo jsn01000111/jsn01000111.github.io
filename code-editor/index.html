@@ -33,9 +33,6 @@
       color: white;
       display: flex;
       flex-direction: column;
-    }
-
-    body {
       overflow: hidden;
     }
 
@@ -65,11 +62,16 @@
     .CodeMirror {
       flex: 1;
       font-size: 14px;
+      height: 100%;
       -webkit-user-select: text !important;
       user-select: text !important;
       touch-action: auto !important;
       -webkit-touch-callout: text !important;
-      height: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .CodeMirror-scroll {
+      overflow-x: auto !important;
     }
 
     iframe {
@@ -128,7 +130,7 @@
       lineNumbers: true,
       mode: "htmlmixed",
       theme: "material",
-      lineWrapping: true,
+      lineWrapping: false, // important for horizontal scroll
       viewportMargin: Infinity
     });
 
