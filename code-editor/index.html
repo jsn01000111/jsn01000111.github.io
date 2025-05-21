@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Text Code Editor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <!--
     Copyright © 2025 JSN01000111
@@ -20,6 +20,10 @@
   <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -31,23 +35,30 @@
       flex-direction: column;
     }
 
+    body {
+      overflow: hidden;
+    }
+
     select, button {
       width: 100%;
-      padding: 10px;
+      padding: 14px;
       font-size: 16px;
       background: #333;
       color: white;
       border: none;
-      border-bottom: 1px solid #444;
+      border-top: 1px solid #444;
     }
 
-    .editor-container, .preview-container {
+    .editor-container,
+    .preview-container {
       flex: 1;
       display: none;
       flex-direction: column;
+      height: 100%;
     }
 
-    .editor-container.active, .preview-container.active {
+    .editor-container.active,
+    .preview-container.active {
       display: flex;
     }
 
@@ -58,11 +69,12 @@
       user-select: text !important;
       touch-action: auto !important;
       -webkit-touch-callout: text !important;
+      height: 100%;
     }
 
     iframe {
+      flex: 1;
       width: 100%;
-      height: 100%;
       border: none;
       background: white;
     }
@@ -74,12 +86,17 @@
     }
 
     .watermark {
-      position: absolute;
-      bottom: 8px;
-      right: 10px;
+      text-align: center;
       font-size: 11px;
       color: #999;
-      pointer-events: none;
+      padding: 6px;
+    }
+
+    @media (max-width: 600px) {
+      button, select {
+        font-size: 15px;
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -94,7 +111,7 @@
 
   <div class="editor-container active" id="editorBox">
     <textarea id="editor">
-      
+
     </textarea>
     <button onclick="handleRun()">Run Code</button>
   </div>
