@@ -1,69 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Text Code Editor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <!--
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- Copyright -->  <!--
     Copyright © 2025 JSN01000111
     Licensed for educational and personal use only.
-  -->
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/material.css">
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
+  -->  <!-- CodeMirror Core & Theme -->  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/material.css">  <!-- Linting UI -->  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/lint.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/lint.js"></script>  <!-- Language Modes -->  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>  <!-- JavaScript Linter -->  <script src="https://cdn.jsdelivr.net/npm/jshint@2/dist/jshint.js"></script>  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/javascript-lint.js"></script>  <!-- HTML Linter -->  <script src="https://cdn.jsdelivr.net/npm/htmlhint@0.11.0/dist/htmlhint.js"></script>  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/html-lint.js"></script>  <style>
     html, body {
       margin: 0;
-      padding: 0;
       height: 100%;
-      font-family: sans-serif;
       background: #1e1e1e;
       color: white;
+      font-family: sans-serif;
+      overflow: hidden;
     }
 
-    select {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      background: #333;
-      color: white;
-      border: none;
-      border-bottom: 1px solid #444;
-    }
-
-    .editor-container,
-    .preview-container {
-      display: none;
-      flex-direction: column;
-      height: calc(100vh - 50px); /* Account for dropdown + button */
-    }
-
-    .editor-container.active,
-    .preview-container.active {
+    .editor-container {
       display: flex;
-    }
-
-    .editor-wrapper {
-      flex: 1;
-      overflow: auto;
+      flex-direction: column;
+      height: 100%;
     }
 
     .CodeMirror {
+      flex: 1;
       height: 100%;
       font-size: 14px;
-      -webkit-overflow-scrolling: touch;
+      background: #1e1e1e;
     }
 
     .CodeMirror-scroll {
@@ -75,7 +39,6 @@
       position: sticky;
       bottom: 0;
       background: #1e1e1e;
-      z-index: 999;
     }
 
     button {
@@ -87,93 +50,33 @@
       border: none;
       border-top: 1px solid #555;
     }
-
-    iframe {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: white;
-    }
-
-    .output-title {
-      text-align: center;
-      padding: 10px;
-      background: #222;
-    }
-
-    .watermark {
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      padding: 6px;
-    }
-  </style>
-</head>
+  </style>  <script>
+    // Make linters global
+    window.JSHINT = JSHINT;
+    window.HTMLHint = HTMLHint;
+  </script></head>
 <body>
+  <div class="editor-container">
+    <textarea id="editor">
 
-  <select onchange="changeMode(this.value)">
-    <option value="htmlmixed">HTML</option>
-    <option value="css">CSS</option>
-    <option value="javascript">JavaScript</option>
-    <option value="null">Plain Text</option>
-  </select>
-
-  <!-- Editor -->
-  <div class="editor-container active" id="editorBox">
-    <div class="editor-wrapper">
-      <textarea id="editor">
-        
-      </textarea>
-    </div>
+    </textarea>
     <div class="button-bar">
-      <button onclick="handleRun()">Run Code</button>
+      <button onclick="formatCode()">Format</button>
     </div>
-  </div>
-
-  <!-- Preview -->
-  <div class="preview-container" id="previewBox">
-    <div class="output-title">Live Output</div>
-    <iframe id="preview"></iframe>
-    <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
-    <div class="button-bar">
-      <button onclick="toggleView('editor')">Back to Editor</button>
-    </div>
-  </div>
-
-  <script>
+  </div>  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>  <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       lineNumbers: true,
       mode: "htmlmixed",
       theme: "material",
-      lineWrapping: false,
-      viewportMargin: Infinity
+      lineWrapping: true,
+      lint: true,
+      gutters: ["CodeMirror-lint-markers"]
     });
 
-    function changeMode(mode) {
-      editor.setOption("mode", mode);
-    }
-
-    function handleRun() {
+    function formatCode() {
       const code = editor.getValue();
       const formatted = html_beautify(code, { indent_size: 2 });
       editor.setValue(formatted);
-      runCode(formatted);
-      toggleView("preview");
     }
-
-    function runCode(code) {
-      const iframe = document.getElementById("preview");
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(code);
-      doc.close();
-    }
-
-    function toggleView(view) {
-      document.getElementById("editorBox").classList.toggle("active", view === "editor");
-      document.getElementById("previewBox").classList.toggle("active", view === "preview");
-    }
-  </script>
-
-</body>
+  </script></body>
 </html>
