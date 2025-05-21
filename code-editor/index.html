@@ -28,15 +28,9 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #1e1e1e;
       font-family: sans-serif;
+      background: #1e1e1e;
       color: white;
-      display: flex;
-      flex-direction: column;
-    }
-
-    body {
-      overflow: hidden;
     }
 
     select {
@@ -51,9 +45,9 @@
 
     .editor-container,
     .preview-container {
-      flex: 1;
       display: none;
       flex-direction: column;
+      height: calc(100vh - 50px); /* Account for dropdown + button */
     }
 
     .editor-container.active,
@@ -63,26 +57,25 @@
 
     .editor-wrapper {
       flex: 1;
-      overflow: hidden;
+      overflow: auto;
     }
 
     .CodeMirror {
       height: 100%;
       font-size: 14px;
-      -webkit-user-select: text !important;
-      user-select: text !important;
-      touch-action: auto !important;
-      -webkit-touch-callout: text !important;
       -webkit-overflow-scrolling: touch;
     }
 
     .CodeMirror-scroll {
-      overflow-x: auto !important;
+      overflow: auto !important;
     }
 
     .button-bar {
       display: flex;
-      flex-direction: row;
+      position: sticky;
+      bottom: 0;
+      background: #1e1e1e;
+      z-index: 999;
     }
 
     button {
@@ -129,7 +122,7 @@
   <div class="editor-container active" id="editorBox">
     <div class="editor-wrapper">
       <textarea id="editor">
-
+        
       </textarea>
     </div>
     <div class="button-bar">
