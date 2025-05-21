@@ -62,6 +62,9 @@
       border-radius: 8px;
       margin-top: 20px;
     }
+    #htmlTempContainer {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -87,12 +90,15 @@
       <li>Use the toggle to switch modes (Markdown ↔ HTML)</li>
       <li>Paste your content in the box and click Convert</li>
       <li>Copy the result using the button</li>
-      <li>Preview is shown for Markdown → HTML mode only</li>
+      <li>Preview only works for Markdown → HTML</li>
     </ul>
   </div>
 
+  <!-- hidden container for safe HTML parsing -->
+  <div id="htmlTempContainer"></div>
+
   <script>
-    let mode = 'markdown'; // or 'html'
+    let mode = 'markdown';
 
     function toggleMode() {
       mode = mode === 'markdown' ? 'html' : 'markdown';
@@ -112,8 +118,10 @@
         document.getElementById('outputBox').textContent = html.trim();
         document.getElementById('previewBox').innerHTML = html.trim();
       } else {
+        const container = document.getElementById('htmlTempContainer');
+        container.innerHTML = input;
         const turndownService = new TurndownService();
-        const markdown = turndownService.turndown(input);
+        const markdown = turndownService.turndown(container);
         document.getElementById('outputBox').textContent = markdown.trim();
         document.getElementById('previewBox').innerHTML = '';
       }
@@ -128,9 +136,9 @@
       });
     }
 
-    // Auto convert sample on load
+    // Load sample Markdown on start
     window.onload = () => {
-      document.getElementById('inputBox').value = '# Hello World\n\nThis is **Markdown**!';
+      document.getElementById('inputBox').value = '# Hello World\n\n**Markdown** works here!';
       convert();
     };
   </script>
