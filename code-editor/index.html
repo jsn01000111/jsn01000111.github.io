@@ -33,17 +33,20 @@
       color: white;
       display: flex;
       flex-direction: column;
+    }
+
+    body {
       overflow: hidden;
     }
 
-    select, button {
+    select {
       width: 100%;
       padding: 14px;
       font-size: 16px;
       background: #333;
       color: white;
       border: none;
-      border-top: 1px solid #444;
+      border-bottom: 1px solid #444;
     }
 
     .editor-container,
@@ -51,7 +54,6 @@
       flex: 1;
       display: none;
       flex-direction: column;
-      height: 100%;
     }
 
     .editor-container.active,
@@ -59,10 +61,14 @@
       display: flex;
     }
 
-    .CodeMirror {
+    .editor-wrapper {
       flex: 1;
-      font-size: 14px;
+      overflow: hidden;
+    }
+
+    .CodeMirror {
       height: 100%;
+      font-size: 14px;
       -webkit-user-select: text !important;
       user-select: text !important;
       touch-action: auto !important;
@@ -72,6 +78,21 @@
 
     .CodeMirror-scroll {
       overflow-x: auto !important;
+    }
+
+    .button-bar {
+      display: flex;
+      flex-direction: row;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      background: #444;
+      color: white;
+      border: none;
+      border-top: 1px solid #555;
     }
 
     iframe {
@@ -93,13 +114,6 @@
       color: #999;
       padding: 6px;
     }
-
-    @media (max-width: 600px) {
-      button, select {
-        font-size: 15px;
-        padding: 12px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -111,18 +125,26 @@
     <option value="null">Plain Text</option>
   </select>
 
+  <!-- Editor -->
   <div class="editor-container active" id="editorBox">
-    <textarea id="editor">
+    <div class="editor-wrapper">
+      <textarea id="editor">
 
-    </textarea>
-    <button onclick="handleRun()">Run Code</button>
+      </textarea>
+    </div>
+    <div class="button-bar">
+      <button onclick="handleRun()">Run Code</button>
+    </div>
   </div>
 
+  <!-- Preview -->
   <div class="preview-container" id="previewBox">
     <div class="output-title">Live Output</div>
     <iframe id="preview"></iframe>
     <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
-    <button onclick="toggleView('editor')">Back to Editor</button>
+    <div class="button-bar">
+      <button onclick="toggleView('editor')">Back to Editor</button>
+    </div>
   </div>
 
   <script>
@@ -130,7 +152,7 @@
       lineNumbers: true,
       mode: "htmlmixed",
       theme: "material",
-      lineWrapping: false, // important for horizontal scroll
+      lineWrapping: false,
       viewportMargin: Infinity
     });
 
