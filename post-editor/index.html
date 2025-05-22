@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Post Editor</title>
-  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/monokai.min.css" />
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #121212;
-      color: #fff;
-    }
+    body { margin: 0; font-family: sans-serif; background: #121212; color: #fff; }
     .toolbar {
       display: flex;
       justify-content: space-between;
@@ -32,9 +25,8 @@
     .editor-container {
       padding: 1rem;
       height: 80vh;
-      overflow: hidden;
     }
-    #editor {
+    #editor, #htmlView {
       width: 100%;
       height: 100%;
       border: none;
@@ -44,60 +36,56 @@
       font-size: 1rem;
       overflow-y: auto;
     }
-    #editor[contenteditable="true"]:focus {
+    #editor[contenteditable="true"]:focus, .CodeMirror-focused {
       outline: 2px solid #444;
-    }
-    pre {
-      background: #1a1a1a;
-      padding: 1rem;
-      margin: 0;
-      overflow-x: auto;
-      height: 100%;
-    }
-    code {
-      font-size: 1rem;
     }
     #htmlView {
       display: none;
-      height: 100%;
     }
   </style>
 </head>
 <body>
   <div class="toolbar">
     <div>
-      <button onclick="toggleMode('html')">HTML Post</button>
-      <button onclick="toggleMode('compose')">Compose View</button>      
+      <button onclick="toggleMode('html')">Edit HTML Post</button>
+      <button onclick="toggleMode('compose')">Compose View</button>
     </div>
     <button onclick="copyHTML()">Copy</button>
-  </div>
-
-  <div class="editor-container">
+  </div>  <div class="editor-container">
     <div id="editor" contenteditable="true">
-      <p>Start writing your blog post here...</p>
+      <p>Start writing your blog post...</p>
     </div>
-    <pre id="htmlView"><code class="language-markup" id="htmlCode"></code></pre>
-  </div>
+    <textarea id="htmlView"></textarea>
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>  <script>
+    let htmlEditor;
 
-  <script>
     function toggleMode(mode) {
-      const editor = document.getElementById("editor");
+      const editorDiv = document.getElementById("editor");
       const htmlView = document.getElementById("htmlView");
-      const code = document.getElementById("htmlCode");
 
       if (mode === "html") {
-        const raw = editor.innerHTML
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
-        code.innerHTML = raw;
-        Prism.highlightElement(code);
+        htmlView.value = editorDiv.innerHTML.trim();
         htmlView.style.display = "block";
-        editor.style.display = "none";
+        editorDiv.style.display = "none";
+
+        if (!htmlEditor) {
+          htmlEditor = CodeMirror.fromTextArea(htmlView, {
+            mode: "htmlmixed",
+            lineNumbers: true,
+            theme: "monokai"
+          });
+          htmlEditor.setSize("100%", "100%");
+        } else {
+          htmlEditor.setValue(htmlView.value);
+        }
       } else {
-        editor.innerHTML = code.textContent;
-        editor.style.display = "block";
+        if (htmlEditor) {
+          editorDiv.innerHTML = htmlEditor.getValue();
+        }
+        editorDiv.style.display = "block";
         htmlView.style.display = "none";
+        if (htmlEditor) htmlEditor.toTextArea();
+        htmlEditor = null;
       }
     }
 
@@ -106,6 +94,5 @@
       navigator.clipboard.writeText(html);
       alert("HTML copied!");
     }
-  </script>
-</body>
+  </script></body>
 </html>
