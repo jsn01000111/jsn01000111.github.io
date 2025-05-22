@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Prism.js theme (dark) -->
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Post Editor</title>
@@ -61,6 +65,17 @@
   </div>
 
   <script>
+function updatePreview() {
+  const html = document.getElementById("editor").innerHTML;
+  const escaped = html
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  document.getElementById("preview").innerHTML = `
+    <pre><code class="language-markup">${escaped}</code></pre>
+  `;
+  Prism.highlightAll();
+}
+    
     function toggleMode(mode) {
       const editor = document.getElementById("editor");
       const htmlView = document.getElementById("htmlView");
