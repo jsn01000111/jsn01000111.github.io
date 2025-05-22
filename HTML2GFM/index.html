@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HTML to Markdown (GFM)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+    textarea, pre {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-family: monospace;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover { background: #0056b3; }
+    pre { background: #fff; border: 1px solid #ccc; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+  <h2>HTML to Markdown (GitHub-Flavored)</h2>
+
+  <textarea id="htmlInput" rows="10">
+<h1>Hello</h1>
+<p><strong>Bold</strong>, <em>italic</em>, <del>strikethrough</del></p>
+<ul><li>Item 1</li><li>Item 2</li></ul>
+<table><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>30</td></tr></table>
+  </textarea>
+
+  <button onclick="convertToMarkdown()">Convert</button>
+  <button onclick="copyMarkdown()">Copy Markdown</button>
+
+  <pre id="markdownOutput"></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/turndown@7.1.1/dist/turndown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.3/dist/turndown-plugin-gfm.umd.js"></script>
+  <script>
+    const turndownService = new TurndownService({ headingStyle: 'atx' });
+    turndownService.use(turndownPluginGfm.gfm);
+
+    function convertToMarkdown() {
+      const html = document.getElementById('htmlInput').value;
+      const markdown = turndownService.turndown(html);
+      document.getElementById('markdownOutput').textContent = markdown.trim();
+    }
+
+    function copyMarkdown() {
+      const markdown = document.getElementById('markdownOutput').textContent;
+      navigator.clipboard.writeText(markdown).then(() => {
+        alert("Markdown copied!");
+      }).catch(err => {
+        alert("Copy failed: " + err);
+      });
+    }
+
+    window.onload = convertToMarkdown;
+  </script>
+</body>
+</html>
