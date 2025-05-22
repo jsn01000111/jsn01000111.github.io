@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Post Editor</title>
@@ -25,6 +24,7 @@
     .editor-container {
       padding: 1rem;
       height: 80vh;
+      position: relative;
     }
     #editor, #htmlView {
       width: 100%;
@@ -42,6 +42,23 @@
     #htmlView {
       display: none;
     }
+    .floating-toolbar {
+      position: absolute;
+      display: none;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 0.3rem;
+      z-index: 10;
+    }
+    .floating-toolbar button {
+      background: none;
+      border: none;
+      color: #fff;
+      margin: 0 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -52,21 +69,33 @@
     </div>
     <button onclick="copyHTML()">Copy</button>
   </div>  <div class="editor-container">
-    <div id="editor" contenteditable="true">
+    <div id="editor" contenteditable="true" onmouseup="showFloatingToolbar(event)" onkeyup="hideFloatingToolbar()">
       <p>Start writing your blog post...</p>
     </div>
     <textarea id="htmlView"></textarea>
+    <div id="floatingToolbar" class="floating-toolbar">
+      <button onclick="execCmd('bold')">B</button>
+      <button onclick="execCmd('italic')">I</button>
+      <button onclick="execCmd('insertUnorderedList')">&#8226; List</button>
+      <button onclick="execCmd('insertOrderedList')">1. List</button>
+      <button onclick="execCmd('formatBlock','<p>')">P</button>
+      <button onclick="execCmd('formatBlock','<h1>')">H1</button>
+      <button onclick="execCmd('formatBlock','<h2>')">H2</button>
+      <button onclick="execCmd('formatBlock','<h3>')">H3</button>
+    </div>
   </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>  <script>
     let htmlEditor;
 
     function toggleMode(mode) {
       const editorDiv = document.getElementById("editor");
       const htmlView = document.getElementById("htmlView");
+      const toolbar = document.getElementById("floatingToolbar");
 
       if (mode === "html") {
         htmlView.value = editorDiv.innerHTML.trim();
         htmlView.style.display = "block";
         editorDiv.style.display = "none";
+        toolbar.style.display = "none";
 
         if (!htmlEditor) {
           htmlEditor = CodeMirror.fromTextArea(htmlView, {
@@ -81,11 +110,11 @@
       } else {
         if (htmlEditor) {
           editorDiv.innerHTML = htmlEditor.getValue();
+          htmlEditor.toTextArea();
+          htmlEditor = null;
         }
         editorDiv.style.display = "block";
         htmlView.style.display = "none";
-        if (htmlEditor) htmlEditor.toTextArea();
-        htmlEditor = null;
       }
     }
 
@@ -93,6 +122,29 @@
       const html = document.getElementById("editor").innerHTML;
       navigator.clipboard.writeText(html);
       alert("HTML copied!");
+    }
+
+    function execCmd(cmd, val = null) {
+      document.execCommand(cmd, false, val);
+      hideFloatingToolbar();
+    }
+
+    function showFloatingToolbar(e) {
+      const selection = window.getSelection();
+      if (!selection.isCollapsed) {
+        const toolbar = document.getElementById("floatingToolbar");
+        const rect = selection.getRangeAt(0).getBoundingClientRect();
+        toolbar.style.top = `${rect.top + window.scrollY - 45}px`;
+        toolbar.style.left = `${rect.left + window.scrollX}px`;
+        toolbar.style.display = "flex";
+      } else {
+        hideFloatingToolbar();
+      }
+    }
+
+    function hideFloatingToolbar() {
+      const toolbar = document.getElementById("floatingToolbar");
+      toolbar.style.display = "none";
     }
   </script></body>
 </html>
