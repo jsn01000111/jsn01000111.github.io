@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Editor</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #121212; color: #fff; }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      background: #1f1f1f;
+      padding: 0.5rem;
+      border-bottom: 1px solid #333;
+    }
+    .toolbar button {
+      background: #333;
+      border: none;
+      color: white;
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .editor-container {
+      padding: 1rem;
+      height: 80vh;
+    }
+    #editor, #htmlView {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #1a1a1a;
+      color: #ddd;
+      padding: 1rem;
+      font-size: 1rem;
+      overflow-y: auto;
+    }
+    #editor[contenteditable="true"]:focus, textarea:focus {
+      outline: 2px solid #444;
+    }
+    #htmlView {
+      display: none;
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div>
+      <button onclick="toggleMode('compose')">Compose View</button>
+      <button onclick="toggleMode('html')">HTML View</button>
+    </div>
+    <button onclick="copyHTML()">Copy</button>
+  </div>
+
+  <div class="editor-container">
+    <div id="editor" contenteditable="true">
+    
+    </div>
+    <textarea id="htmlView"></textarea>
+  </div>
+
+  <script>
+    function toggleMode(mode) {
+      const editor = document.getElementById("editor");
+      const htmlView = document.getElementById("htmlView");
+      if (mode === "html") {
+        htmlView.value = editor.innerHTML;
+        htmlView.style.display = "block";
+        editor.style.display = "none";
+      } else {
+        editor.innerHTML = htmlView.value;
+        editor.style.display = "block";
+        htmlView.style.display = "none";
+      }
+    }
+
+    function copyHTML() {
+      const html = document.getElementById("editor").innerHTML;
+      navigator.clipboard.writeText(html);
+      alert("HTML copied!");
+    }
+  </script>
+</body>
+</html>
