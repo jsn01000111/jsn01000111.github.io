@@ -1,14 +1,19 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Text Code Editor with Live Edit Sync</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <title>Text Code Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
-  <style>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>  <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -17,48 +22,104 @@
       background: #1e1e1e;
       color: white;
     }
-    select, button {
+
+    select {
       width: 100%;
       padding: 14px;
       font-size: 16px;
       background: #333;
       color: white;
       border: none;
+      border-bottom: 1px solid #444;
     }
-    .editor-container, .preview-container {
+
+    .editor-container,
+    .preview-container {
       display: none;
       flex-direction: column;
       height: calc(100vh - 50px);
     }
-    .editor-container.active, .preview-container.active {
+
+    .editor-container.active,
+    .preview-container.active {
       display: flex;
     }
-    .editor-wrapper { flex: 1; overflow: auto; }
-    .CodeMirror { height: 100%; font-size: 14px; }
-    iframe { flex: 1; width: 100%; border: none; background: white; }
-    .button-bar { display: flex; position: sticky; bottom: 0; background: #1e1e1e; z-index: 999; }
-    .output-title { text-align: center; padding: 10px; background: #222; }
-    .watermark { text-align: center; font-size: 11px; color: #999; padding: 6px; }
-  </style>
-</head>
+
+    .editor-wrapper {
+      flex: 1;
+      overflow: auto;
+    }
+
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .CodeMirror-scroll {
+      overflow: auto !important;
+    }
+
+    .button-bar {
+      display: flex;
+      position: sticky;
+      bottom: 0;
+      background: #1e1e1e;
+      z-index: 999;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      background: #444;
+      color: white;
+      border: none;
+      border-top: 1px solid #555;
+    }
+
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    .output-title {
+      text-align: center;
+      padding: 10px;
+      background: #222;
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      padding: 6px;
+    }
+
+    .editing-mode-msg {
+      text-align: center;
+      background: yellow;
+      color: black;
+      padding: 8px;
+      font-weight: bold;
+      display: none;
+    }
+  </style></head>
 <body>  <select onchange="changeMode(this.value)">
     <option value="htmlmixed">HTML</option>
     <option value="css">CSS</option>
     <option value="javascript">JavaScript</option>
     <option value="null">Plain Text</option>
-  </select>  <div class="editor-container active" id="editorBox">
+  </select>  <div class="editing-mode-msg" id="editMsg">Element edit mode is active!</div>  <!-- Editor -->  <div class="editor-container active" id="editorBox">
     <div class="editor-wrapper">
-      <textarea id="editor">
-<h1 id="demo">Click me in preview</h1>
-<script>
-document.getElementById("demo").onclick = () => alert("Clicked!");
-</script>
-      </textarea>
+      <textarea id="editor"></textarea>
     </div>
     <div class="button-bar">
       <button onclick="handleRun()">Run Code</button>
     </div>
-  </div>  <div class="preview-container" id="previewBox">
+  </div>  <!-- Preview -->  <div class="preview-container" id="previewBox">
     <div class="output-title">Live Output</div>
     <iframe id="preview"></iframe>
     <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
@@ -79,9 +140,10 @@ document.getElementById("demo").onclick = () => alert("Clicked!");
     }
 
     function handleRun() {
-      const code = html_beautify(editor.getValue(), { indent_size: 2 });
-      editor.setValue(code);
-      runCode(code);
+      const code = editor.getValue();
+      const formatted = html_beautify(code, { indent_size: 2 });
+      editor.setValue(formatted);
+      runCode(formatted);
       toggleView("preview");
     }
 
@@ -91,21 +153,7 @@ document.getElementById("demo").onclick = () => alert("Clicked!");
       doc.open();
       doc.write(code);
       doc.close();
-
-      const script = doc.createElement("script");
-      script.innerHTML = `
-        let selectedEl = null;
-        document.body.addEventListener("click", function(e) {
-          e.preventDefault();
-          selectedEl = e.target;
-          const newText = prompt("Edit element content:", selectedEl.innerHTML);
-          if (newText !== null) {
-            selectedEl.innerHTML = newText;
-            parent.updateEditorHTML(selectedEl.outerHTML, selectedEl.id);
-          }
-        });
-      `;
-      doc.body.appendChild(script);
+      setTimeout(setupEditableMode, 500);
     }
 
     function toggleView(view) {
@@ -113,17 +161,48 @@ document.getElementById("demo").onclick = () => alert("Clicked!");
       document.getElementById("previewBox").classList.toggle("active", view === "preview");
     }
 
-    // Sync back changes to CodeMirror
-    function updateEditorHTML(newOuterHTML, id) {
-      const code = editor.getValue();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(code, 'text/html');
-      const el = doc.getElementById(id);
-      if (el) {
-        el.outerHTML = newOuterHTML;
-        const newHTML = html_beautify(doc.body.innerHTML, { indent_size: 2 });
-        editor.setValue(newHTML);
-      }
+    let editingMode = false;
+
+    function activateEditingMode() {
+      editingMode = true;
+      document.getElementById("editMsg").style.display = "block";
+    }
+
+    function setupEditableMode() {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+      doc.querySelectorAll("*").forEach(el => {
+        el.addEventListener("click", e => {
+          if (!editingMode) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const tag = el.tagName.toLowerCase();
+          const currentHTML = el.outerHTML;
+          const newHTML = prompt("Edit HTML:", currentHTML);
+          if (newHTML && newHTML !== currentHTML) {
+            el.outerHTML = newHTML;
+            const updatedDoc = doc.documentElement.outerHTML;
+            editor.setValue(html_beautify(updatedDoc));
+          }
+        });
+      });
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "s") activateEditingMode();
+    });
+
+    if ("DeviceMotionEvent" in window) {
+      let lastShake = 0;
+      window.addEventListener("devicemotion", function(e) {
+        const acc = e.accelerationIncludingGravity;
+        const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+        if (total > 30 && Date.now() - lastShake > 2000) {
+          lastShake = Date.now();
+          activateEditingMode();
+        }
+      });
     }
   </script></body>
 </html>
