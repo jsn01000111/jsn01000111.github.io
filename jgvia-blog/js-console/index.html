@@ -15,21 +15,37 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      transition: background 0.3s, color 0.3s;
     }
     .toolbar {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 0.5rem;
       background: #1f1f1f;
       border-bottom: 1px solid #333;
+      flex-wrap: wrap; /* Allow wrapping for smaller screens */
     }
-    .toolbar button {
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toolbar button, .toolbar label {
       background: #333;
       border: none;
       color: white;
       padding: 0.4rem 0.75rem;
       cursor: pointer;
       border-radius: 4px;
+      font-size: 0.9rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .toolbar button:hover {
+      background: #555;
+    }
+    .toolbar input[type="checkbox"] {
+      margin-right: 0.2rem;
     }
     #editorContainer {
       flex: 1;
@@ -42,68 +58,239 @@
       overflow-y: auto;
       font-size: 14px;
       border-top: 1px solid #333;
+      white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
     }
-    .log { color: #fff; }
-    .error { color: red; }
+    .log { color: #e0e0e0; }
+    .input-code { color: #888; border-bottom: 1px dotted #444; padding-bottom: 5px; margin-bottom: 5px;}
+    .error { color: #ff6b6b; font-weight: bold; }
+    .warn { color: #ffd166; }
+    .info { color: #66b3ff; }
+
     .CodeMirror {
       height: 100%;
       font-size: 14px;
     }
+
+    /* Light Theme */
+    body.light-theme {
+      background: #f0f2f5;
+      color: #333;
+    }
+    body.light-theme .toolbar {
+      background: #e0e0e0;
+      border-bottom-color: #ccc;
+    }
+    body.light-theme .toolbar button, body.light-theme .toolbar label {
+      background: #c0c0c0;
+      color: #333;
+    }
+    body.light-theme .toolbar button:hover {
+      background: #b0b0b0;
+    }
+    body.light-theme #console {
+      background: #ffffff;
+      border-top-color: #ccc;
+    }
+    body.light-theme .log { color: #333; }
+    body.light-theme .input-code { color: #666; border-bottom-color: #bbb; }
+    body.light-theme .error { color: #cc0000; }
+    body.light-theme .warn { color: #cc8800; }
+    body.light-theme .info { color: #0066cc; }
+    body.light-theme .CodeMirror {
+      background: #ffffff;
+    }
+    /* CodeMirror light theme needs its own styling adjustments */
+    .CodeMirror-wrap { background: var(--code-bg, #1a1a1a); }
+    .light-theme .CodeMirror {
+      background: #ffffff !important; /* Override CodeMirror monokai */
+      color: #333 !important;
+    }
+    .light-theme .CodeMirror-gutters { background: #f8f8f8 !important; border-right: 1px solid #ddd !important; }
+    .light-theme .CodeMirror-linenumbers { color: #999 !important; }
+    .light-theme .CodeMirror-cursor { border-left: 1px solid #333 !important; }
+    /* You'd need to adjust specific token colors for CodeMirror light theme if not using a built-in light theme */
   </style>
 </head>
-<body>
-
-   <script src="https://unpkg.com/esprima@4.0.1/dist/esprima.min.js"></script>
+<body class="dark-theme">
 
   <div class="toolbar">
-    <div>
+    <div class="toolbar-left">
       <button onclick="runCode()">Run</button>
       <button onclick="copyCode()">Copy</button>
+      <label>
+        <input type="checkbox" id="executeOnEnter" checked> Execute on Enter
+      </label>
+      <button onclick="clearConsole()">Clear Console</button>
     </div>
-    <button onclick="clearConsole()">Clear</button>
+    <div class="toolbar-right">
+      <button onclick="toggleTheme()">Toggle Theme</button>
+    </div>
   </div>
 
   <div id="editorContainer">
-    <textarea id="code">// Type JavaScript code here</textarea>
+    <textarea id="code">// Type JavaScript code here
+const greet = "Hello, world!";
+console.log(greet);
+
+function add(a, b) {
+  return a + b;
+}
+
+console.log("2 + 3 =", add(2, 3));
+console.error("This is an error message.");
+console.warn("Beware of this warning!");
+console.info({ name: "Alice", age: 30 });
+</textarea>
   </div>
   <div id="console"></div>
 
-  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/monokai.min.css"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/4.0.1/esprima.min.js"></script>
 
   <script>
     const consoleBox = document.getElementById("console");
+    const executeOnEnterCheckbox = document.getElementById("executeOnEnter");
+    const body = document.body;
 
     const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       mode: "javascript",
       theme: "monokai",
-      lineNumbers: true
+      lineNumbers: true,
+      indentUnit: 2,
+      tabSize: 2,
+      extraKeys: {
+        "Cmd-Enter": function(cm) { runCode(); }, // For macOS
+        "Ctrl-Enter": function(cm) { runCode(); }  // For Windows/Linux
+      }
     });
+
+    // Load code from localStorage on page load
+    const savedCode = localStorage.getItem('jsConsoleCode');
+    if (savedCode) {
+      editor.setValue(savedCode);
+    } else {
+      // Set initial example code if no saved code
+      editor.setValue(`// Type JavaScript code here
+const greet = "Hello, world!";
+console.log(greet);
+
+function add(a, b) {
+  return a + b;
+}
+
+console.log("2 + 3 =", add(2, 3));
+console.error("This is an error message.");
+console.warn("Beware of this warning!");
+console.info({ name: "Alice", age: 30 });
+`);
+    }
+
+    // Save code to localStorage whenever it changes
+    editor.on('change', () => {
+      localStorage.setItem('jsConsoleCode', editor.getValue());
+    });
+
+    // Execute on Enter functionality
+    editor.on('keydown', (instance, event) => {
+      if (executeOnEnterCheckbox.checked && event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault(); // Prevent new line
+        runCode();
+      }
+    });
+
+    // Function to format output (e.g., objects)
+    function formatConsoleOutput(arg) {
+      if (typeof arg === 'object' && arg !== null) {
+        try {
+          return JSON.stringify(arg, null, 2); // Pretty print JSON
+        } catch (e) {
+          return String(arg); // Fallback for circular references or other issues
+        }
+      }
+      return String(arg);
+    }
 
     function runCode() {
       const code = editor.getValue();
-      consoleBox.innerHTML += `<div class="log">> ${code}</div>`;
+      consoleBox.innerHTML += `<div class="input-code">> ${code}</div>`;
+
+      // Store original console methods
+      const originalConsole = {};
+      ['log', 'error', 'warn', 'info'].forEach(method => {
+        originalConsole[method] = console[method];
+      });
+
+      // Override console methods to log to our custom console
+      console.log = (...args) => {
+        const output = args.map(formatConsoleOutput).join(' ');
+        consoleBox.innerHTML += `<div class="log">${output}</div>`;
+        originalConsole.log(...args); // Optional: also log to native browser console
+      };
+
+      console.error = (...args) => {
+        const output = args.map(formatConsoleOutput).join(' ');
+        consoleBox.innerHTML += `<div class="error">ERROR: ${output}</div>`;
+        originalConsole.error(...args);
+      };
+
+      console.warn = (...args) => {
+        const output = args.map(formatConsoleOutput).join(' ');
+        consoleBox.innerHTML += `<div class="warn">WARN: ${output}</div>`;
+        originalConsole.warn(...args);
+      };
+
+      console.info = (...args) => {
+        const output = args.map(formatConsoleOutput).join(' ');
+        consoleBox.innerHTML += `<div class="info">INFO: ${output}</div>`;
+        originalConsole.info(...args);
+      };
+
       try {
         esprima.parseScript(code); // Validate syntax
+        // Execute the code in an isolated scope
         const result = new Function(code)();
         if (result !== undefined) {
-          consoleBox.innerHTML += `<div class="log">${result}</div>`;
+          // Display the return value of the executed script, if any
+          const resultOutput = formatConsoleOutput(result);
+          consoleBox.innerHTML += `<div class="log">Result: ${resultOutput}</div>`;
         }
       } catch (err) {
-        consoleBox.innerHTML += `<div class="error">Error: ${err.message}</div>`;
+        if (err.name === 'SyntaxError') {
+          consoleBox.innerHTML += `<div class="error">Syntax Error: ${err.message}</div>`;
+        } else {
+          consoleBox.innerHTML += `<div class="error">Runtime Error: ${err.message}</div>`;
+        }
+      } finally {
+        // Restore original console methods
+        ['log', 'error', 'warn', 'info'].forEach(method => {
+          console[method] = originalConsole[method];
+        });
       }
-      consoleBox.scrollTop = consoleBox.scrollHeight;
+      consoleBox.scrollTop = consoleBox.scrollHeight; // Scroll to bottom
     }
 
     function copyCode() {
       navigator.clipboard.writeText(editor.getValue());
-      alert("Code copied!");
+      alert("Code copied to clipboard!");
     }
 
     function clearConsole() {
       consoleBox.innerHTML = "";
+    }
+
+    // Theme toggling
+    function toggleTheme() {
+      if (body.classList.contains('dark-theme')) {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        editor.setOption("theme", "default"); // CodeMirror's default is light
+      } else {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        editor.setOption("theme", "monokai"); // Your preferred dark theme
+      }
     }
   </script>
 
