@@ -1,16 +1,14 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Text Code Editor with DOM Inspector</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <title>Text Code Editor with Live Edit Sync</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>  <style>
-    * { box-sizing: border-box; }
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
+  <style>
     html, body {
       margin: 0;
       padding: 0;
@@ -36,65 +34,13 @@
       display: flex;
     }
     .editor-wrapper { flex: 1; overflow: auto; }
-    .CodeMirror {
-      height: 100%;
-      font-size: 14px;
-      -webkit-overflow-scrolling: touch;
-    }
-    iframe {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: white;
-    }
-    .output-title {
-      text-align: center;
-      padding: 10px;
-      background: #222;
-    }
-    .button-bar {
-      display: flex;
-      position: sticky;
-      bottom: 0;
-      background: #1e1e1e;
-      z-index: 999;
-    }
-    .button-bar button {
-      flex: 1;
-      border-top: 1px solid #555;
-    }
-    .watermark {
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      padding: 6px;
-    }
-    .dom-inspector {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-height: 40%;
-      background: #2c2c2c;
-      overflow: auto;
-      z-index: 1000;
-      font-size: 13px;
-      padding: 10px;
-      color: #eee;
-    }
-    .dom-inspector ul {
-      list-style: none;
-      padding-left: 1em;
-    }
-    .dom-inspector li {
-      margin: 2px 0;
-      cursor: pointer;
-    }
-    .highlighted {
-      outline: 2px solid red !important;
-    }
-  </style></head>
+    .CodeMirror { height: 100%; font-size: 14px; }
+    iframe { flex: 1; width: 100%; border: none; background: white; }
+    .button-bar { display: flex; position: sticky; bottom: 0; background: #1e1e1e; z-index: 999; }
+    .output-title { text-align: center; padding: 10px; background: #222; }
+    .watermark { text-align: center; font-size: 11px; color: #999; padding: 6px; }
+  </style>
+</head>
 <body>  <select onchange="changeMode(this.value)">
     <option value="htmlmixed">HTML</option>
     <option value="css">CSS</option>
@@ -102,19 +48,23 @@
     <option value="null">Plain Text</option>
   </select>  <div class="editor-container active" id="editorBox">
     <div class="editor-wrapper">
-      <textarea id="editor"></textarea>
+      <textarea id="editor">
+<h1 id="demo">Click me in preview</h1>
+<script>
+document.getElementById("demo").onclick = () => alert("Clicked!");
+</script>
+      </textarea>
     </div>
     <div class="button-bar">
       <button onclick="handleRun()">Run Code</button>
     </div>
   </div>  <div class="preview-container" id="previewBox">
-    <div class="output-title">Live Output (Press "S" or shake to edit)</div>
+    <div class="output-title">Live Output</div>
     <iframe id="preview"></iframe>
     <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
     <div class="button-bar">
       <button onclick="toggleView('editor')">Back to Editor</button>
     </div>
-    <div class="dom-inspector" id="domInspector"></div>
   </div>  <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       lineNumbers: true,
@@ -129,10 +79,9 @@
     }
 
     function handleRun() {
-      const code = editor.getValue();
-      const formatted = html_beautify(code, { indent_size: 2 });
-      editor.setValue(formatted);
-      runCode(formatted);
+      const code = html_beautify(editor.getValue(), { indent_size: 2 });
+      editor.setValue(code);
+      runCode(code);
       toggleView("preview");
     }
 
@@ -142,6 +91,21 @@
       doc.open();
       doc.write(code);
       doc.close();
+
+      const script = doc.createElement("script");
+      script.innerHTML = `
+        let selectedEl = null;
+        document.body.addEventListener("click", function(e) {
+          e.preventDefault();
+          selectedEl = e.target;
+          const newText = prompt("Edit element content:", selectedEl.innerHTML);
+          if (newText !== null) {
+            selectedEl.innerHTML = newText;
+            parent.updateEditorHTML(selectedEl.outerHTML, selectedEl.id);
+          }
+        });
+      `;
+      doc.body.appendChild(script);
     }
 
     function toggleView(view) {
@@ -149,56 +113,17 @@
       document.getElementById("previewBox").classList.toggle("active", view === "preview");
     }
 
-    // DOM Inspector Feature
-    function inspectDOM() {
-      const inspector = document.getElementById("domInspector");
-      inspector.innerHTML = "";
-      const doc = document.getElementById("preview").contentDocument;
-      const root = doc.body;
-      inspector.appendChild(buildDOMTree(root));
-      inspector.style.display = "block";
-    }
-
-    function buildDOMTree(node) {
-      const ul = document.createElement("ul");
-      for (let child of node.children) {
-        const li = document.createElement("li");
-        li.textContent = `<${child.tagName.toLowerCase()}>`;
-        li.onclick = (e) => {
-          e.stopPropagation();
-          node.ownerDocument.querySelectorAll(".highlighted").forEach(el => el.classList.remove("highlighted"));
-          child.classList.add("highlighted");
-          showQuickEdit(child);
-        };
-        li.appendChild(buildDOMTree(child));
-        ul.appendChild(li);
+    // Sync back changes to CodeMirror
+    function updateEditorHTML(newOuterHTML, id) {
+      const code = editor.getValue();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(code, 'text/html');
+      const el = doc.getElementById(id);
+      if (el) {
+        el.outerHTML = newOuterHTML;
+        const newHTML = html_beautify(doc.body.innerHTML, { indent_size: 2 });
+        editor.setValue(newHTML);
       }
-      return ul;
-    }
-
-    function showQuickEdit(el) {
-      const content = prompt("Edit innerHTML for <" + el.tagName.toLowerCase() + ">:", el.innerHTML);
-      if (content !== null) el.innerHTML = content;
-    }
-
-    // Activation
-    document.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === 's') inspectDOM();
-    });
-
-    if ("ondevicemotion" in window) {
-      let shakeThreshold = 15, lastTime = 0;
-      window.addEventListener("devicemotion", (e) => {
-        const acc = e.accelerationIncludingGravity;
-        const currentTime = new Date().getTime();
-        if ((currentTime - lastTime) > 1000) {
-          const magnitude = Math.sqrt(acc.x * acc.x + acc.y * acc.y + acc.z * acc.z);
-          if (magnitude > shakeThreshold) {
-            lastTime = currentTime;
-            inspectDOM();
-          }
-        }
-      });
     }
   </script></body>
-  </html>
+</html>
