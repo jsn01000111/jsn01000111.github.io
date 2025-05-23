@@ -97,15 +97,10 @@
       font-size: 14px;
       z-index: 9999;
       display: none;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .css-editor-panel label {
-      display: block;
-      margin-bottom: 10px;
     }
     .css-editor-panel input {
       width: 100%;
+      margin-bottom: 6px;
     }
   </style>
 </head>
@@ -134,7 +129,6 @@
     </div>
   </div>
   <div class="css-editor-panel" id="cssEditor"></div>
-
   <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       lineNumbers: true,
@@ -183,34 +177,30 @@
       const cssEditor = document.getElementById("cssEditor");
       cssEditor.style.display = "none";
 
-      // Body background click for CSS editing
-      doc.body.addEventListener("click", function (e) {
-        if (!editingMode) return;
-        e.preventDefault();
-        e.stopPropagation();
-        cssEditor.innerHTML = "";
-        const styles = doc.body.style;
-        for (let i = 0; i < styles.length; i++) {
-          const key = styles[i];
-          const val = styles.getPropertyValue(key);
-          cssEditor.innerHTML += `<label>${key}<br><input value="${val}" data-key="${key}" /></label>`;
-        }
-        cssEditor.style.top = "20px";
-        cssEditor.style.left = "20px";
-        cssEditor.style.display = "block";
-        cssEditor.querySelectorAll("input").forEach(input => {
-          input.addEventListener("input", () => {
-            doc.body.style[input.dataset.key] = input.value;
-          });
-        });
-      });
-
       doc.querySelectorAll("*").forEach(el => {
         el.addEventListener("click", e => {
           if (!editingMode) return;
-          if (e.target === doc.body) return;
           e.preventDefault();
           e.stopPropagation();
+          if (e.target === doc.body) {
+            cssEditor.innerHTML = "";
+            const styles = doc.body.style;
+            for (let i = 0; i < styles.length; i++) {
+              const key = styles[i];
+              const val = styles.getPropertyValue(key);
+              cssEditor.innerHTML += `<label>${key}<input value="${val}" data-key="${key}" /></label>`;
+            }
+            cssEditor.style.top = "20px";
+            cssEditor.style.left = "20px";
+            cssEditor.style.display = "block";
+            cssEditor.querySelectorAll("input").forEach(input => {
+              input.addEventListener("input", () => {
+                doc.body.style[input.dataset.key] = input.value;
+              });
+            });
+            return;
+          }
+          const tag = el.tagName.toLowerCase();
           const currentHTML = el.outerHTML;
           const newHTML = prompt("Edit HTML:", currentHTML);
           if (newHTML && newHTML !== currentHTML) {
@@ -222,14 +212,13 @@
       });
     }
 
-    document.addEventListener("keydown", function (e) {
-      const isPreview = document.getElementById("previewBox").classList.contains("active");
-      if (isPreview && e.key === "s") activateEditingMode();
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "s") activateEditingMode();
     });
 
     if ("DeviceMotionEvent" in window) {
       let lastShake = 0;
-      window.addEventListener("devicemotion", function (e) {
+      window.addEventListener("devicemotion", function(e) {
         const acc = e.accelerationIncludingGravity;
         const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
         if (total > 25 && Date.now() - lastShake > 2000) {
