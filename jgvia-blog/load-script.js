@@ -10,10 +10,11 @@ function include(file) {
 }
 
 include(
-'https://cdn.jsdelivr.net/gh/jsn01000111/jsn01000111.github.io@main/jscript/x-timeago.js');
-include(
-'https://cdn.jsdelivr.net/gh/jsn01000111/jsn01000111.github.io@refs/heads/main/jgvia-blog/random-feed.js');
+'https://cdn.jsdelivr.net/gh/jsn01000111/jsn01000111.github.io@refs/heads/main/jgvia-blog/x-timeago.js');
 include(
 'https://cdn.jsdelivr.net/gh/jsn01000111/jsn01000111.github.io@main/jgvia-blog/post-random.js');
+include(
+'https://cdn.jsdelivr.net/gh/jsn01000111/jsn01000111.github.io@refs/heads/main/jgvia-blog/random-feed.js');
+
 
 
