@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Code Editor & Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background: #1e1e1e;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: #333;
+      color: white;
+      border: none;
+      border-bottom: 1px solid #444;
+    }
+
+    .editor-container,
+    .preview-container {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .editor-container.active,
+    .preview-container.active {
+      display: flex;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      overflow: auto;
+    }
+
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .CodeMirror-scroll {
+      overflow: auto !important;
+    }
+
+    .button-bar {
+      display: flex;
+      position: sticky;
+      bottom: 0;
+      background: #1e1e1e;
+      z-index: 999;
+      padding: 0.5rem;
+      gap: 0.5rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      background: #444;
+      color: white;
+      border: none;
+      border-top: 1px solid #555;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #555;
+    }
+
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    .output-title {
+      text-align: center;
+      padding: 10px;
+      background: #222;
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      padding: 6px;
+    }
+
+    /* Styles for the live edit tools */
+    .live-edit-tools {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 5px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .preview-container:hover .live-edit-tools,
+    .live-edit-tools.active {
+      opacity: 1;
+    }
+
+    .live-edit-tools button {
+        background: #007bff;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.8em;
+        border-radius: 3px;
+        border: none;
+        cursor: pointer;
+        flex: unset;
+        margin-left: 5px;
+    }
+    .live-edit-tools button:hover {
+        background: #0056b3;
+    }
+    .live-edit-tools label {
+        color: white;
+        font-size: 0.8em;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+    }
+    .live-edit-tools input[type="checkbox"] {
+        margin-right: 5px;
+    }
+
+    #previewBox {
+        position: relative;
+        /* Ensure iframe content doesn't cover tools during selection */
+        overflow: hidden; /* Important for placing overlays */
+    }
+
+    /* Styles for element selection overlay and resizers */
+    #selectionOverlay {
+        position: absolute;
+        border: 2px dashed #007bff;
+        pointer-events: none; /* Allows clicks to pass through */
+        z-index: 9; /* Below live-edit-tools */
+        display: none;
+    }
+
+    .resizer {
+        width: 10px;
+        height: 10px;
+        background: #007bff;
+        border: 1px solid white;
+        position: absolute;
+        z-index: 11; /* Above selectionOverlay */
+        pointer-events: all; /* Allows interaction */
+        cursor: grab;
+    }
+    .resizer.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+    .resizer.n { top: -5px; left: 50%; margin-left: -5px; cursor: ns-resize; }
+    .resizer.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+    .resizer.e { top: 50%; right: -5px; margin-top: -5px; cursor: ew-resize; }
+    .resizer.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+    .resizer.s { bottom: -5px; left: 50%; margin-left: -5px; cursor: ns-resize; }
+    .resizer.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+    .resizer.w { top: 50%; left: -5px; margin-top: -5px; cursor: ew-resize; }
+  </style>
+</head>
+<body>
+
+  <select onchange="changeMode(this.value)">
+    <option value="htmlmixed">HTML</option>
+    <option value="css">CSS</option>
+    <option value="javascript">JavaScript</option>
+    <option value="null">Plain Text</option>
+  </select>
+
+  <div class="editor-container active" id="editorBox">
+    <div class="editor-wrapper">
+      <textarea id="editor"></textarea>
+    </div>
+    <div class="button-bar">
+      <button onclick="handleRun()">Run Code</button>
+    </div>
+  </div>
+
+  <div class="preview-container" id="previewBox">
+    <div class="output-title">Live Output</div>
+    <div class="live-edit-tools" id="liveEditTools">
+        <label>
+            <input type="checkbox" id="enableLiveEdit"> Enable Content Edit
+        </label>
+        <label>
+            <input type="checkbox" id="enableLayoutEdit"> Enable Layout Edit
+        </label>
+        <button onclick="saveLiveChanges()">Save Changes</button>
+    </div>
+    <iframe id="preview"></iframe>
+
+    <div id="selectionOverlay"></div>
+    <div class="resizer nw"></div>
+    <div class="resizer n"></div>
+    <div class="resizer ne"></div>
+    <div class="resizer e"></div>
+    <div class="resizer se"></div>
+    <div class="resizer s"></div>
+    <div class="resizer sw"></div>
+    <div class="resizer w"></div>
+
+    <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
+    <div class="button-bar">
+      <button onclick="toggleView('editor')">Back to Editor</button>
+    </div>
+  </div>
+
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      lineNumbers: true,
+      mode: "htmlmixed",
+      theme: "dracula",
+      lineWrapping: false,
+      viewportMargin: Infinity
+    });
+
+    const previewIframe = document.getElementById("preview");
+    const enableLiveEditCheckbox = document.getElementById("enableLiveEdit"); // For content editing
+    const enableLayoutEditCheckbox = document.getElementById("enableLayoutEdit"); // For layout editing
+    const liveEditTools = document.getElementById("liveEditTools");
+    const selectionOverlay = document.getElementById('selectionOverlay');
+    const resizers = document.querySelectorAll('.resizer');
+
+    let mutationObserver = null;
+    let liveEditDebounceTimer;
+
+    let selectedElementInIframe = null; // Stores the currently selected element in the iframe
+    let isResizing = false;
+    let currentResizer = null;
+    let startX, startY, startWidth, startHeight, startLeft, startTop;
+
+    // Initial example content
+    const initialHtmlCode = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Preview Page</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f0f0f0; color: #333; }
+        h1 { color: #007bff; }
+        .resizable-box {
+            border: 2px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            min-width: 50px;
+            min-height: 50px;
+            /* Added position:relative for contained absolute children (like handles if not handled globally) */
+        }
+        .another-box {
+            background-color: #e0f7fa;
+            border: 1px dashed #00bcd4;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Live Preview!</h1>
+    <p>You can now **edit text directly** when 'Content Edit' is enabled.</p>
+    <div class="resizable-box" style="width: 300px; height: 150px; background-color: lightyellow;">
+        <p>This box can be resized when 'Layout Edit' is enabled.</p>
+        <p>Try dragging the corners/edges.</p>
+    </div>
+    <div class="another-box">
+        <p>Another content area.</p>
+    </div>
+    <p>Changes made here will auto-save back to the editor.</p>
+</body>
+</html>`;
+
+
+    // Load code from localStorage or set initial example
+    const savedCode = localStorage.getItem('codeEditorContent');
+    editor.setValue(savedCode || initialHtmlCode);
+
+    // Set initial mode from localStorage
+    const savedMode = localStorage.getItem('codeEditorMode') || 'htmlmixed';
+    document.querySelector('select').value = savedMode;
+    editor.setOption("mode", savedMode);
+
+
+    function changeMode(mode) {
+      editor.setOption("mode", mode);
+      localStorage.setItem('codeEditorMode', mode);
+    }
+
+    function handleRun() {
+      const code = editor.getValue();
+      const currentMode = editor.getOption("mode");
+
+      let contentToDisplay = code;
+      if (currentMode === "htmlmixed") {
+        try {
+            contentToDisplay = html_beautify(code, { indent_size: 2, preserve_newlines: true });
+            editor.setValue(contentToDisplay);
+        } catch (e) {
+            console.error("HTML Beautify error:", e);
+        }
+      }
+
+      renderPreview(contentToDisplay);
+      toggleView("preview");
+    }
+
+    function renderPreview(code) {
+      const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+      doc.open();
+      // Add 'contenteditable' conditionally based on checkbox
+      const bodyTag = enableLiveEditCheckbox.checked ? `<body contenteditable="true" style="min-height: 100vh;">` : `<body>`;
+      doc.write(code.replace(/<body([^>]*)>/, bodyTag));
+      doc.close();
+
+      // Ensure contenteditable attribute is set if enabled
+      if (doc.body && enableLiveEditCheckbox.checked) {
+        doc.body.setAttribute('contenteditable', 'true');
+        doc.body.style.minHeight = '100vh';
+      }
+
+      // Re-attach MutationObserver if live editing is enabled
+      setupLiveEditingObserver();
+
+      // Add event listeners for element selection if layout editing is enabled
+      setupLayoutEditing();
+    }
+
+    function toggleView(view) {
+      document.getElementById("editorBox").classList.toggle("active", view === "editor");
+      document.getElementById("previewBox").classList.toggle("active", view === "preview");
+
+      if (view === "editor") {
+        disconnectObserver();
+        hideSelectionOverlay();
+      } else {
+         setupLiveEditingObserver(); // Re-enable content editing observer
+         setupLayoutEditing(); // Re-enable layout editing listeners
+         liveEditTools.classList.add('active');
+         setTimeout(() => {
+             liveEditTools.classList.remove('active');
+         }, 1500);
+      }
+    }
+
+    // --- Live Editing (Content Edit) ---
+
+    function debounce(func, delay) {
+      return function(...args) {
+        clearTimeout(liveEditDebounceTimer);
+        liveEditDebounceTimer = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    const updateEditorFromPreview = debounce(() => {
+      const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+      let updatedHtml = doc.documentElement.outerHTML;
+
+      // Remove contenteditable attribute for saving to editor
+      updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/, '<body$1$2>');
+      updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/, '<body$1$2>'); // Handle no space case
+
+      if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
+        try {
+            updatedHtml = html_beautify(updatedHtml, { indent_size: 2, preserve_newlines: true });
+        } catch (e) {
+            console.error("Beautify error during live update:", e);
+        }
+      }
+      editor.setValue(updatedHtml);
+      localStorage.setItem('codeEditorContent', updatedHtml);
+      console.log('Live content changes saved to editor!');
+    }, 500);
+
+    function setupLiveEditingObserver() {
+      const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+      if (!doc || !doc.body) {
+        console.warn('Iframe document or body not ready for live editing setup.');
+        return;
+      }
+
+      // Disconnect existing observer if any
+      disconnectObserver();
+
+      if (enableLiveEditCheckbox.checked) {
+        doc.body.setAttribute('contenteditable', 'true'); // Ensure contenteditable is on
+        doc.body.style.minHeight = '100vh'; // Ensure body is tall enough
+
+        mutationObserver = new MutationObserver(mutations => {
+          if (mutations.some(m => m.target === doc.body || doc.body.contains(m.target))) {
+            updateEditorFromPreview();
+          }
+        });
+        mutationObserver.observe(doc.body, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          attributes: true
+        });
+        console.log('Live content editing observer started.');
+      } else {
+        doc.body.removeAttribute('contenteditable'); // Remove contenteditable
+      }
+    }
+
+    function disconnectObserver() {
+      if (mutationObserver) {
+        mutationObserver.disconnect();
+        mutationObserver = null;
+        console.log('Live content editing observer disconnected.');
+      }
+      clearTimeout(liveEditDebounceTimer);
+    }
+
+    enableLiveEditCheckbox.addEventListener('change', () => {
+      setupLiveEditingObserver();
+      // Re-render preview to apply/remove contenteditable based on checkbox
+      handleRun(); // This will re-render with the correct contenteditable state
+      liveEditTools.classList.add('active');
+    });
+
+    // --- Layout Editing Features ---
+
+    function setupLayoutEditing() {
+        const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+        if (!doc) return;
+
+        // Remove previous listeners to avoid duplicates
+        doc.removeEventListener('click', handleElementClick);
+        doc.removeEventListener('mousemove', handleMouseMove);
+        doc.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('mouseup', handleMouseUp); // Listen on window as well
+
+        if (enableLayoutEditCheckbox.checked) {
+            doc.addEventListener('click', handleElementClick);
+            doc.addEventListener('mousemove', handleMouseMove);
+            doc.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('mouseup', handleMouseUp); // If mouseup happens outside iframe
+            console.log('Layout editing enabled.');
+        } else {
+            hideSelectionOverlay();
+            selectedElementInIframe = null;
+            console.log('Layout editing disabled.');
+        }
+    }
+
+    enableLayoutEditCheckbox.addEventListener('change', () => {
+        setupLayoutEditing();
+        hideSelectionOverlay(); // Clear any previous selection
+        liveEditTools.classList.add('active');
+    });
+
+    function handleElementClick(event) {
+        if (!enableLayoutEditCheckbox.checked) return;
+
+        event.preventDefault(); // Prevent default link clicks etc.
+        event.stopPropagation(); // Stop event from bubbling up to parent
+
+        const target = event.target;
+        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === previewIframe.contentDocument) {
+            hideSelectionOverlay();
+            selectedElementInIframe = null;
+            return;
+        }
+
+        selectedElementInIframe = target;
+        updateSelectionOverlay();
+    }
+
+    function updateSelectionOverlay() {
+        if (!selectedElementInIframe) {
+            hideSelectionOverlay();
+            return;
+        }
+
+        const rect = selectedElementInIframe.getBoundingClientRect();
+        const iframeRect = previewIframe.getBoundingClientRect();
+
+        // Position overlay relative to the iframe's position on the page
+        selectionOverlay.style.left = (iframeRect.left + rect.left) + 'px';
+        selectionOverlay.style.top = (iframeRect.top + rect.top) + 'px';
+        selectionOverlay.style.width = rect.width + 'px';
+        selectionOverlay.style.height = rect.height + 'px';
+        selectionOverlay.style.display = 'block';
+
+        // Position resizers relative to the overlay
+        resizers.forEach(resizer => {
+            resizer.style.display = 'block';
+            if (resizer.classList.contains('nw')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
+            if (resizer.classList.contains('n')) { resizer.style.left = (iframeRect.left + rect.left + rect.width / 2 - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
+            if (resizer.classList.contains('ne')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
+            if (resizer.classList.contains('e')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top + rect.height / 2 - 5) + 'px'; }
+            if (resizer.classList.contains('se')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
+            if (resizer.classList.contains('s')) { resizer.style.left = (iframeRect.left + rect.left + rect.width / 2 - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
+            if (resizer.classList.contains('sw')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
+            if (resizer.classList.contains('w')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top + rect.height / 2 - 5) + 'px'; }
+        });
+    }
+
+    function hideSelectionOverlay() {
+        selectionOverlay.style.display = 'none';
+        resizers.forEach(resizer => resizer.style.display = 'none');
+    }
+
+    resizers.forEach(resizer => {
+        resizer.addEventListener('mousedown', (e) => {
+            if (!selectedElementInIframe) return;
+
+            isResizing = true;
+            currentResizer = resizer;
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = selectedElementInIframe.offsetWidth;
+            startHeight = selectedElementInIframe.offsetHeight;
+            startLeft = selectedElementInIframe.offsetLeft;
+            startTop = selectedElementInIframe.offsetTop;
+
+            // Prevent text selection during drag
+            e.preventDefault();
+            e.stopPropagation();
+            document.body.style.userSelect = 'none'; // Prevent selection on host page
+        });
+    });
+
+    function handleMouseMove(e) {
+        if (!isResizing || !selectedElementInIframe) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let newWidth = startWidth;
+        let newHeight = startHeight;
+        let newLeft = startLeft;
+        let newTop = startTop;
+
+        if (currentResizer.classList.contains('e')) {
+            newWidth = startWidth + dx;
+        } else if (currentResizer.classList.contains('s')) {
+            newHeight = startHeight + dy;
+        } else if (currentResizer.classList.contains('w')) {
+            newWidth = startWidth - dx;
+            newLeft = startLeft + dx;
+        } else if (currentResizer.classList.contains('n')) {
+            newHeight = startHeight - dy;
+            newTop = startTop + dy;
+        } else if (currentResizer.classList.contains('se')) {
+            newWidth = startWidth + dx;
+            newHeight = startHeight + dy;
+        } else if (currentResizer.classList.contains('sw')) {
+            newWidth = startWidth - dx;
+            newHeight = startHeight + dy;
+            newLeft = startLeft + dx;
+        } else if (currentResizer.classList.contains('ne')) {
+            newWidth = startWidth + dx;
+            newHeight = startHeight - dy;
+            newTop = startTop + dy;
+        } else if (currentResizer.classList.contains('nw')) {
+            newWidth = startWidth - dx;
+            newHeight = startHeight - dy;
+            newLeft = startLeft + dx;
+            newTop = startTop + dy;
+        }
+
+        // Apply new dimensions (and position if applicable)
+        // Ensure minimum size
+        selectedElementInIframe.style.width = Math.max(50, newWidth) + 'px';
+        selectedElementInIframe.style.height = Math.max(50, newHeight) + 'px';
+        if (selectedElementInIframe.style.position === 'absolute' || selectedElementInIframe.style.position === 'relative') {
+            selectedElementInIframe.style.left = newLeft + 'px';
+            selectedElementInIframe.style.top = newTop + 'px';
+        }
+
+        updateSelectionOverlay(); // Update overlay position as element resizes
+    }
+
+    function handleMouseUp() {
+        if (isResizing) {
+            isResizing = false;
+            currentResizer = null;
+            document.body.style.userSelect = ''; // Re-enable selection
+
+            // Auto-save changes after resize
+            updateSourceCodeFromElementStyle(selectedElementInIframe);
+        }
+    }
+
+    // This is the most complex part: updating the source HTML string
+    // This is a simplified approach that will work for basic inline styles
+    function updateSourceCodeFromElementStyle(element) {
+        if (!element || !element.outerHTML) return;
+
+        const currentEditorContent = editor.getValue();
+        const originalOuterHTML = element.originalOuterHTML || ''; // Store original to find in string
+        const updatedOuterHTML = element.outerHTML;
+
+        // Try to find and replace the element's HTML in the editor's string content
+        // This is highly prone to errors if the HTML is complex or has changed much.
+        // A robust solution would involve an HTML parser/serializer.
+        let newContent = currentEditorContent;
+
+        // A very basic and fragile regex-based replacement.
+        // This won't handle multiple identical tags, or tags with changing attributes.
+        // It assumes the original outerHTML exists in the editor content.
+        // For production, you'd need a DOM manipulation library for strings.
+        const originalTagName = element.tagName.toLowerCase();
+        const currentStyle = element.getAttribute('style') || '';
+        const id = element.id ? `id="${element.id}"` : '';
+        const classes = element.className ? `class="${element.className}"` : '';
+
+        // Build a more robust regex to find the specific element in the source.
+        // This is still not perfect and may fail with complex HTML.
+        // The ideal solution is to parse the HTML string into a manipulable AST/DOM-like object,
+        // update that object, then serialize it back to string.
+        const regex = new RegExp(`<${originalTagName}([^>]*)`, 'i');
+        const match = currentEditorContent.match(regex);
+
+        if (match && match[1] !== undefined) {
+             const attributesPart = match[1];
+             // Simple approach: find the first occurrence of the tag, and try to replace its style.
+             // This is crude and might break if attributes change.
+             let updatedAttributes = attributesPart;
+             if (attributesPart.includes('style=')) {
+                 updatedAttributes = attributesPart.replace(/style="[^"]*"/, `style="${currentStyle}"`);
+             } else {
+                 updatedAttributes += ` style="${currentStyle}"`;
+             }
+             newContent = currentEditorContent.replace(match[0], `<${originalTagName}${updatedAttributes}`);
+        } else {
+            console.warn("Could not find element in source code for style update. Update manually if needed.");
+        }
+
+
+        // Fallback for simplicity if regex is too complex
+        if (selectedElementInIframe.style.cssText) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = currentEditorContent;
+            const elementsInEditor = tempDiv.querySelectorAll(selectedElementInIframe.tagName.toLowerCase());
+
+            // This is a very rough heuristic to find the *corresponding* element in the editor's DOM
+            // based on its original position/index, which may not hold true if the user changed content
+            let foundMatch = false;
+            if (selectedElementInIframe.parentNode) {
+                const parentIndex = Array.from(selectedElementInIframe.parentNode.children).indexOf(selectedElementInIframe);
+                 if (parentIndex !== -1 && elementsInEditor[parentIndex]) {
+                    // Try to update its style attribute
+                    elementsInEditor[parentIndex].setAttribute('style', selectedElementInIframe.style.cssText);
+                    newContent = tempDiv.innerHTML;
+                    foundMatch = true;
+                }
+            }
+            if(!foundMatch) {
+                console.warn("Could not reliably find corresponding element in editor's HTML string. Consider manual update.");
+            }
+        }
+
+
+        if (typeof html_beautify === 'function') {
+            try {
+                newContent = html_beautify(newContent, { indent_size: 2, preserve_newlines: true });
+            } catch (e) {
+                console.error("Beautify error during source update:", e);
+            }
+        }
+
+        editor.setValue(newContent);
+        localStorage.setItem('codeEditorContent', newContent);
+        console.log('Layout changes saved to editor!');
+    }
+
+
+    function saveLiveChanges() {
+        if (enableLiveEditCheckbox.checked) {
+            updateEditorFromPreview(); // Save content changes
+        }
+        if (enableLayoutEditCheckbox.checked && selectedElementInIframe) {
+            updateSourceCodeFromElementStyle(selectedElementInIframe); // Save layout changes
+        }
+        alert('All live changes manually saved!');
+    }
+
+    // Event listener to save editor content
+    editor.on('change', () => {
+      localStorage.setItem('codeEditorContent', editor.getValue());
+    });
+
+    // Initial render of preview when the page loads (if content exists)
+    if (savedCode) {
+        renderPreview(savedCode);
+    }
+  </script>
+
+</body>
+</html>
