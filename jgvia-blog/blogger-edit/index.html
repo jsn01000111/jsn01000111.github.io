@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blogger XML Editor</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/eclipse.css">
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
@@ -75,7 +75,7 @@
   <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {
       mode: "application/xml",
-      theme: "dracula",
+      theme: "eclipse",
       lineNumbers: true,
       lineWrapping: true,
       extraKeys: {
