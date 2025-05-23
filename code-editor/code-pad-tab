@@ -1,0 +1,166 @@
+<!--
+Copyright © 2025 JSN01000111
+Licensed for educational and personal use only.
+-->
+
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Codepad Tabbed</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Consolas, monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .tabs {
+      display: flex;
+      background: #2d2d2d;
+      border-bottom: 1px solid #444;
+    }
+    .tab {
+      padding: 10px 15px;
+      cursor: pointer;
+      background: #2d2d2d;
+      border-right: 1px solid #444;
+      display: flex;
+      align-items: center;
+    }
+    .tab.active {
+      background: #1e1e1e;
+      font-weight: bold;
+    }
+    .tab:hover {
+      background: #3a3a3a;
+    }
+    #addTab {
+      background: #007acc;
+      color: white;
+      font-weight: bold;
+    }
+    .close-btn {
+      margin-left: 5px;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    #editorContainer {
+      flex: 1;
+      position: relative;
+    }
+    .CodeMirror {
+      height: 100%;
+    }
+    .mode-selector {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      font-size: 12px;
+      background: #444;
+      color: white;
+      border: none;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs" id="tabs">
+    <div class="tab active" ondblclick="renameTab(0)">Codepad Tab 1<span class="close-btn" onclick="closeTab(event, 0)"></span></div>
+    <div class="tab" id="addTab" onclick="addTab()">+</div>
+  </div>
+  <div id="editorContainer">
+    <textarea id="editor"></textarea>
+    <select id="modeSelector" class="mode-selector" onchange="changeMode(this.value)">
+      <option value="htmlmixed">HTML</option>
+      <option value="css">CSS</option>
+      <option value="javascript">JavaScript</option>
+      <option value="null">Plain Text</option>
+    </select>
+  </div>  <script>
+    const tabs = [{ content: '', mode: 'htmlmixed' }];
+    let activeTabIndex = 0;
+
+    const tabsContainer = document.getElementById('tabs');
+    const modeSelector = document.getElementById('modeSelector');
+    const editorInstance = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      lineNumbers: true,
+      mode: tabs[0].mode,
+      theme: "dracula",
+      lineWrapping: true,
+    });
+
+    editorInstance.on("change", () => {
+      tabs[activeTabIndex].content = editorInstance.getValue();
+    });
+
+    function switchTab(index) {
+      tabs[activeTabIndex].content = editorInstance.getValue();
+      activeTabIndex = index;
+      editorInstance.setValue(tabs[index].content);
+      editorInstance.setOption("mode", tabs[index].mode);
+      modeSelector.value = tabs[index].mode;
+      updateTabClasses();
+    }
+
+    function updateTabClasses() {
+      document.querySelectorAll('.tab').forEach((t, i) => {
+        t.classList.toggle('active', i === activeTabIndex);
+      });
+    }
+
+    function addTab() {
+      const index = tabs.length;
+      tabs.push({ content: '', mode: 'htmlmixed' });
+      const tab = document.createElement('div');
+      tab.className = 'tab';
+      tab.ondblclick = () => renameTab(index);
+      tab.onclick = () => switchTab(index);
+      tab.innerHTML = `Tab ${index + 1}<span class="close-btn" onclick="closeTab(event, ${index})">[x]</span>`;
+      tabsContainer.insertBefore(tab, document.getElementById('addTab'));
+      switchTab(index);
+    }
+
+    function renameTab(index) {
+      const newName = prompt("Rename Tab:", document.querySelectorAll('.tab')[index].textContent.replace('[x]', '').trim());
+      if (newName) {
+        document.querySelectorAll('.tab')[index].childNodes[0].nodeValue = newName;
+      }
+    }
+
+    function closeTab(event, index) {
+      event.stopPropagation();
+      if (tabs.length === 1) return;
+      tabs.splice(index, 1);
+      tabsContainer.removeChild(document.querySelectorAll('.tab')[index]);
+      if (activeTabIndex >= tabs.length) activeTabIndex = tabs.length - 1;
+      switchTab(activeTabIndex);
+      rebuildTabListeners();
+    }
+
+    function rebuildTabListeners() {
+      document.querySelectorAll('.tab').forEach((tab, index) => {
+        if (index === tabs.length) return;
+        tab.onclick = () => switchTab(index);
+        tab.ondblclick = () => renameTab(index);
+        const closeBtn = tab.querySelector('.close-btn');
+        if (closeBtn) closeBtn.setAttribute('onclick', `closeTab(event, ${index})`);
+      });
+    }
+
+    function changeMode(mode) {
+      tabs[activeTabIndex].mode = mode;
+      editorInstance.setOption("mode", mode);
+    }
+  </script></body>
+</html>
