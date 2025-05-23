@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JS Console Tester</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/monokai.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      background: #1f1f1f;
+      border-bottom: 1px solid #333;
+    }
+    .toolbar button {
+      background: #333;
+      border: none;
+      color: white;
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #editorContainer {
+      flex: 1;
+      height: 50%;
+    }
+    #console {
+      flex: 1;
+      background: #1a1a1a;
+      padding: 1rem;
+      overflow-y: auto;
+      font-size: 14px;
+      border-top: 1px solid #333;
+    }
+    .log { color: #fff; }
+    .error { color: red; }
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+   <script src="https://unpkg.com/esprima@4.0.1/dist/esprima.min.js"></script>
+
+  <div class="toolbar">
+    <div>
+      <button onclick="runCode()">Run</button>
+      <button onclick="copyCode()">Copy</button>
+    </div>
+    <button onclick="clearConsole()">Clear</button>
+  </div>
+
+  <div id="editorContainer">
+    <textarea id="code">// Type JavaScript code here</textarea>
+  </div>
+  <div id="console"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/4.0.1/esprima.min.js"></script>
+
+  <script>
+    const consoleBox = document.getElementById("console");
+
+    const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      mode: "javascript",
+      theme: "monokai",
+      lineNumbers: true
+    });
+
+    function runCode() {
+      const code = editor.getValue();
+      consoleBox.innerHTML += `<div class="log">> ${code}</div>`;
+      try {
+        esprima.parseScript(code); // Validate syntax
+        const result = new Function(code)();
+        if (result !== undefined) {
+          consoleBox.innerHTML += `<div class="log">${result}</div>`;
+        }
+      } catch (err) {
+        consoleBox.innerHTML += `<div class="error">Error: ${err.message}</div>`;
+      }
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+
+    function copyCode() {
+      navigator.clipboard.writeText(editor.getValue());
+      alert("Code copied!");
+    }
+
+    function clearConsole() {
+      consoleBox.innerHTML = "";
+    }
+  </script>
+
+</body>
+</html>
