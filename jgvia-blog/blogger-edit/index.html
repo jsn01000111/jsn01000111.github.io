@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blogger XML Editor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background: #1e1e1e;
+      color: white;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0.5rem;
+      background: #2d2d2d;
+      gap: 0.5rem;
+    }
+
+    .toolbar button, .toolbar label {
+      background: #444;
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .toolbar input[type="file"] {
+      display: none;
+    }
+
+    #editorContainer {
+      height: 85vh;
+    }
+
+    .CodeMirror {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <label for="uploadFile">Upload XML</label>
+    <input type="file" id="uploadFile" accept=".xml" />
+    <button onclick="downloadXML()">Download</button>    
+    <button onclick="openSearch()">Search</button>
+    <button onclick="copyToClipboard()">Copy</button>
+  </div>
+
+  <div id="editorContainer">
+    <textarea id="templateEditor"></textarea>
+  </div>
+
+  <!-- CodeMirror Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css"/>
+
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {
+      mode: "application/xml",
+      theme: "dracula",
+      lineNumbers: true,
+      lineWrapping: true,
+      extraKeys: {
+        "Ctrl-F": "findPersistent",
+        "Cmd-F": "findPersistent"
+      }
+    });
+
+    document.getElementById("uploadFile").addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          editor.setValue(e.target.result);
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    function downloadXML() {
+      const blob = new Blob([editor.getValue()], { type: "text/xml" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "blogger-template.xml";
+      a.click();
+    }
+
+    function beautifyXML() {
+      try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(editor.getValue(), "text/xml");
+        const xmlStr = new XMLSerializer().serializeToString(xmlDoc);
+        editor.setValue(xmlStr);
+      } catch (e) {
+        alert("Invalid XML format");
+      }
+    }
+
+    function openSearch() {
+      editor.execCommand("findPersistent");
+    }
+
+    function copyToClipboard() {
+      const text = editor.getValue();
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      }).catch(err => {
+        alert("Copy failed.");
+      });
+    }
+  </script>
+</body>
+</html>
