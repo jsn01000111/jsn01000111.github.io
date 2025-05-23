@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Text Code Editor</title>
@@ -7,51 +8,44 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
   <style>
-    * { box-sizing: border-box; }
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: sans-serif;
       background: #1e1e1e;
+      font-family: sans-serif;
       color: white;
     }
-    select {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      background: #333;
-      color: white;
-      border: none;
-      border-bottom: 1px solid #444;
-    }
+
     .editor-container, .preview-container {
       display: none;
       flex-direction: column;
       height: calc(100vh - 50px);
     }
-    .editor-container.active, .preview-container.active {
+
+    .editor-container.active,
+    .preview-container.active {
       display: flex;
     }
-    .editor-wrapper { flex: 1; overflow: auto; }
+
+    .editor-wrapper, .css-editor-wrapper {
+      flex: 1;
+      overflow: auto;
+    }
+
     .CodeMirror {
       height: 100%;
       font-size: 14px;
-      -webkit-overflow-scrolling: touch;
     }
-    .CodeMirror-scroll { overflow: auto !important; }
+
     .button-bar {
       display: flex;
-      position: sticky;
-      bottom: 0;
       background: #1e1e1e;
-      z-index: 999;
     }
+
     button {
       flex: 1;
       padding: 14px;
@@ -59,25 +53,28 @@
       background: #444;
       color: white;
       border: none;
-      border-top: 1px solid #555;
     }
+
     iframe {
       flex: 1;
       width: 100%;
       border: none;
       background: white;
     }
+
     .output-title {
       text-align: center;
       padding: 10px;
       background: #222;
     }
+
     .watermark {
       text-align: center;
       font-size: 11px;
       color: #999;
       padding: 6px;
     }
+
     .editing-mode-msg {
       text-align: center;
       background: yellow;
@@ -86,31 +83,41 @@
       font-weight: bold;
       display: none;
     }
+
     .css-editor-panel {
-      position: absolute;
-      background: white;
-      color: black;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      font-size: 14px;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      background: #111;
       z-index: 9999;
       display: none;
+      flex-direction: column;
     }
-    .css-editor-panel input {
-      width: 100%;
-      margin-bottom: 6px;
+
+    .css-editor-panel h3 {
+      margin: 0;
+      padding: 10px;
+      background: #222;
+      color: #0f0;
+      text-align: center;
+    }
+
+    .css-editor-wrapper .CodeMirror {
+      height: 100%;
     }
   </style>
 </head>
 <body>
+
   <select onchange="changeMode(this.value)">
     <option value="htmlmixed">HTML</option>
     <option value="css">CSS</option>
-    <option value="javascript">JavaScript</option>
-    <option value="null">Plain Text</option>
   </select>
-  <div class="editing-mode-msg" id="editMsg">Element edit mode is active!</div>
+
+  <div class="editing-mode-msg" id="editMsg">Edit mode active – tap background to edit CSS</div>
+
   <div class="editor-container active" id="editorBox">
     <div class="editor-wrapper">
       <textarea id="editor"></textarea>
@@ -119,6 +126,7 @@
       <button onclick="handleRun()">Run Code</button>
     </div>
   </div>
+
   <div class="preview-container" id="previewBox">
     <div class="output-title">Live Output</div>
     <iframe id="preview"></iframe>
@@ -127,104 +135,127 @@
       <button onclick="toggleView('editor')">Back to Editor</button>
     </div>
   </div>
-  <div class="css-editor-panel" id="cssEditor"></div>
+
+  <!-- CSS Editor Panel -->
+  <div class="css-editor-panel" id="cssEditorPanel">
+    <h3>CSS Editor</h3>
+    <div class="css-editor-wrapper">
+      <textarea id="cssEditor"></textarea>
+    </div>
+  </div>
+
   <script>
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       lineNumbers: true,
       mode: "htmlmixed",
       theme: "dracula",
-      lineWrapping: false,
       viewportMargin: Infinity
-    });function changeMode(mode) {
-  editor.setOption("mode", mode);
-}
-
-function handleRun() {
-  const code = editor.getValue();
-  const formatted = html_beautify(code, { indent_size: 2 });
-  editor.setValue(formatted);
-  runCode(formatted);
-  toggleView("preview");
-}
-
-function runCode(code) {
-  const iframe = document.getElementById("preview");
-  const doc = iframe.contentDocument || iframe.contentWindow.document;
-  doc.open();
-  doc.write(code);
-  doc.close();
-  setTimeout(setupEditableMode, 500);
-}
-
-function toggleView(view) {
-  document.getElementById("editorBox").classList.toggle("active", view === "editor");
-  document.getElementById("previewBox").classList.toggle("active", view === "preview");
-}
-
-let editingMode = false;
-
-function activateEditingMode() {
-  editingMode = true;
-  document.getElementById("editMsg").style.display = "block";
-}
-
-function setupEditableMode() {
-  const iframe = document.getElementById("preview");
-  const doc = iframe.contentDocument || iframe.contentWindow.document;
-  const cssEditor = document.getElementById("cssEditor");
-  cssEditor.style.display = "none";
-
-  doc.querySelectorAll("*").forEach(el => {
-    el.addEventListener("click", e => {
-      if (!editingMode) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.target === doc.body) {
-        cssEditor.innerHTML = "";
-        const styles = doc.body.style;
-        for (let i = 0; i < styles.length; i++) {
-          const key = styles[i];
-          const val = styles.getPropertyValue(key);
-          cssEditor.innerHTML += `<label>${key}<input value="${val}" data-key="${key}" /></label>`;
-        }
-        cssEditor.style.top = "20px";
-        cssEditor.style.left = "20px";
-        cssEditor.style.display = "block";
-        cssEditor.querySelectorAll("input").forEach(input => {
-          input.addEventListener("input", () => {
-            doc.body.style[input.dataset.key] = input.value;
-          });
-        });
-        return;
-      }
-      const tag = el.tagName.toLowerCase();
-      const currentHTML = el.outerHTML;
-      const newHTML = prompt("Edit HTML:", currentHTML);
-      if (newHTML && newHTML !== currentHTML) {
-        el.outerHTML = newHTML;
-        const updatedDoc = doc.documentElement.outerHTML;
-        editor.setValue(html_beautify(updatedDoc));
-      }
     });
-  });
-}
 
-document.addEventListener("keydown", function(e) {
-  if (e.key === "s") activateEditingMode();
-});
+    const cssEditor = CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
+      lineNumbers: true,
+      mode: "css",
+      theme: "dracula"
+    });
 
-if ("DeviceMotionEvent" in window) {
-  let lastShake = 0;
-  window.addEventListener("devicemotion", function(e) {
-    const acc = e.accelerationIncludingGravity;
-    const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
-    if (total > 25 && Date.now() - lastShake > 2000) {
-      lastShake = Date.now();
-      activateEditingMode();
+    function changeMode(mode) {
+      editor.setOption("mode", mode);
     }
-  });
-}
 
+    function handleRun() {
+      const code = html_beautify(editor.getValue(), { indent_size: 2 });
+      editor.setValue(code);
+      runCode(code);
+      toggleView("preview");
+    }
+
+    function runCode(code) {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+      setTimeout(setupEditableMode, 300);
+    }
+
+    function toggleView(view) {
+      document.getElementById("editorBox").classList.toggle("active", view === "editor");
+      document.getElementById("previewBox").classList.toggle("active", view === "preview");
+    }
+
+    let editingMode = false;
+
+    function activateEditingMode() {
+      editingMode = true;
+      document.getElementById("editMsg").style.display = "block";
+    }
+
+    function showCssEditor(cssText) {
+      const panel = document.getElementById("cssEditorPanel");
+      panel.style.display = "flex";
+      cssEditor.setValue(cssText);
+      cssEditor.focus();
+
+      cssEditor.on("change", () => {
+        const newCss = cssEditor.getValue();
+        const iframe = document.getElementById("preview");
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const styleTag = doc.querySelector("style") || doc.head.appendChild(doc.createElement("style"));
+        styleTag.innerHTML = newCss;
+        syncBackToCode();
+      });
+    }
+
+    function setupEditableMode() {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+      doc.body.addEventListener("click", function(e) {
+        if (!editingMode) return;
+        if (e.target === doc.body || e.target === doc.documentElement) {
+          const style = doc.querySelector("style");
+          showCssEditor(style ? style.textContent : '');
+        }
+      });
+
+      doc.querySelectorAll("*").forEach(el => {
+        el.addEventListener("click", e => {
+          if (!editingMode || el === doc.body) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const currentHTML = el.outerHTML;
+          const newHTML = prompt("Edit HTML:", currentHTML);
+          if (newHTML && newHTML !== currentHTML) {
+            el.outerHTML = newHTML;
+            syncBackToCode();
+          }
+        });
+      });
+    }
+
+    function syncBackToCode() {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      editor.setValue(html_beautify(doc.documentElement.outerHTML));
+    }
+
+    // Keyboard activation
+    document.addEventListener("keydown", e => {
+      if (e.key === "s") activateEditingMode();
+    });
+
+    // Shake activation
+    if ("DeviceMotionEvent" in window) {
+      let lastShake = 0;
+      window.addEventListener("devicemotion", e => {
+        const acc = e.accelerationIncludingGravity;
+        const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+        if (total > 30 && Date.now() - lastShake > 2000) {
+          lastShake = Date.now();
+          activateEditingMode();
+        }
+      });
+    }
   </script>
 </body>
-      </html>
+</html>
