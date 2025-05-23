@@ -8,44 +8,42 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #1e1e1e;
       font-family: sans-serif;
+      background: #1e1e1e;
       color: white;
     }
-
     .editor-container, .preview-container {
       display: none;
       flex-direction: column;
       height: calc(100vh - 50px);
     }
-
-    .editor-container.active,
-    .preview-container.active {
+    .editor-container.active, .preview-container.active {
       display: flex;
     }
-
-    .editor-wrapper, .css-editor-wrapper {
+    .editor-wrapper {
       flex: 1;
       overflow: auto;
     }
-
     .CodeMirror {
       height: 100%;
       font-size: 14px;
     }
-
     .button-bar {
       display: flex;
+      position: sticky;
+      bottom: 0;
       background: #1e1e1e;
+      z-index: 999;
     }
-
     button {
       flex: 1;
       padding: 14px;
@@ -54,27 +52,12 @@
       color: white;
       border: none;
     }
-
     iframe {
       flex: 1;
       width: 100%;
       border: none;
       background: white;
     }
-
-    .output-title {
-      text-align: center;
-      padding: 10px;
-      background: #222;
-    }
-
-    .watermark {
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      padding: 6px;
-    }
-
     .editing-mode-msg {
       text-align: center;
       background: yellow;
@@ -83,179 +66,135 @@
       font-weight: bold;
       display: none;
     }
-
-    .css-editor-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 50%;
-      height: 100%;
-      background: #111;
-      z-index: 9999;
-      display: none;
-      flex-direction: column;
-    }
-
-    .css-editor-panel h3 {
-      margin: 0;
-      padding: 10px;
-      background: #222;
-      color: #0f0;
-      text-align: center;
-    }
-
-    .css-editor-wrapper .CodeMirror {
-      height: 100%;
-    }
   </style>
 </head>
 <body>
-
-  <select onchange="changeMode(this.value)">
-    <option value="htmlmixed">HTML</option>
-    <option value="css">CSS</option>
-  </select>
-
-  <div class="editing-mode-msg" id="editMsg">Edit mode active – tap background to edit CSS</div>
-
-  <div class="editor-container active" id="editorBox">
-    <div class="editor-wrapper">
-      <textarea id="editor"></textarea>
-    </div>
-    <div class="button-bar">
-      <button onclick="handleRun()">Run Code</button>
-    </div>
+<select onchange="changeMode(this.value)">
+  <option value="htmlmixed">HTML</option>
+  <option value="css">CSS</option>
+  <option value="javascript">JavaScript</option>
+</select>
+<div class="editing-mode-msg" id="editMsg">Element edit mode is active!</div>
+<div class="editor-container active" id="editorBox">
+  <div class="editor-wrapper">
+    <textarea id="editor"></textarea>
   </div>
-
-  <div class="preview-container" id="previewBox">
-    <div class="output-title">Live Output</div>
-    <iframe id="preview"></iframe>
-    <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
-    <div class="button-bar">
-      <button onclick="toggleView('editor')">Back to Editor</button>
-    </div>
+  <div class="button-bar">
+    <button onclick="handleRun()">Run Code</button>
   </div>
-
-  <!-- CSS Editor Panel -->
-  <div class="css-editor-panel" id="cssEditorPanel">
-    <h3>CSS Editor</h3>
-    <div class="css-editor-wrapper">
-      <textarea id="cssEditor"></textarea>
-    </div>
+</div>
+<div class="preview-container" id="previewBox">
+  <iframe id="preview"></iframe>
+  <div class="button-bar">
+    <button onclick="toggleView('editor')">Back to Editor</button>
   </div>
+</div>
+<script>
+  const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "dracula",
+    viewportMargin: Infinity
+  });
 
-  <script>
-    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-      lineNumbers: true,
-      mode: "htmlmixed",
-      theme: "dracula",
-      viewportMargin: Infinity
-    });
+  let editingMode = false;
+  let lastCSS = "";
 
-    const cssEditor = CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
-      lineNumbers: true,
-      mode: "css",
-      theme: "dracula"
-    });
+  function changeMode(mode) {
+    editor.setOption("mode", mode);
+  }
 
-    function changeMode(mode) {
-      editor.setOption("mode", mode);
-    }
+  function handleRun() {
+    const code = editor.getValue();
+    const formatted = html_beautify(code, { indent_size: 2 });
+    editor.setValue(formatted);
+    runCode(formatted);
+    toggleView("preview");
+  }
 
-    function handleRun() {
-      const code = html_beautify(editor.getValue(), { indent_size: 2 });
-      editor.setValue(code);
-      runCode(code);
-      toggleView("preview");
-    }
+  function toggleView(view) {
+    document.getElementById("editorBox").classList.toggle("active", view === "editor");
+    document.getElementById("previewBox").classList.toggle("active", view === "preview");
+  }
 
-    function runCode(code) {
-      const iframe = document.getElementById("preview");
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(code);
-      doc.close();
-      setTimeout(setupEditableMode, 300);
-    }
+  function runCode(code) {
+    const iframe = document.getElementById("preview");
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(code);
+    doc.close();
+    setTimeout(() => setupEditableMode(doc), 500);
+  }
 
-    function toggleView(view) {
-      document.getElementById("editorBox").classList.toggle("active", view === "editor");
-      document.getElementById("previewBox").classList.toggle("active", view === "preview");
-    }
+  function activateEditingMode() {
+    editingMode = true;
+    document.getElementById("editMsg").style.display = "block";
+  }
 
-    let editingMode = false;
+  function saveEditedContent(doc) {
+    const newHTML = doc.documentElement.outerHTML;
+    editor.setValue(html_beautify(newHTML));
+  }
 
-    function activateEditingMode() {
-      editingMode = true;
-      document.getElementById("editMsg").style.display = "block";
-    }
-
-    function showCssEditor(cssText) {
-      const panel = document.getElementById("cssEditorPanel");
-      panel.style.display = "flex";
-      cssEditor.setValue(cssText);
-      cssEditor.focus();
-
-      cssEditor.on("change", () => {
-        const newCss = cssEditor.getValue();
-        const iframe = document.getElementById("preview");
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        const styleTag = doc.querySelector("style") || doc.head.appendChild(doc.createElement("style"));
-        styleTag.innerHTML = newCss;
-        syncBackToCode();
-      });
-    }
-
-    function setupEditableMode() {
-      const iframe = document.getElementById("preview");
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-
-      doc.body.addEventListener("click", function(e) {
-        if (!editingMode) return;
-        if (e.target === doc.body || e.target === doc.documentElement) {
-          const style = doc.querySelector("style");
-          showCssEditor(style ? style.textContent : '');
-        }
-      });
-
-      doc.querySelectorAll("*").forEach(el => {
-        el.addEventListener("click", e => {
-          if (!editingMode || el === doc.body) return;
-          e.preventDefault();
-          e.stopPropagation();
-          const currentHTML = el.outerHTML;
-          const newHTML = prompt("Edit HTML:", currentHTML);
-          if (newHTML && newHTML !== currentHTML) {
-            el.outerHTML = newHTML;
-            syncBackToCode();
+  function setupEditableMode(doc) {
+    if (!doc) return;
+    doc.body.addEventListener("click", function(e) {
+      if (!editingMode) return;
+      if (e.target === doc.body || e.target === doc.documentElement) {
+        const styles = doc.querySelector("style")?.innerText || "";
+        const newCSS = prompt("Edit page CSS:", styles);
+        if (newCSS != null) {
+          let styleTag = doc.querySelector("style");
+          if (!styleTag) {
+            styleTag = doc.createElement("style");
+            doc.head.appendChild(styleTag);
           }
-        });
-      });
-    }
-
-    function syncBackToCode() {
-      const iframe = document.getElementById("preview");
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      editor.setValue(html_beautify(doc.documentElement.outerHTML));
-    }
-
-    // Keyboard activation
-    document.addEventListener("keydown", e => {
-      if (e.key === "s") activateEditingMode();
+          styleTag.innerText = newCSS;
+          lastCSS = newCSS;
+        }
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      const html = e.target.outerHTML;
+      const updated = prompt("Edit HTML element:", html);
+      if (updated && updated !== html) {
+        e.target.outerHTML = updated;
+      }
     });
+  }
 
-    // Shake activation
-    if ("DeviceMotionEvent" in window) {
-      let lastShake = 0;
-      window.addEventListener("devicemotion", e => {
-        const acc = e.accelerationIncludingGravity;
-        const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
-        if (total > 30 && Date.now() - lastShake > 2000) {
-          lastShake = Date.now();
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "s") {
+      if (editingMode) {
+        const doc = document.getElementById("preview").contentDocument;
+        saveEditedContent(doc);
+        editingMode = false;
+        document.getElementById("editMsg").style.display = "none";
+      } else {
+        activateEditingMode();
+      }
+    }
+  });
+
+  if ("DeviceMotionEvent" in window) {
+    let lastShake = 0;
+    window.addEventListener("devicemotion", function(e) {
+      const acc = e.accelerationIncludingGravity;
+      const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+      if (total > 25 && Date.now() - lastShake > 1500) {
+        lastShake = Date.now();
+        if (editingMode) {
+          const doc = document.getElementById("preview").contentDocument;
+          saveEditedContent(doc);
+          editingMode = false;
+          document.getElementById("editMsg").style.display = "none";
+        } else {
           activateEditingMode();
         }
-      });
-    }
-  </script>
+      }
+    });
+  }
+</script>
 </body>
 </html>
