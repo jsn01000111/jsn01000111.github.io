@@ -146,10 +146,7 @@ console.info({ name: "Alice", age: 30 });
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/monokai.min.css"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/4.0.1/esprima.min.js"></script>
-
-  <script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/4.0.1/esprima.min.js"></script> <script>
     const consoleBox = document.getElementById("console");
     const executeOnEnterCheckbox = document.getElementById("executeOnEnter");
     const body = document.body;
@@ -206,7 +203,8 @@ console.info({ name: "Alice", age: 30 });
         try {
           return JSON.stringify(arg, null, 2); // Pretty print JSON
         } catch (e) {
-          return String(arg); // Fallback for circular references or other issues
+          // Handle circular references or other stringify errors gracefully
+          return `[Object] - ${String(arg)}`;
         }
       }
       return String(arg);
@@ -248,22 +246,28 @@ console.info({ name: "Alice", age: 30 });
       };
 
       try {
-        esprima.parseScript(code); // Validate syntax
+        // Syntax validation using Esprima
+        esprima.parseScript(code);
+        
         // Execute the code in an isolated scope
+        // Using `window.eval` can be an alternative, but `new Function` is generally cleaner
+        // and doesn't pollute the global scope as much, though still runs in current context.
         const result = new Function(code)();
+        
         if (result !== undefined) {
           // Display the return value of the executed script, if any
           const resultOutput = formatConsoleOutput(result);
           consoleBox.innerHTML += `<div class="log">Result: ${resultOutput}</div>`;
         }
       } catch (err) {
+        // Differentiate between syntax errors and runtime errors
         if (err.name === 'SyntaxError') {
           consoleBox.innerHTML += `<div class="error">Syntax Error: ${err.message}</div>`;
         } else {
           consoleBox.innerHTML += `<div class="error">Runtime Error: ${err.message}</div>`;
         }
       } finally {
-        // Restore original console methods
+        // Restore original console methods regardless of success or failure
         ['log', 'error', 'warn', 'info'].forEach(method => {
           console[method] = originalConsole[method];
         });
@@ -292,6 +296,10 @@ console.info({ name: "Alice", age: 30 });
         editor.setOption("theme", "monokai"); // Your preferred dark theme
       }
     }
+
+    // Initial theme setup (optional, to load a specific theme first)
+    // You could save/load the theme preference from localStorage too
+    // toggleTheme(); // Uncomment to start in light theme initially if desired
   </script>
 
 </body>
