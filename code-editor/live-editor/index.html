@@ -739,9 +739,10 @@
     htmlEditMode = true;
     cssEditMode = false;
     const doc = previewIframe.contentDocument;
-    doc.body.style.cursor = 'text';
-    doc.body.setAttribute('contenteditable', 'true');
-    alert("HTML Edit Mode enabled. Click into elements to change HTML.");
+    doc.body.style.cursor = 'pointer';
+    doc.body.removeAttribute('contenteditable');
+    doc.body.addEventListener("click", handleHTMLEditClick, true);
+    alert("HTML Edit Mode: Click an element to edit its HTML.");
   }
 
   function enableCSSEditMode() {
@@ -750,9 +751,8 @@
     const doc = previewIframe.contentDocument;
     doc.body.style.cursor = 'pointer';
     doc.body.removeAttribute('contenteditable');
-
     doc.body.addEventListener("click", handleCSSEditClick, true);
-    alert("CSS Edit Mode enabled. Click an element to edit its inline style.");
+    alert("CSS Edit Mode: Click an element to edit its style.");
   }
 
   function disablePreviewEditMode() {
@@ -760,9 +760,31 @@
     cssEditMode = false;
     const doc = previewIframe.contentDocument;
     doc.body.style.cursor = 'default';
-    doc.body.removeAttribute('contenteditable');
+    doc.body.removeEventListener("click", handleHTMLEditClick, true);
     doc.body.removeEventListener("click", handleCSSEditClick, true);
+    doc.body.removeAttribute('contenteditable');
     alert("Edit Mode disabled.");
+  }
+
+  function handleHTMLEditClick(e) {
+    if (!htmlEditMode) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const el = e.target;
+    const currentHTML = el.outerHTML;
+    const newHTML = prompt("Edit full HTML of this element:", currentHTML);
+    if (newHTML !== null && newHTML.trim()) {
+      const temp = document.createElement('div');
+      temp.innerHTML = newHTML;
+      if (temp.firstElementChild) {
+        el.replaceWith(temp.firstElementChild);
+        updateEditorFromPreview();
+      } else {
+        alert("Invalid HTML.");
+      }
+    }
   }
 
   function handleCSSEditClick(e) {
@@ -772,8 +794,8 @@
     e.stopPropagation();
 
     const el = e.target;
-    const styleNow = el.getAttribute("style") || "";
-    const newStyle = prompt("Edit inline CSS for this element:", styleNow);
+    const currentStyle = el.getAttribute("style") || getComputedStyle(el).cssText || "";
+    const newStyle = prompt("Edit inline CSS:", currentStyle);
     if (newStyle !== null) {
       el.setAttribute("style", newStyle);
       updateEditorFromPreview();
