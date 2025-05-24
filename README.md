@@ -22,6 +22,9 @@ I enjoy creating small tools and experimenting with HTML, CSS, and JavaScript.
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
+![AI](https://img.shields.io/badge/Exploring-AI_&_ChatGPT-6E57E0?style=flat&logo=openai&logoColor=white)
+![ChatGPT](https://img.shields.io/badge/Powered_by-ChatGPT-10a37f?style=flat&logo=openai&logoColor=white)
+![AI Projects](https://img.shields.io/badge/AI-Projects-blueviolet?style=flat)
 
 ---
 
