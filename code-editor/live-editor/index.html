@@ -728,6 +728,7 @@
 <div class="button-bar" id="previewEditTools">
   <button onclick="enableHTMLEditMode()">Edit HTML</button>
   <button onclick="enableCSSEditMode()">Edit CSS</button>
+  <button onclick="editStyleBlocks()">Edit Stylesheet</button>
   <button onclick="disablePreviewEditMode()">Exit Edit Mode</button>
 </div>
 
@@ -800,6 +801,33 @@
       el.setAttribute("style", newStyle);
       updateEditorFromPreview();
     }
+  }
+
+  function editStyleBlocks() {
+  const doc = previewIframe.contentDocument;
+  const styles = doc.querySelectorAll("head style");
+  if (!styles.length) {
+    alert("No <style> blocks found.");
+    return;
+  }
+
+  // Combine all <style> blocks
+  const combinedCSS = Array.from(styles).map(s => s.innerHTML).join("\n\n");
+
+  const editedCSS = prompt("Edit embedded CSS:", combinedCSS);
+  if (editedCSS !== null) {
+    // Remove existing styles
+    styles.forEach(s => s.remove());
+
+    // Inject new style block
+    const styleTag = doc.createElement("style");
+    styleTag.innerHTML = editedCSS;
+    doc.head.appendChild(styleTag);
+
+    // Update full preview HTML back to the editor
+    updateEditorFromPreview();
+    alert("Stylesheet updated.");
+  }
   }
 </script>
 
