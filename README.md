@@ -25,6 +25,7 @@ I enjoy creating small tools and experimenting with HTML, CSS, and JavaScript.
 ![AI](https://img.shields.io/badge/Exploring-AI_&_ChatGPT-6E57E0?style=flat&logo=openai&logoColor=white)
 ![ChatGPT](https://img.shields.io/badge/Powered_by-ChatGPT-10a37f?style=flat&logo=openai&logoColor=white)
 ![AI Projects](https://img.shields.io/badge/AI-Projects-blueviolet?style=flat)
+![Learning with Gemini](https://img.shields.io/badge/Learning_with-Gemini-34A853?style=flat&logo=google&logoColor=white)
 
 ---
 
