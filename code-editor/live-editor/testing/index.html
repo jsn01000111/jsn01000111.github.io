@@ -40,23 +40,22 @@
       border-bottom: 1px solid #444;
     }
 
-    /* New container for editor and preview to manage active state */
     .content-area {
       display: flex;
-      flex: 1; /* Allows it to fill remaining height */
-      flex-direction: column; /* Stacks editor/preview vertically on small screens */
+      flex: 1;
+      flex-direction: column;
     }
 
     .editor-container,
     .preview-container {
-      display: none; /* Hidden by default */
+      display: none;
       flex-direction: column;
       flex: 1;
     }
 
     .editor-container.active,
     .preview-container.active {
-      display: flex; /* Show when active */
+      display: flex;
     }
 
     .editor-wrapper {
@@ -119,7 +118,7 @@
 
     /* Styles for the live edit tools */
     .live-edit-tools {
-      position: absolute; /* Changed from top:0 to relative positioning within preview-container */
+      position: absolute;
       top: 0;
       left: 0;
       right: 0;
@@ -164,18 +163,18 @@
     }
 
     #previewBox {
-        position: relative; /* Essential for positioning children absolutely */
-        overflow: hidden; /* Important for placing overlays */
-        display: flex; /* Make it a flex container */
-        flex-direction: column; /* Stack iframe, watermark, and buttons vertically */
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Styles for element selection overlay and resizers */
     #selectionOverlay {
         position: absolute;
         border: 2px dashed #007bff;
-        pointer-events: none; /* Allows clicks to pass through */
-        z-index: 9; /* Below live-edit-tools */
+        pointer-events: none;
+        z-index: 9;
         display: none;
     }
 
@@ -185,8 +184,8 @@
         background: #007bff;
         border: 1px solid white;
         position: absolute;
-        z-index: 11; /* Above selectionOverlay */
-        pointer-events: all; /* Allows interaction */
+        z-index: 11;
+        pointer-events: all;
         cursor: grab;
     }
     .resizer.nw { top: -5px; left: -5px; cursor: nwse-resize; }
@@ -227,37 +226,155 @@
       background: #555;
     }
 
-    /* Move "Back to Editor" button bar inside previewBox */
     #previewBox .button-bar {
-        position: static; /* No longer sticky to the body bottom */
-        margin-top: auto; /* Pushes the button bar to the bottom of the flex container */
+        position: static;
+        margin-top: auto;
     }
 
     @media (max-width: 768px) {
       body {
-        flex-direction: column; /* Stack vertically on small screens */
+        flex-direction: column;
       }
       .content-area {
         flex-direction: column;
       }
       .editor-container, .preview-container {
         width: 100%;
-        height: 50vh; /* Give half screen to each on smaller screens */
+        height: 50vh;
       }
       .editor-container.active, .preview-container.active {
-        height: 100%; /* When active, take full height of content-area */
+        height: 100%;
       }
     }
 
     @media (min-width: 769px) {
       .content-area {
-        flex-direction: row; /* Side-by-side on larger screens */
+        flex-direction: row;
       }
       .editor-container, .preview-container {
         width: 50%;
-        height: auto; /* Let flexbox manage height */
+        height: auto;
       }
     }
+
+    /* New Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: #282c34;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: translateY(0);
+    }
+
+    .modal-content h3 {
+      margin: 0;
+      color: #61dafb;
+    }
+
+    .modal-content textarea {
+      width: 100%;
+      height: 200px;
+      background: #1e1e1e;
+      color: #f8f8f2;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      resize: vertical;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .modal-buttons button.save {
+      background: #007bff;
+      color: white;
+    }
+    .modal-buttons button.save:hover {
+      background: #0056b3;
+    }
+
+    .modal-buttons button.cancel {
+      background: #6c757d;
+      color: white;
+    }
+    .modal-buttons button.cancel:hover {
+      background: #5a6268;
+    }
+
+    /* Small contextual tooltip/indicator */
+    #editTooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      cursor: pointer;
+      z-index: 99; /* Above selection overlay, below modal */
+      display: none;
+      white-space: nowrap;
+    }
+
+    #editTooltip button {
+      background: #007bff;
+      color: white;
+      padding: 3px 8px;
+      font-size: 0.75em;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+      flex: unset; /* Override button-bar flex property */
+    }
+    #editTooltip button:hover {
+        background: #0056b3;
+    }
+
   </style>
 </head>
 <body>
@@ -288,6 +405,9 @@
           <label>
               <input type="checkbox" id="enableLayoutEdit"> Enable Layout Edit
           </label>
+          <label>
+              <input type="checkbox" id="enableTapToEdit"> Enable Tap-to-Edit
+          </label>
           <button onclick="saveLiveChanges()">Save Changes</button>
       </div>
       <iframe id="preview"></iframe>
@@ -302,9 +422,20 @@
       <div class="resizer sw"></div>
       <div class="resizer w"></div>
 
-      <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
+      <div id="editTooltip"></div> <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
       <div class="button-bar">
         <button onclick="toggleView('editor')">Back to Editor</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="editModalOverlay">
+    <div class="modal-content">
+      <h3 id="modalTitle">Edit Element</h3>
+      <textarea id="modalEditor"></textarea>
+      <div class="modal-buttons">
+        <button class="save" onclick="saveModalChanges()">Save</button>
+        <button class="cancel" onclick="closeModal()">Cancel</button>
       </div>
     </div>
   </div>
@@ -321,12 +452,19 @@
     const previewIframe = document.getElementById("preview");
     const enableLiveEditCheckbox = document.getElementById("enableLiveEdit"); // For content editing
     const enableLayoutEditCheckbox = document.getElementById("enableLayoutEdit"); // For layout editing
+    const enableTapToEditCheckbox = document.getElementById("enableTapToEdit"); // New checkbox for tap-to-edit
     const liveEditTools = document.getElementById("liveEditTools");
     const selectionOverlay = document.getElementById('selectionOverlay');
     const resizers = document.querySelectorAll('.resizer');
 
+    const editModalOverlay = document.getElementById('editModalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalEditor = document.getElementById('modalEditor');
+    const editTooltip = document.getElementById('editTooltip');
+
     let mutationObserver = null;
     let liveEditDebounceTimer;
+    let tapToEditMode = 'none'; // 'none', 'html', 'css', 'js', 'all'
 
     let selectedElementInIframe = null; // Stores the currently selected element in the iframe
     let isResizing = false;
@@ -351,13 +489,22 @@
             border-radius: 5px;
             min-width: 50px;
             min-height: 50px;
-            /* Added position:relative for contained absolute children (like handles if not handled globally) */
+            position: relative; /* Added for layout editing */
+            display: block; /* Added for layout editing */
         }
         .another-box {
             background-color: #e0f7fa;
             border: 1px dashed #00bcd4;
             padding: 10px;
             margin-top: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -367,9 +514,11 @@
     <div class="resizable-box" style="width: 300px; height: 150px; background-color: lightyellow;">
         <p>This box can be resized when 'Layout Edit' is enabled.</p>
         <p>Try dragging the corners/edges.</p>
+        <button onclick="alert('Button clicked!')">Click Me</button>
     </div>
     <div class="another-box">
         <p>Another content area.</p>
+        <span id="testSpan" data-custom="value">This is a span.</span>
     </div>
     <p>Changes made here will auto-save back to the editor.</p>
 </body>
@@ -428,6 +577,9 @@
 
       // Add event listeners for element selection if layout editing is enabled
       setupLayoutEditing();
+
+      // Setup tap-to-edit listeners
+      setupTapToEdit();
     }
 
     function toggleView(view) {
@@ -437,9 +589,12 @@
       if (view === "editor") {
         disconnectObserver();
         hideSelectionOverlay();
+        hideEditTooltip();
+        disableTapToEdit(); // Ensure tap-to-edit is off when back in editor
       } else {
          setupLiveEditingObserver(); // Re-enable content editing observer
          setupLayoutEditing(); // Re-enable layout editing listeners
+         setupTapToEdit(); // Re-enable tap-to-edit listeners
          liveEditTools.classList.add('active');
          setTimeout(() => {
              liveEditTools.classList.remove('active');
@@ -450,9 +605,10 @@
     // --- Live Editing (Content Edit) ---
 
     function debounce(func, delay) {
+      let timer;
       return function(...args) {
-        clearTimeout(liveEditDebounceTimer);
-        liveEditDebounceTimer = setTimeout(() => func.apply(this, args), delay);
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), delay);
       };
     }
 
@@ -518,7 +674,6 @@
 
     enableLiveEditCheckbox.addEventListener('change', () => {
       setupLiveEditingObserver();
-      // Re-render preview to apply/remove contenteditable based on checkbox
       handleRun(); // This will re-render with the correct contenteditable state
       liveEditTools.classList.add('active');
     });
@@ -529,47 +684,27 @@
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc) return;
 
-        // Remove previous listeners to avoid duplicates
-        doc.removeEventListener('click', handleElementClick);
         doc.removeEventListener('mousemove', handleMouseMove);
         doc.removeEventListener('mouseup', handleMouseUp);
-        window.removeEventListener('mouseup', handleMouseUp); // Listen on window as well
+        window.removeEventListener('mouseup', handleMouseUp);
 
         if (enableLayoutEditCheckbox.checked) {
-            doc.addEventListener('click', handleElementClick);
             doc.addEventListener('mousemove', handleMouseMove);
             doc.addEventListener('mouseup', handleMouseUp);
-            window.addEventListener('mouseup', handleMouseUp); // If mouseup happens outside iframe
+            window.addEventListener('mouseup', handleMouseUp);
             console.log('Layout editing enabled.');
         } else {
             hideSelectionOverlay();
-            selectedElementInIframe = null;
+            // selectedElementInIframe = null; // Don't clear selectedElementInIframe as tap-to-edit might use it
             console.log('Layout editing disabled.');
         }
     }
 
     enableLayoutEditCheckbox.addEventListener('change', () => {
         setupLayoutEditing();
-        hideSelectionOverlay(); // Clear any previous selection
+        hideSelectionOverlay();
         liveEditTools.classList.add('active');
     });
-
-    function handleElementClick(event) {
-        if (!enableLayoutEditCheckbox.checked) return;
-
-        event.preventDefault(); // Prevent default link clicks etc.
-        event.stopPropagation(); // Stop event from bubbling up to parent
-
-        const target = event.target;
-        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === previewIframe.contentDocument) {
-            hideSelectionOverlay();
-            selectedElementInIframe = null;
-            return;
-        }
-
-        selectedElementInIframe = target;
-        updateSelectionOverlay();
-    }
 
     function updateSelectionOverlay() {
         if (!selectedElementInIframe) {
@@ -580,14 +715,12 @@
         const rect = selectedElementInIframe.getBoundingClientRect();
         const iframeRect = previewIframe.getBoundingClientRect();
 
-        // Position overlay relative to the iframe's position on the page
         selectionOverlay.style.left = (iframeRect.left + rect.left) + 'px';
         selectionOverlay.style.top = (iframeRect.top + rect.top) + 'px';
         selectionOverlay.style.width = rect.width + 'px';
         selectionOverlay.style.height = rect.height + 'px';
         selectionOverlay.style.display = 'block';
 
-        // Position resizers relative to the overlay
         resizers.forEach(resizer => {
             resizer.style.display = 'block';
             if (resizer.classList.contains('nw')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
@@ -619,10 +752,9 @@
             startLeft = selectedElementInIframe.offsetLeft;
             startTop = selectedElementInIframe.offsetTop;
 
-            // Prevent text selection during drag
             e.preventDefault();
             e.stopPropagation();
-            document.body.style.userSelect = 'none'; // Prevent selection on host page
+            document.body.style.userSelect = 'none';
         });
     });
 
@@ -665,121 +797,57 @@
             newTop = startTop + dy;
         }
 
-        // Apply new dimensions (and position if applicable)
-        // Ensure minimum size
         selectedElementInIframe.style.width = Math.max(50, newWidth) + 'px';
         selectedElementInIframe.style.height = Math.max(50, newHeight) + 'px';
-        if (selectedElementInIframe.style.position === 'absolute' || selectedElementInIframe.style.position === 'relative') {
+        // Only apply position if element is already positioned
+        const computedStyle = window.getComputedStyle(selectedElementInIframe);
+        if (computedStyle.position === 'absolute' || computedStyle.position === 'relative' || computedStyle.position === 'fixed') {
             selectedElementInIframe.style.left = newLeft + 'px';
             selectedElementInIframe.style.top = newTop + 'px';
         }
 
-        updateSelectionOverlay(); // Update overlay position as element resizes
+
+        updateSelectionOverlay();
     }
 
     function handleMouseUp() {
         if (isResizing) {
             isResizing = false;
             currentResizer = null;
-            document.body.style.userSelect = ''; // Re-enable selection
+            document.body.style.userSelect = '';
 
-            // Auto-save changes after resize
-            updateSourceCodeFromElementStyle(selectedElementInIframe);
+            updateSourceCodeFromElement(selectedElementInIframe);
         }
     }
 
-    // This is the most complex part: updating the source HTML string
-    // This is a simplified approach that will work for basic inline styles
-    function updateSourceCodeFromElementStyle(element) {
-        if (!element || !element.outerHTML) return;
+    function updateSourceCodeFromElement(element) {
+        if (!element) return;
 
-        const currentEditorContent = editor.getValue();
-        const originalOuterHTML = element.originalOuterHTML || ''; // Store original to find in string
-        const updatedOuterHTML = element.outerHTML;
+        const doc = previewIframe.contentDocument;
+        let updatedHtml = doc.documentElement.outerHTML;
 
-        // Try to find and replace the element's HTML in the editor's string content
-        // This is highly prone to errors if the HTML is complex or has changed much.
-        // A robust solution would involve an HTML parser/serializer.
-        let newContent = currentEditorContent;
+        // Remove contenteditable attribute for saving to editor
+        updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/, '<body$1$2>');
+        updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/, '<body$1$2>'); // Handle no space case
 
-        // A very basic and fragile regex-based replacement.
-        // This won't handle multiple identical tags, or tags with changing attributes.
-        // It assumes the original outerHTML exists in the editor content.
-        // For production, you'd need a DOM manipulation library for strings.
-        const originalTagName = element.tagName.toLowerCase();
-        const currentStyle = element.getAttribute('style') || '';
-        const id = element.id ? `id="${element.id}"` : '';
-        const classes = element.className ? `class="${element.className}"` : '';
-
-        // Build a more robust regex to find the specific element in the source.
-        // This is still not perfect and may fail with complex HTML.
-        // The ideal solution is to parse the HTML string into a manipulable AST/DOM-like object,
-        // update that object, then serialize it back to string.
-        const regex = new RegExp(`<${originalTagName}([^>]*)`, 'i');
-        const match = currentEditorContent.match(regex);
-
-        if (match && match[1] !== undefined) {
-             const attributesPart = match[1];
-             // Simple approach: find the first occurrence of the tag, and try to replace its style.
-             // This is crude and might break if attributes change.
-             let updatedAttributes = attributesPart;
-             if (attributesPart.includes('style=')) {
-                 updatedAttributes = attributesPart.replace(/style="[^"]*"/, `style="${currentStyle}"`);
-             } else {
-                 updatedAttributes += ` style="${currentStyle}"`;
-             }
-             newContent = currentEditorContent.replace(match[0], `<${originalTagName}${updatedAttributes}`);
-        } else {
-            console.warn("Could not find element in source code for style update. Update manually if needed.");
-        }
-
-
-        // Fallback for simplicity if regex is too complex
-        if (selectedElementInIframe.style.cssText) {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = currentEditorContent;
-            const elementsInEditor = tempDiv.querySelectorAll(selectedElementInIframe.tagName.toLowerCase());
-
-            // This is a very rough heuristic to find the *corresponding* element in the editor's DOM
-            // based on its original position/index, which may not hold true if the user changed content
-            let foundMatch = false;
-            if (selectedElementInIframe.parentNode) {
-                const parentIndex = Array.from(selectedElementInIframe.parentNode.children).indexOf(selectedElementInIframe);
-                 if (parentIndex !== -1 && elementsInEditor[parentIndex]) {
-                    // Try to update its style attribute
-                    elementsInEditor[parentIndex].setAttribute('style', selectedElementInIframe.style.cssText);
-                    newContent = tempDiv.innerHTML;
-                    foundMatch = true;
-                }
-            }
-            if(!foundMatch) {
-                console.warn("Could not reliably find corresponding element in editor's HTML string. Consider manual update.");
-            }
-        }
-
-
-        if (typeof html_beautify === 'function') {
+        if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
             try {
-                newContent = html_beautify(newContent, { indent_size: 2, preserve_newlines: true });
+                updatedHtml = html_beautify(updatedHtml, { indent_size: 2, preserve_newlines: true });
             } catch (e) {
                 console.error("Beautify error during source update:", e);
             }
         }
-
-        editor.setValue(newContent);
-        localStorage.setItem('codeEditorContent', newContent);
-        console.log('Layout changes saved to editor!');
+        editor.setValue(updatedHtml);
+        localStorage.setItem('codeEditorContent', updatedHtml);
+        console.log('Element changes saved to editor!');
     }
 
-
     function saveLiveChanges() {
-        if (enableLiveEditCheckbox.checked) {
-            updateEditorFromPreview(); // Save content changes
-        }
-        if (enableLayoutEditCheckbox.checked && selectedElementInIframe) {
-            updateSourceCodeFromElementStyle(selectedElementInIframe); // Save layout changes
-        }
-        alert('All live changes manually saved!');
+        // This button now primarily saves general content edits and layout edits
+        // More specific modal saves are handled by saveModalChanges()
+        updateEditorFromPreview(); // Save content changes
+        // Layout changes are saved on mouseup, so no need for specific save here
+        alert('All live changes (content & layout) manually saved!');
     }
 
     // Event listener to save editor content
@@ -791,158 +859,213 @@
     if (savedCode) {
         renderPreview(savedCode);
     }
-  </script>
 
-  <div class="button-bar" id="previewEditTools">
-  <button onclick="enableHTMLEditMode()">Edit HTML</button>
-  <button onclick="enableCSSEditMode()">Edit CSS</button>
-  <button onclick="editStyleBlocks()">Edit Stylesheet</button>
-  <button onclick="enableJSInspectMode()">Inspect JS</button>
-  <button onclick="disablePreviewEditMode()">Exit Edit Mode</button>
-</div>
+    // --- Modal Editor Logic ---
 
-<script>
-  let htmlEditMode = false;
-  let cssEditMode = false;
+    function openModal(type, element) {
+      selectedElementInIframe = element; // Store the element being edited
+      editModalOverlay.classList.add('active');
+      modalEditor.value = ''; // Clear previous content
 
-  function enableHTMLEditMode() {
-    htmlEditMode = true;
-    cssEditMode = false;
-    const doc = previewIframe.contentDocument;
-    doc.body.style.cursor = 'pointer';
-    doc.body.removeAttribute('contenteditable');
-    doc.body.addEventListener("click", handleHTMLEditClick, true);
-    alert("HTML Edit Mode: Click an element to edit its HTML.");
-  }
-
-  function enableCSSEditMode() {
-    htmlEditMode = false;
-    cssEditMode = true;
-    const doc = previewIframe.contentDocument;
-    doc.body.style.cursor = 'pointer';
-    doc.body.removeAttribute('contenteditable');
-    doc.body.addEventListener("click", handleCSSEditClick, true);
-    alert("CSS Edit Mode: Click an element to edit its style.");
-  }
-
-  function disablePreviewEditMode() {
-    htmlEditMode = false;
-    cssEditMode = false;
-    const doc = previewIframe.contentDocument;
-    doc.body.style.cursor = 'default';
-    doc.body.removeEventListener("click", handleHTMLEditClick, true);
-    doc.body.removeEventListener("click", handleCSSEditClick, true);
-    doc.body.removeAttribute('contenteditable');
-    alert("Edit Mode disabled.");
-  }
-
-  function handleHTMLEditClick(e) {
-    if (!htmlEditMode) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const el = e.target;
-    const currentHTML = el.outerHTML;
-    const newHTML = prompt("Edit full HTML of this element:", currentHTML);
-    if (newHTML !== null && newHTML.trim()) {
-      const temp = document.createElement('div');
-      temp.innerHTML = newHTML;
-      if (temp.firstElementChild) {
-        el.replaceWith(temp.firstElementChild);
-        updateEditorFromPreview();
-      } else {
-        alert("Invalid HTML.");
-      }
-    }
-  }
-
-  function handleCSSEditClick(e) {
-    if (!cssEditMode) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const el = e.target;
-    const currentStyle = el.getAttribute("style") || getComputedStyle(el).cssText || "";
-    const newStyle = prompt("Edit inline CSS:", currentStyle);
-    if (newStyle !== null) {
-      el.setAttribute("style", newStyle);
-      updateEditorFromPreview();
-    }
-  }
-
-  function editStyleBlocks() {
-  const doc = previewIframe.contentDocument;
-  const styles = doc.querySelectorAll("head style");
-  if (!styles.length) {
-    alert("No <style> blocks found.");
-    return;
-  }
-
-  // Combine all <style> blocks
-  const combinedCSS = Array.from(styles).map(s => s.innerHTML).join("\n\n");
-
-  const editedCSS = prompt("Edit embedded CSS:", combinedCSS);
-  if (editedCSS !== null) {
-    // Remove existing styles
-    styles.forEach(s => s.remove());
-
-    // Inject new style block
-    const styleTag = doc.createElement("style");
-    styleTag.innerHTML = editedCSS;
-    doc.head.appendChild(styleTag);
-
-    // Update full preview HTML back to the editor
-    updateEditorFromPreview();
-    alert("Stylesheet updated.");
-  }
-  }
-
-  let jsInspectMode = false;
-
-function enableJSInspectMode() {
-  jsInspectMode = true;
-  const doc = previewIframe.contentDocument;
-  doc.body.style.cursor = 'help';
-  doc.body.addEventListener("click", handleJSInspectClick, true);
-  alert("JS Inspect Mode: Click an element to inspect its JS-related properties.");
-}
-
-function disableJSInspectMode() {
-  jsInspectMode = false;
-  const doc = previewIframe.contentDocument;
-  doc.body.style.cursor = 'default';
-  doc.body.removeEventListener("click", handleJSInspectClick, true);
-}
-
-function handleJSInspectClick(e) {
-  if (!jsInspectMode) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const el = e.target;
-
-  const listeners = [];
-  for (const key in el) {
-    if (key.startsWith("on") && typeof el[key] === "function") {
-      listeners.push(`${key} = ${el[key].toString().split("\n")[0]}...`);
-    }
-  }
-
-  const summary = `
-Tag: ${el.tagName.toLowerCase()}
-ID: ${el.id || "(none)"}
-Class: ${el.className || "(none)"}
-Dataset: ${JSON.stringify(el.dataset)}
+      let content = '';
+      if (type === 'html') {
+        modalTitle.textContent = 'Edit HTML';
+        content = element.outerHTML;
+      } else if (type === 'css') {
+        modalTitle.textContent = 'Edit Inline CSS';
+        content = element.getAttribute('style') || '';
+      } else if (type === 'js') {
+        modalTitle.textContent = 'Inspect JavaScript Properties';
+        const listeners = [];
+        for (const key in element) {
+            if (key.startsWith("on") && typeof element[key] === "function") {
+                listeners.push(`${key} = ${element[key].toString().split("\n")[0]}...`);
+            }
+        }
+        content = `
+Tag: ${element.tagName.toLowerCase()}
+ID: ${element.id || "(none)"}
+Class: ${element.className || "(none)"}
+Dataset: ${JSON.stringify(element.dataset)}
 Event Listeners:
 ${listeners.length ? listeners.join("\n") : "(none)"}
 `;
+        modalEditor.readOnly = true; // Make JS inspection read-only
+      } else if (type === 'stylesheet') {
+        modalTitle.textContent = 'Edit Stylesheet (Head)';
+        const doc = previewIframe.contentDocument;
+        const styles = doc.querySelectorAll("head style");
+        content = Array.from(styles).map(s => s.innerHTML).join("\n\n");
+        modalEditor.readOnly = false;
+      }
 
-  alert(summary);
-  disableJSInspectMode(); // Auto-exit after one inspection
-}
+      modalEditor.value = content;
+    }
+
+    function closeModal() {
+      editModalOverlay.classList.remove('active');
+      selectedElementInIframe = null;
+      modalEditor.readOnly = false; // Reset to editable
+      hideEditTooltip(); // Hide tooltip when modal closes
+    }
+
+    function saveModalChanges() {
+      if (!selectedElementInIframe) return;
+
+      const editedContent = modalEditor.value;
+      const currentModalType = modalTitle.textContent;
+
+      if (currentModalType === 'Edit HTML') {
+        try {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = editedContent;
+          if (tempDiv.firstElementChild) {
+            selectedElementInIframe.replaceWith(tempDiv.firstElementChild);
+          } else {
+            alert("Invalid HTML provided. No changes saved.");
+            closeModal();
+            return;
+          }
+        } catch (e) {
+          alert("Error parsing HTML. No changes saved.");
+          console.error(e);
+          closeModal();
+          return;
+        }
+      } else if (currentModalType === 'Edit Inline CSS') {
+        selectedElementInIframe.setAttribute('style', editedContent);
+      } else if (currentModalType === 'Edit Stylesheet (Head)') {
+        const doc = previewIframe.contentDocument;
+        const styles = doc.querySelectorAll("head style");
+        styles.forEach(s => s.remove()); // Remove all existing style tags
+
+        const styleTag = doc.createElement("style");
+        styleTag.innerHTML = editedContent;
+        doc.head.appendChild(styleTag);
+      }
+
+      updateSourceCodeFromElement(selectedElementInIframe); // Update the main editor
+      closeModal();
+    }
+
+    // --- Tap-to-Edit Logic ---
+
+    function setupTapToEdit() {
+        const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+        if (!doc) return;
+
+        // Ensure we remove previous listeners to prevent duplicates
+        doc.removeEventListener('click', handlePreviewClickForTapToEdit, true); // Use capture phase
+
+        if (enableTapToEditCheckbox.checked) {
+            doc.addEventListener('click', handlePreviewClickForTapToEdit, true); // Use capture phase to intercept before iframe's own clicks
+            doc.body.style.cursor = 'crosshair'; // Indicate clickable mode
+            console.log('Tap-to-Edit enabled.');
+        } else {
+            disableTapToEdit();
+        }
+    }
+
+    function disableTapToEdit() {
+        const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+        if (doc) {
+            doc.removeEventListener('click', handlePreviewClickForTapToEdit, true);
+            doc.body.style.cursor = 'default';
+        }
+        hideEditTooltip();
+        console.log('Tap-to-Edit disabled.');
+    }
+
+
+    enableTapToEditCheckbox.addEventListener('change', () => {
+        setupTapToEdit();
+        hideEditTooltip();
+        liveEditTools.classList.add('active');
+    });
+
+    function handlePreviewClickForTapToEdit(e) {
+        if (!enableTapToEditCheckbox.checked) return;
+
+        // Prevent default actions only if a valid element is targeted and not a resizer
+        if (e.target && !e.target.classList.contains('resizer')) {
+             // Don't prevent click if it's contenteditable
+            if (e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const clickedElement = e.target;
+            selectedElementInIframe = clickedElement; // Set the selected element
+
+            const rect = clickedElement.getBoundingClientRect();
+            const iframeRect = previewIframe.getBoundingClientRect();
+
+            const tooltipX = iframeRect.left + rect.left + rect.width / 2;
+            const tooltipY = iframeRect.top + rect.top;
+
+            showEditTooltip(tooltipX, tooltipY, clickedElement);
+            updateSelectionOverlay(); // Show selection outline
+        }
+    }
+
+    function showEditTooltip(x, y, element) {
+        editTooltip.style.left = `${x}px`;
+        editTooltip.style.top = `${y - 35}px`; // Position above the element
+        editTooltip.innerHTML = `
+            <button onclick="openModal('html', selectedElementInIframe)">HTML</button>
+            <button onclick="openModal('css', selectedElementInIframe)">CSS</button>
+            <button onclick="openModal('js', selectedElementInIframe)">JS</button>
+            <button onclick="hideEditTooltip()">x</button>
+        `;
+        editTooltip.style.display = 'block';
+    }
+
+    function hideEditTooltip() {
+        editTooltip.style.display = 'none';
+        // Do not clear selectedElementInIframe here, as layout editing or modal might still use it
+    }
+
+    // Global click listener to hide tooltip if clicked outside (on the main page)
+    document.addEventListener('click', (event) => {
+        if (editTooltip.style.display === 'block' && !editModalOverlay.classList.contains('active')) {
+            const isClickInsideTooltip = editTooltip.contains(event.target);
+            const isClickInsidePreview = previewIframe.contains(event.target);
+            const isClickOnResizer = event.target.classList.contains('resizer');
+            if (!isClickInsideTooltip && !isClickInsidePreview && !isClickOnResizer) {
+                hideEditTooltip();
+                hideSelectionOverlay();
+                selectedElementInIframe = null; // Clear selection if clicked outside everything
+            }
+        }
+    });
+
+    // Make sure to hide tooltip/selection when iframe content is reloaded
+    previewIframe.onload = () => {
+        hideEditTooltip();
+        hideSelectionOverlay();
+        selectedElementInIframe = null;
+        // Re-attach event listeners to the new iframe document
+        setupLiveEditingObserver();
+        setupLayoutEditing();
+        setupTapToEdit();
+    };
+
+    // Initial setup when page loads
+    renderPreview(editor.getValue()); // To ensure all listeners are attached.
+  </script>
+
+  <div class="button-bar" id="previewEditTools">
+  <button onclick="editStyleBlocksGlobal()">Edit Stylesheet (Global)</button>
+  <button onclick="closeModal()">Close Modal</button> </div>
+
+<script>
+  // This function is moved here and renamed slightly to avoid conflict and make it global
+  function editStyleBlocksGlobal() {
+    openModal('stylesheet', null); // 'null' because it's not tied to a specific element
+  }
+
 </script>
 
 </body>
