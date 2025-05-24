@@ -116,9 +116,9 @@
       padding: 6px;
     }
 
-    /* Styles for the live edit tools */
+    /* Styles for the live edit tools (checkboxes) */
     .live-edit-tools {
-      position: absolute;
+      position: sticky; /* Make it sticky to the top of the preview */
       top: 0;
       left: 0;
       right: 0;
@@ -197,38 +197,31 @@
     .resizer.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
     .resizer.w { top: 50%; left: -5px; margin-top: -5px; cursor: ew-resize; }
 
-    #previewEditTools {
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 0.5rem;
-      display: flex;
-      justify-content: center;
-      background: #1e1e1e;
-      position: sticky;
-      bottom: 0;
-      z-index: 999;
-    }
-
-    #previewEditTools button {
-      flex: 1 1 45%;
-      min-width: 130px;
-      padding: 12px;
-      font-size: 15px;
-      background: #444;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    #previewEditTools button:hover {
-      background: #555;
-    }
-
+    /* Specific styling for preview button bars */
     #previewBox .button-bar {
-        position: static;
-        margin-top: auto;
+        position: static; /* Override the `position: sticky` on the general .button-bar */
+        margin-top: 0; /* Remove previous auto margin */
+        flex-wrap: wrap; /* Allow buttons to wrap */
+        justify-content: center; /* Center buttons */
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    #previewBox .button-bar button {
+        flex: 1 1 45%; /* Allow buttons to grow/shrink, with a base width */
+        min-width: 130px; /* Ensure a minimum width */
+        padding: 12px;
+        font-size: 15px;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    #previewBox .button-bar button:hover {
+      background: #555;
     }
 
     @media (max-width: 768px) {
@@ -425,7 +418,11 @@
       <div id="editTooltip"></div>
 
       <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
-      <div class="button-bar">
+
+      <div class="button-bar" id="previewSpecificButtons">
+        <button onclick="editStyleBlocksGlobal()">Edit Stylesheet (Global)</button>
+      </div>
+      <div class="button-bar" id="backToEditorBar">
         <button onclick="toggleView('editor')">Back to Editor</button>
       </div>
     </div>
@@ -847,12 +844,8 @@
 
 
     function saveLiveChanges() {
-        // This button now primarily saves general content edits and layout edits
-        // More specific modal saves are handled by saveModalChanges()
-        updateEditorFromPreview(); // Save content changes
-        // Layout changes are saved on mouseup, so no need for specific save here,
-        // but a full re-save of the iframe's HTML covers it.
-        updateSourceCodeFromElement(); // Ensure all iframe changes are reflected.
+        updateEditorFromPreview();
+        updateSourceCodeFromElement();
         alert('All live changes (content & layout) manually saved!');
     }
 
@@ -908,10 +901,10 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
 
     function closeModal() {
       editModalOverlay.classList.remove('active');
-      selectedElementInIframe = null; // Clear selected element after modal closes
-      modalEditor.readOnly = false; // Reset to editable
-      hideEditTooltip(); // Hide tooltip when modal closes
-      hideSelectionOverlay(); // Also hide selection overlay
+      selectedElementInIframe = null;
+      modalEditor.readOnly = false;
+      hideEditTooltip();
+      hideSelectionOverlay();
     }
 
     function saveModalChanges() {
@@ -941,7 +934,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
           closeModal();
           return;
         }
-        updateSourceCodeFromElement(); // Re-save entire iframe content
+        updateSourceCodeFromElement();
       } else if (currentModalType === 'Edit Inline CSS') {
         if (!selectedElementInIframe) {
             console.error("No element selected for CSS edit.");
@@ -949,17 +942,15 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
             return;
         }
         selectedElementInIframe.setAttribute('style', editedContent);
-        updateSourceCodeFromElement(); // Re-save entire iframe content
+        updateSourceCodeFromElement();
       } else if (currentModalType === 'Edit Stylesheet (Head)') {
-        // Remove all existing style tags
         const styles = doc.querySelectorAll("head style");
         styles.forEach(s => s.remove());
 
-        // Inject new style block
         const styleTag = doc.createElement("style");
         styleTag.innerHTML = editedContent;
         doc.head.appendChild(styleTag);
-        updateSourceCodeFromElement(); // Re-save entire iframe content
+        updateSourceCodeFromElement();
       } else if (currentModalType === 'Inspect JavaScript Properties') {
         // No saving for JS inspection, just close.
       }
@@ -973,7 +964,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc) return;
 
-        doc.removeEventListener('click', handlePreviewClickForTapToEdit, true); // Use capture phase
+        doc.removeEventListener('click', handlePreviewClickForTapToEdit, true);
 
         if (enableTapToEditCheckbox.checked) {
             doc.addEventListener('click', handlePreviewClickForTapToEdit, true);
@@ -1003,12 +994,10 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
     function handlePreviewClickForTapToEdit(e) {
         if (!enableTapToEditCheckbox.checked) return;
 
-        // Don't intercept clicks on resizers or if contenteditable is active
         if (e.target.classList.contains('resizer') || e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) {
             return;
         }
 
-        // Check if the click is on an element that is *inside* the iframe and not the body/html itself
         const target = e.target;
         if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === previewIframe.contentDocument) {
              hideEditTooltip();
@@ -1017,10 +1006,10 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
              return;
         }
 
-        e.preventDefault(); // Prevent default link clicks, button actions etc.
-        e.stopPropagation(); // Stop event from bubbling up to parent
+        e.preventDefault();
+        e.stopPropagation();
 
-        selectedElementInIframe = target; // Set the selected element
+        selectedElementInIframe = target;
 
         const rect = selectedElementInIframe.getBoundingClientRect();
         const iframeRect = previewIframe.getBoundingClientRect();
@@ -1029,7 +1018,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const tooltipY = iframeRect.top + rect.top;
 
         showEditTooltip(tooltipX, tooltipY, selectedElementInIframe);
-        updateSelectionOverlay(); // Show selection outline
+        updateSelectionOverlay();
     }
 
     function showEditTooltip(x, y, element) {
@@ -1046,13 +1035,9 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
 
     function hideEditTooltip() {
         editTooltip.style.display = 'none';
-        // Note: selectedElementInIframe is NOT cleared here, as the modal might still be open for it.
-        // It's cleared by closeModal() or when switching to editor view.
     }
 
-    // Global click listener to hide tooltip/selection if clicked outside (on the main page)
     document.addEventListener('click', (event) => {
-        // Only act if modal is NOT active AND tooltip is currently visible
         if (editModalOverlay.classList.contains('active') || editTooltip.style.display !== 'block') {
             return;
         }
@@ -1061,14 +1046,12 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const isClickInsidePreview = previewIframe.contains(event.target);
         const isClickOnResizer = event.target.classList.contains('resizer');
 
-        // Hide if click is outside tooltip, outside iframe, and not on a resizer
         if (!isClickInsideTooltip && !isClickInsidePreview && !isClickOnResizer) {
             hideEditTooltip();
             hideSelectionOverlay();
-            selectedElementInIframe = null; // Clear selection if clicked outside
+            selectedElementInIframe = null;
         }
     });
-
 
     previewIframe.onload = () => {
         hideEditTooltip();
@@ -1081,16 +1064,6 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
 
     renderPreview(editor.getValue());
   </script>
-
-<div class="button-bar" id="previewEditTools">
-  <button onclick="editStyleBlocksGlobal()">Edit Stylesheet (Global)</button>
-  <button onclick="closeModal()">Close Modal</button> </div>
-
-<script>
-  function editStyleBlocksGlobal() {
-    openModal('stylesheet', null);
-  }
-</script>
 
 </body>
 </html>
