@@ -574,10 +574,10 @@
       setupLiveEditingObserver();
 
       // Add event listeners for element selection if layout editing is enabled
-      setupLayoutEditing();
+      setupLayoutEditing(); // Re-call this to ensure listeners are re-attached on iframe re-render
 
       // Setup tap-to-edit listeners
-      setupTapToEdit();
+      setupTapToEdit(); // Re-call this to ensure listeners are re-attached on iframe re-render
     }
 
     function toggleView(view) {
@@ -683,14 +683,18 @@
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc) return;
 
-        doc.removeEventListener('mousemove', handleMouseMove);
-        doc.removeEventListener('mouseup', handleMouseUp);
-        window.removeEventListener('mouseup', handleMouseUp);
+        // Important: Remove old listeners first to prevent duplicates
+        doc.removeEventListener('mousemove', handleMouseMoveInIframe);
+        doc.removeEventListener('mouseup', handleMouseUpInIframe);
+        doc.removeEventListener('mousedown', handleMouseDownInIframe); // Add mousedown listener for selection
+        window.removeEventListener('mouseup', handleMouseUp); // Global mouseup for dragging outside iframe
 
+        // Re-attach listeners based on checkbox state
         if (enableLayoutEditCheckbox.checked) {
-            doc.addEventListener('mousemove', handleMouseMove);
-            doc.addEventListener('mouseup', handleMouseUp);
-            window.addEventListener('mouseup', handleMouseUp);
+            doc.addEventListener('mousemove', handleMouseMoveInIframe);
+            doc.addEventListener('mouseup', handleMouseUpInIframe);
+            doc.addEventListener('mousedown', handleMouseDownInIframe); // Listen for clicks within iframe
+            window.addEventListener('mouseup', handleMouseUp); // Global mouseup for drag release outside iframe
             console.log('Layout editing enabled.');
         } else {
             hideSelectionOverlay();
@@ -700,9 +704,35 @@
 
     enableLayoutEditCheckbox.addEventListener('change', () => {
         setupLayoutEditing();
-        hideSelectionOverlay();
+        hideSelectionOverlay(); // Always hide when toggling off
         liveEditTools.classList.add('active');
     });
+
+    // Handle initial selection for layout editing
+    function handleMouseDownInIframe(e) {
+        if (!enableLayoutEditCheckbox.checked) return;
+
+        // If clicking on a resizer, let the resizer's mousedown handle it
+        if (e.target.classList.contains('resizer')) return;
+
+        // Don't select iframe's body/html, or contenteditable areas
+        const target = e.target;
+        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target.isContentEditable || target.closest('[contenteditable="true"]')) {
+            hideSelectionOverlay();
+            selectedElementInIframe = null; // Clear selection if clicking on unselectable areas
+            return;
+        }
+
+        // Only select elements that are not the iframe body/html and are children of body
+        if (previewIframe.contentDocument.body.contains(target)) {
+            selectedElementInIframe = target;
+            updateSelectionOverlay();
+            e.stopPropagation(); // Prevent other handlers (like tap-to-edit) from acting
+        } else {
+            hideSelectionOverlay();
+            selectedElementInIframe = null;
+        }
+    }
 
     function updateSelectionOverlay() {
         if (!selectedElementInIframe) {
@@ -713,22 +743,24 @@
         const rect = selectedElementInIframe.getBoundingClientRect();
         const iframeRect = previewIframe.getBoundingClientRect();
 
+        // Position overlay relative to the main window
         selectionOverlay.style.left = (iframeRect.left + rect.left) + 'px';
         selectionOverlay.style.top = (iframeRect.top + rect.top) + 'px';
         selectionOverlay.style.width = rect.width + 'px';
         selectionOverlay.style.height = rect.height + 'px';
         selectionOverlay.style.display = 'block';
 
+        // Position resizers relative to the main window
         resizers.forEach(resizer => {
             resizer.style.display = 'block';
             if (resizer.classList.contains('nw')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
-            if (resizer.classList.contains('n')) { resizer.style.left = (iframeRect.left + rect.left + rect.width / 2 - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
-            if (resizer.classList.contains('ne')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
-            if (resizer.classList.contains('e')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top + rect.height / 2 - 5) + 'px'; }
-            if (resizer.classList.contains('se')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
-            if (resizer.classList.contains('s')) { resizer.style.left = (iframeRect.left + rect.left + rect.width / 2 - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
-            if (resizer.classList.contains('sw')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
-            if (resizer.classList.contains('w')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top + rect.height / 2 - 5) + 'px'; }
+            else if (resizer.classList.contains('n')) { resizer.style.left = (iframeRect.left + rect.left + rect.width / 2 - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
+            else if (resizer.classList.contains('ne')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top - 5) + 'px'; }
+            else if (resizer.classList.contains('e')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top + rect.height / 2 - 5) + 'px'; }
+            else if (resizer.classList.contains('se')) { resizer.style.left = (iframeRect.left + rect.right - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
+            else if (resizer.classList.contains('s')) { resizer.style.left = (iframeRect.left + rect.left + rect.width / 2 - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
+            else if (resizer.classList.contains('sw')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.bottom - 5) + 'px'; }
+            else if (resizer.classList.contains('w')) { resizer.style.left = (iframeRect.left + rect.left - 5) + 'px'; resizer.style.top = (iframeRect.top + rect.top + rect.height / 2 - 5) + 'px'; }
         });
     }
 
@@ -737,25 +769,40 @@
         resizers.forEach(resizer => resizer.style.display = 'none');
     }
 
+    // Attach mousedown listeners to resizers in the main document
     resizers.forEach(resizer => {
         resizer.addEventListener('mousedown', (e) => {
-            if (!selectedElementInIframe) return;
+            if (!selectedElementInIframe || !enableLayoutEditCheckbox.checked) return; // Ensure layout edit is enabled
 
             isResizing = true;
             currentResizer = resizer;
             startX = e.clientX;
             startY = e.clientY;
-            startWidth = selectedElementInIframe.offsetWidth;
-            startHeight = selectedElementInIframe.offsetHeight;
-            startLeft = selectedElementInIframe.offsetLeft;
-            startTop = selectedElementInIframe.offsetTop;
+
+            // Get initial dimensions relative to the iframe's content
+            const iframeContentWindow = previewIframe.contentWindow;
+            const computedStyle = iframeContentWindow.getComputedStyle(selectedElementInIframe);
+
+            // Use computed values for robust resizing
+            startWidth = parseFloat(computedStyle.width);
+            startHeight = parseFloat(computedStyle.height);
+            startLeft = parseFloat(computedStyle.left) || 0; // Default to 0 if not explicitly set
+            startTop = parseFloat(computedStyle.top) || 0;   // Default to 0 if not explicitly set
+
+            // Set initial position to relative if not already set, for left/top to work
+            if (computedStyle.position === 'static') {
+                selectedElementInIframe.style.position = 'relative';
+            }
 
             e.preventDefault();
             e.stopPropagation();
-            document.body.style.userSelect = 'none';
+            document.body.style.userSelect = 'none'; // Prevent text selection during resize
+            document.body.style.cursor = currentResizer.style.cursor; // Change cursor globally
         });
     });
 
+    // Move mousemove and mouseup listeners to be global on window, but only when resizing
+    // This allows dragging outside the iframe
     function handleMouseMove(e) {
         if (!isResizing || !selectedElementInIframe) return;
 
@@ -795,16 +842,18 @@
             newTop = startTop + dy;
         }
 
-        selectedElementInIframe.style.width = Math.max(50, newWidth) + 'px';
-        selectedElementInIframe.style.height = Math.max(50, newHeight) + 'px';
-        const computedStyle = window.getComputedStyle(selectedElementInIframe);
-        if (computedStyle.position === 'absolute' || computedStyle.position === 'relative' || computedStyle.position === 'fixed') {
+        // Apply styles
+        selectedElementInIframe.style.width = Math.max(10, newWidth) + 'px'; // Minimum size
+        selectedElementInIframe.style.height = Math.max(10, newHeight) + 'px';
+
+        // Only apply left/top if position is not static
+        const currentPosition = previewIframe.contentWindow.getComputedStyle(selectedElementInIframe).position;
+        if (currentPosition !== 'static') {
             selectedElementInIframe.style.left = newLeft + 'px';
             selectedElementInIframe.style.top = newTop + 'px';
         }
 
-
-        updateSelectionOverlay();
+        updateSelectionOverlay(); // Update overlay to follow the element
     }
 
     function handleMouseUp() {
@@ -812,13 +861,25 @@
             isResizing = false;
             currentResizer = null;
             document.body.style.userSelect = '';
+            document.body.style.cursor = 'default'; // Reset cursor
 
-            updateSourceCodeFromElement(); // Save entire iframe content
+            updateSourceCodeFromElement(); // Save entire iframe content with new inline styles
+            console.log('Element resized and saved.');
         }
     }
 
+    // Global mousemove for resizing (to allow dragging outside iframe)
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    // Dummy functions for iframe's own mousemove/mouseup (can be empty or removed if not needed)
+    // These were remnants that were causing issues. Resizing is handled globally.
+    function handleMouseMoveInIframe(e) { /* console.log('iframe mousemove'); */ }
+    function handleMouseUpInIframe(e) { /* console.log('iframe mouseup'); */ }
+
+
     // Function to update the main editor with the current iframe HTML
-    function updateSourceCodeFromElement(element = null) { // Made element optional
+    function updateSourceCodeFromElement(element = null) {
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc) {
             console.warn('Iframe document not ready for source code update.');
@@ -839,6 +900,8 @@
         }
         editor.setValue(updatedHtml);
         localStorage.setItem('codeEditorContent', updatedHtml);
+        // CodeMirror needs to be refreshed if its content has changed outside of its direct manipulation
+        editor.refresh(); // Crucial for reflecting large content changes
         console.log('Iframe content saved to editor!');
     }
 
@@ -893,7 +956,8 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         modalTitle.textContent = 'Edit Stylesheet (Head)';
         const doc = previewIframe.contentDocument;
         const styles = doc.querySelectorAll("head style");
-        content = Array.from(styles).map(s => s.innerHTML).join("\n\n");
+        // Combine all style blocks into one for editing
+        content = Array.from(styles).map(s => s.innerHTML).join("\n\n/* --- Separate Style Block --- */\n\n");
       }
 
       modalEditor.value = content;
@@ -919,7 +983,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
             return;
         }
         try {
-          const tempDiv = document.createElement('div');
+          const tempDiv = doc.createElement('div'); // Create temp div in iframe document
           tempDiv.innerHTML = editedContent;
           if (tempDiv.firstElementChild) {
             selectedElementInIframe.replaceWith(tempDiv.firstElementChild);
@@ -944,13 +1008,16 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         selectedElementInIframe.setAttribute('style', editedContent);
         updateSourceCodeFromElement();
       } else if (currentModalType === 'Edit Stylesheet (Head)') {
+        // Remove all existing style tags
         const styles = doc.querySelectorAll("head style");
         styles.forEach(s => s.remove());
 
+        // Inject new style block
         const styleTag = doc.createElement("style");
         styleTag.innerHTML = editedContent;
         doc.head.appendChild(styleTag);
-        updateSourceCodeFromElement();
+        updateSourceCodeFromElement(); // Crucial for reflecting changes in main editor
+        console.log('Stylesheet changes applied and saved to editor.');
       } else if (currentModalType === 'Inspect JavaScript Properties') {
         // No saving for JS inspection, just close.
       }
@@ -994,11 +1061,13 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
     function handlePreviewClickForTapToEdit(e) {
         if (!enableTapToEditCheckbox.checked) return;
 
+        // Don't intercept clicks on resizers or if contenteditable is active
         if (e.target.classList.contains('resizer') || e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) {
             return;
         }
 
         const target = e.target;
+        // Don't trigger for HTML or BODY tags directly, or the document itself
         if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === previewIframe.contentDocument) {
              hideEditTooltip();
              hideSelectionOverlay();
@@ -1037,31 +1106,38 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         editTooltip.style.display = 'none';
     }
 
+    // Global click listener to hide tooltip/selection if clicked outside (on the main page)
     document.addEventListener('click', (event) => {
+        // Only act if modal is NOT active AND tooltip is currently visible
         if (editModalOverlay.classList.contains('active') || editTooltip.style.display !== 'block') {
             return;
         }
 
         const isClickInsideTooltip = editTooltip.contains(event.target);
-        const isClickInsidePreview = previewIframe.contains(event.target);
+        const isClickInsidePreviewIframe = previewIframe.contains(event.target);
         const isClickOnResizer = event.target.classList.contains('resizer');
+        const isClickOnModal = editModalOverlay.contains(event.target); // Exclude modal clicks
 
-        if (!isClickInsideTooltip && !isClickInsidePreview && !isClickOnResizer) {
+        // Hide if click is outside tooltip, outside iframe, not on a resizer, and not on the modal
+        if (!isClickInsideTooltip && !isClickInsidePreviewIframe && !isClickOnResizer && !isClickOnModal) {
             hideEditTooltip();
             hideSelectionOverlay();
-            selectedElementInIframe = null;
+            selectedElementInIframe = null; // Clear selection if clicked outside
         }
     });
 
+
+    // Initial setup on iframe load or re-render
     previewIframe.onload = () => {
         hideEditTooltip();
         hideSelectionOverlay();
-        selectedElementInIframe = null;
-        setupLiveEditingObserver();
-        setupLayoutEditing();
-        setupTapToEdit();
+        selectedElementInIframe = null; // Clear any lingering selection on iframe reload
+        setupLiveEditingObserver(); // Re-attach content observer
+        setupLayoutEditing();       // Re-attach layout listeners
+        setupTapToEdit();           // Re-attach tap-to-edit listeners
     };
 
+    // Run initial preview
     renderPreview(editor.getValue());
   </script>
 
