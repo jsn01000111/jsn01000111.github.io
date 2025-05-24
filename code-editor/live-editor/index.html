@@ -191,6 +191,43 @@
     .resizer.s { bottom: -5px; left: 50%; margin-left: -5px; cursor: ns-resize; }
     .resizer.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
     .resizer.w { top: 50%; left: -5px; margin-top: -5px; cursor: ew-resize; }
+
+    #previewEditTools {
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  background: #1e1e1e;
+  position: sticky;
+  bottom: 0;
+  z-index: 999;
+}
+
+#previewEditTools button {
+  flex: 1 1 45%;
+  min-width: 130px;
+  padding: 12px;
+  font-size: 15px;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#previewEditTools button:hover {
+  background: #555;
+}
+
+@media (max-width: 480px) {
+  #previewEditTools button {
+    flex: 1 1 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
+}
   </style>
 </head>
 <body>
