@@ -1,0 +1,198 @@
+<!-- 
+Code Sandbox Tool by JSN01000111
+A custom HTML/CSS/JavaScript live editor and validator for educational and personal use.
+Combines CodeMirror, HTMLHint, CSSLint, and JSHint for real-time error detection.  
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Sandbox Tool</title>
+  <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.17/lib/codemirror.css">
+  <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.17/addon/lint/lint.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    h2, h3 {
+      margin: 10px 0 5px;
+    }
+
+    .editor-section {
+      margin-bottom: 15px;
+    }
+
+    textarea, .CodeMirror {
+      width: 100%;
+      height: 140px;
+      max-height: 50vh;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+
+    .results {
+      font-family: monospace;
+      white-space: pre-wrap;
+      padding: 10px;
+      margin-top: 5px;
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    button {
+      margin: 5px 0;
+      padding: 8px 16px;
+      font-size: 16px;
+      border: none;
+      background: #333;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d3d3d3;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      button {
+        width: 100%;
+        font-size: 1rem;
+      }
+
+      iframe {
+        height: 200px;
+      }
+
+      textarea, .CodeMirror {
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h2>HTML/CSS/JS Sandbox</h2>
+
+<div class="editor-section">
+  <h3>HTML</h3>
+  <textarea id="html">// HTML code here</textarea>
+  <button onclick="validateHTML()">Validate HTML</button>
+  <div id="htmlValidationResults" class="results"></div>
+</div>
+
+<div class="editor-section">
+  <h3>CSS</h3>
+  <textarea id="css">// CSS code here</textarea>
+</div>
+
+<div class="editor-section">
+  <h3>JavaScript</h3>
+  <textarea id="js">// JS code here</textarea>
+</div>
+
+<button onclick="runSandbox()">Run Code</button>
+<iframe id="preview"></iframe>
+
+<!-- CodeMirror and Linting -->
+<script src="https://unpkg.com/codemirror@5.65.17/lib/codemirror.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/mode/htmlmixed/htmlmixed.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/mode/javascript/javascript.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/mode/css/css.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/addon/lint/lint.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/addon/lint/javascript-lint.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/addon/lint/css-lint.js"></script>
+<script src="https://unpkg.com/codemirror@5.65.17/addon/lint/html-lint.js"></script>
+
+<!-- Linter engines -->
+<script src="https://unpkg.com/jshint@2.13.6/dist/jshint.js"></script>
+<script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/htmlhint/brackets-htmlhint@master/htmlhint/htmlhint.js"></script>
+<script>window.HTMLHint = HTMLHint;</script>
+
+<script>
+  const htmlEditor = CodeMirror.fromTextArea(document.getElementById("html"), {
+    mode: "htmlmixed",
+    lineNumbers: true,
+    gutters: ["CodeMirror-lint-markers"],
+    lint: true
+  });
+
+  const cssEditor = CodeMirror.fromTextArea(document.getElementById("css"), {
+    mode: "css",
+    lineNumbers: true,
+    gutters: ["CodeMirror-lint-markers"],
+    lint: true
+  });
+
+  const jsEditor = CodeMirror.fromTextArea(document.getElementById("js"), {
+    mode: "javascript",
+    lineNumbers: true,
+    gutters: ["CodeMirror-lint-markers"],
+    lint: true
+  });
+
+  function runSandbox() {
+    const html = htmlEditor.getValue();
+    const css = cssEditor.getValue();
+    const js = jsEditor.getValue();
+
+    const output = `
+<!DOCTYPE html>
+<html>
+<head><style>${css}</style></head>
+<body>
+${html}
+<script>${js.replace(/<\/script>/gi, "<\\/script>")}<\/script>
+</body>
+</html>`;
+    document.getElementById("preview").srcdoc = output;
+  }
+
+  function validateHTML() {
+    const html = htmlEditor.getValue();
+    const results = HTMLHint.verify(html);
+    const output = document.getElementById("htmlValidationResults");
+
+    output.innerHTML = "";
+
+    if (results.length === 0) {
+      output.innerHTML = '<span style="color:green;">No HTML errors found!</span>';
+    } else {
+      results.forEach(error => {
+        const div = document.createElement("div");
+        div.style.color = "red";
+        div.textContent = `Line ${error.line}, Col ${error.col}: ${error.message}`;
+        output.appendChild(div);
+      });
+    }
+  }
+
+  // Set initial code
+  htmlEditor.setValue(`<div class="box">\n  <h1>Hello World</h1>\n  <p>HTML Validator Demo<p>\n</div>`);
+  cssEditor.setValue(`.box { background: red; padding: 10px; `);
+  jsEditor.setValue(`console.log('JS loaded')`);
+</script>
+
+</body>
+</html>
