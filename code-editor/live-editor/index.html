@@ -5,6 +5,11 @@
   <title>Live Code Editor & Preview</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
+  <!--
+  Copyright © 2025 JSN01000111
+  Licensed for educational and personal use only.
+  -->
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
@@ -766,6 +771,7 @@
   <button onclick="enableHTMLEditMode()">Edit HTML</button>
   <button onclick="enableCSSEditMode()">Edit CSS</button>
   <button onclick="editStyleBlocks()">Edit Stylesheet</button>
+  <button onclick="enableJSInspectMode()">Inspect JS</button>
   <button onclick="disablePreviewEditMode()">Exit Edit Mode</button>
 </div>
 
@@ -866,6 +872,51 @@
     alert("Stylesheet updated.");
   }
   }
+
+  let jsInspectMode = false;
+
+function enableJSInspectMode() {
+  jsInspectMode = true;
+  const doc = previewIframe.contentDocument;
+  doc.body.style.cursor = 'help';
+  doc.body.addEventListener("click", handleJSInspectClick, true);
+  alert("JS Inspect Mode: Click an element to inspect its JS-related properties.");
+}
+
+function disableJSInspectMode() {
+  jsInspectMode = false;
+  const doc = previewIframe.contentDocument;
+  doc.body.style.cursor = 'default';
+  doc.body.removeEventListener("click", handleJSInspectClick, true);
+}
+
+function handleJSInspectClick(e) {
+  if (!jsInspectMode) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const el = e.target;
+
+  const listeners = [];
+  for (const key in el) {
+    if (key.startsWith("on") && typeof el[key] === "function") {
+      listeners.push(`${key} = ${el[key].toString().split("\n")[0]}...`);
+    }
+  }
+
+  const summary = `
+Tag: ${el.tagName.toLowerCase()}
+ID: ${el.id || "(none)"}
+Class: ${el.className || "(none)"}
+Dataset: ${JSON.stringify(el.dataset)}
+Event Listeners:
+${listeners.length ? listeners.join("\n") : "(none)"}
+`;
+
+  alert(summary);
+  disableJSInspectMode(); // Auto-exit after one inspection
+}
 </script>
 
 </body>
