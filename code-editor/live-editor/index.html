@@ -724,5 +724,62 @@
     }
   </script>
 
+  <!-- HTML/CSS Edit Buttons -->
+<div class="button-bar" id="previewEditTools">
+  <button onclick="enableHTMLEditMode()">Edit HTML</button>
+  <button onclick="enableCSSEditMode()">Edit CSS</button>
+  <button onclick="disablePreviewEditMode()">Exit Edit Mode</button>
+</div>
+
+<script>
+  let htmlEditMode = false;
+  let cssEditMode = false;
+
+  function enableHTMLEditMode() {
+    htmlEditMode = true;
+    cssEditMode = false;
+    const doc = previewIframe.contentDocument;
+    doc.body.style.cursor = 'text';
+    doc.body.setAttribute('contenteditable', 'true');
+    alert("HTML Edit Mode enabled. Click into elements to change HTML.");
+  }
+
+  function enableCSSEditMode() {
+    htmlEditMode = false;
+    cssEditMode = true;
+    const doc = previewIframe.contentDocument;
+    doc.body.style.cursor = 'pointer';
+    doc.body.removeAttribute('contenteditable');
+
+    doc.body.addEventListener("click", handleCSSEditClick, true);
+    alert("CSS Edit Mode enabled. Click an element to edit its inline style.");
+  }
+
+  function disablePreviewEditMode() {
+    htmlEditMode = false;
+    cssEditMode = false;
+    const doc = previewIframe.contentDocument;
+    doc.body.style.cursor = 'default';
+    doc.body.removeAttribute('contenteditable');
+    doc.body.removeEventListener("click", handleCSSEditClick, true);
+    alert("Edit Mode disabled.");
+  }
+
+  function handleCSSEditClick(e) {
+    if (!cssEditMode) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const el = e.target;
+    const styleNow = el.getAttribute("style") || "";
+    const newStyle = prompt("Edit inline CSS for this element:", styleNow);
+    if (newStyle !== null) {
+      el.setAttribute("style", newStyle);
+      updateEditorFromPreview();
+    }
+  }
+</script>
+
 </body>
 </html>
