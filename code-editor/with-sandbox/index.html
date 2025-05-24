@@ -2,224 +2,137 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Text Code Editor</title>
+  <title>Text Code Editor with Lint</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <!--
-  Copyright © 2025 JSN01000111
-  Licensed for educational and personal use only.
-  -->
-
-  <!-- CodeMirror & Beautify -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
-
-  <!-- Linter Scripts -->
-  <script src="https://cdn.jsdelivr.net/gh/htmlhint/HTMLHint@latest/dist/htmlhint.min.js"></script>
-  <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
-  <script src="https://unpkg.com/jshint@2.13.6/dist/jshint.js"></script>
-
   <style>
-    * {
-      box-sizing: border-box;
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      background: #1e1e1e; color: #fff; font-family: sans-serif;
     }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: sans-serif;
-      background: #1e1e1e;
-      color: white;
+    select, button {
+      width: 100%; padding: 12px; font-size: 16px;
+      background: #333; color: #fff; border: none;
     }
-
-    select {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      background: #333;
-      color: white;
-      border: none;
-      border-bottom: 1px solid #444;
-    }
-
-    .editor-container,
-    .preview-container {
-      display: none;
-      flex-direction: column;
-      height: calc(100vh - 50px);
-    }
-
-    .editor-container.active,
-    .preview-container.active {
-      display: flex;
-    }
-
-    .editor-wrapper {
-      flex: 1;
-      overflow: auto;
-    }
-
-    .CodeMirror {
-      height: 100%;
-      font-size: 14px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .CodeMirror-scroll {
-      overflow: auto !important;
-    }
-
-    .button-bar {
-      display: flex;
-      position: sticky;
-      bottom: 0;
-      background: #1e1e1e;
-      z-index: 999;
-    }
-
-    button {
-      flex: 1;
-      padding: 14px;
-      font-size: 16px;
-      background: #444;
-      color: white;
-      border: none;
-      border-top: 1px solid #555;
-    }
-
-    iframe {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: white;
-    }
-
-    .output-title {
-      text-align: center;
-      padding: 10px;
-      background: #222;
-    }
-
-    .watermark {
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      padding: 6px;
-    }
-
-    #lintResults {
-      font-size: 12px;
-      padding: 10px;
-      background: #222;
-      color: red;
-      overflow-y: auto;
-      max-height: 25vh;
-    }
-
-    @media (max-width: 768px) {
-      .button-bar button {
-        font-size: 14px;
-      }
-    }
+    .editor-container, .preview-container { display: none; flex-direction: column; height: calc(100vh - 50px); }
+    .editor-container.active, .preview-container.active { display: flex; }
+    .editor-wrapper { flex: 1; }
+    .CodeMirror { height: 100%; font-size: 14px; }
+    .button-bar { display: flex; background: #222; }
+    .button-bar button { flex: 1; border-top: 1px solid #555; }
+    iframe { flex: 1; width: 100%; border: none; background: white; }
+    .output-title, .watermark { text-align: center; padding: 8px; background: #222; font-size: 14px; }
+    .lint-results { padding: 10px; font-size: 13px; white-space: pre-wrap; background: #111; color: #faa; overflow-y: auto; max-height: 200px; }
   </style>
 </head>
 <body>
 
-  <select onchange="changeMode(this.value)">
-    <option value="htmlmixed">HTML</option>
-    <option value="css">CSS</option>
-    <option value="javascript">JavaScript</option>
-    <option value="null">Plain Text</option>
-  </select>
+<select onchange="changeMode(this.value)">
+  <option value="htmlmixed">HTML</option>
+  <option value="css">CSS</option>
+  <option value="javascript">JavaScript</option>
+  <option value="null">Plain Text</option>
+</select>
 
-  <!-- Editor -->
-  <div class="editor-container active" id="editorBox">
-    <div class="editor-wrapper">
-      <textarea id="editor"></textarea>
-    </div>
-    <div id="lintResults"></div>
-    <div class="button-bar">
-      <button onclick="handleRun()">Run Code</button>
-    </div>
+<div class="editor-container active" id="editorBox">
+  <div class="editor-wrapper">
+    <textarea id="editor"></textarea>
   </div>
-
-  <!-- Preview -->
-  <div class="preview-container" id="previewBox">
-    <div class="output-title">Live Output</div>
-    <iframe id="preview"></iframe>
-    <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
-    <div class="button-bar">
-      <button onclick="toggleView('editor')">Back to Editor</button>
-    </div>
+  <div id="lintResults" class="lint-results"></div>
+  <div class="button-bar">
+    <button onclick="handleRun()">Run Code</button>
   </div>
+</div>
 
-  <script>
-    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-      lineNumbers: true,
-      mode: "htmlmixed",
-      theme: "dracula",
-      lineWrapping: false,
-      viewportMargin: Infinity
-    });
+<div class="preview-container" id="previewBox">
+  <div class="output-title">Live Output</div>
+  <iframe id="preview"></iframe>
+  <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
+  <div class="button-bar">
+    <button onclick="toggleView('editor')">Back to Editor</button>
+  </div>
+</div>
 
-    function changeMode(mode) {
-      editor.setOption("mode", mode);
-    }
+<!-- CodeMirror & Lint Engines -->
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
 
-    function handleRun() {
-      const code = editor.getValue();
-      const formatted = html_beautify(code, { indent_size: 2 });
-      editor.setValue(formatted);
-      validateCode();
-      runCode(formatted);
-      toggleView("preview");
-    }
+<!-- Linters -->
+<script src="https://cdn.jsdelivr.net/npm/jshint@2.13.6/dist/jshint.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/csslint@1.0.5/dist/csslint.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/htmlhint/htmlhint@0.15.0/dist/htmlhint.min.js"></script>
 
-    function runCode(code) {
-      const iframe = document.getElementById("preview");
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(code);
-      doc.close();
-    }
+<script>
+  const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "dracula",
+    lineWrapping: false,
+    viewportMargin: Infinity
+  });
 
-    function toggleView(view) {
-      document.getElementById("editorBox").classList.toggle("active", view === "editor");
-      document.getElementById("previewBox").classList.toggle("active", view === "preview");
-    }
+  function changeMode(mode) {
+    editor.setOption("mode", mode);
+    editor.setValue(""); // Optional: clear when switching
+    document.getElementById("lintResults").innerHTML = "";
+  }
 
-    function validateCode() {
-      const code = editor.getValue();
-      const mode = editor.getOption("mode");
-      const output = document.getElementById("lintResults");
-      output.innerHTML = "";
-      let messages = [];
+  function handleRun() {
+    const mode = editor.getOption("mode");
+    const code = editor.getValue();
+    const output = document.getElementById("lintResults");
+    output.innerHTML = "";
 
-      if (mode === "htmlmixed") {
-        const results = HTMLHint.verify(code);
-        results.forEach(msg => messages.push(`HTML: Line ${msg.line}, Col ${msg.col}: ${msg.message}`));
-      } else if (mode === "css") {
-        const results = CSSLint.verify(code).messages;
-        results.forEach(msg => {
-          if (msg) messages.push(`CSS: Line ${msg.line}, Col ${msg.col}: ${msg.message}`);
-        });
-      } else if (mode === "javascript") {
-        JSHINT(code);
-        JSHINT.errors.forEach(err => {
-          if (err) messages.push(`JS: Line ${err.line}, Col ${err.character}: ${err.reason}`);
-        });
+    if (mode === "htmlmixed") {
+      const results = HTMLHint.verify(code);
+      if (results.length) {
+        results.forEach(r => output.innerHTML += `Line ${r.line}, Col ${r.col}: ${r.message}<br>`);
+      } else {
+        output.innerHTML = "<span style='color:lightgreen;'>No HTML errors</span>";
       }
-
-      output.innerHTML = messages.length ? messages.join("<br>") : "<span style='color:lightgreen;'>No errors found.</span>";
+    } else if (mode === "css") {
+      const results = CSSLint.verify(code).messages;
+      if (results.length) {
+        results.forEach(r => output.innerHTML += `Line ${r.line || "?"}: ${r.message}<br>`);
+      } else {
+        output.innerHTML = "<span style='color:lightgreen;'>No CSS errors</span>";
+      }
+    } else if (mode === "javascript") {
+      JSHINT(code);
+      const results = JSHINT.errors;
+      if (results && results.length) {
+        results.forEach(r => {
+          if (r) output.innerHTML += `Line ${r.line}, Col ${r.character}: ${r.reason}<br>`;
+        });
+      } else {
+        output.innerHTML = "<span style='color:lightgreen;'>No JavaScript errors</span>";
+      }
     }
-  </script>
+
+    if (mode === "htmlmixed") {
+      runCode(code); toggleView("preview");
+    } else {
+      toggleView("preview");
+      runCode(`<pre style="padding:1em;color:black;background:#fefefe;">${code}</pre>`);
+    }
+  }
+
+  function runCode(code) {
+    const iframe = document.getElementById("preview");
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open(); doc.write(code); doc.close();
+  }
+
+  function toggleView(view) {
+    document.getElementById("editorBox").classList.toggle("active", view === "editor");
+    document.getElementById("previewBox").classList.toggle("active", view === "preview");
+  }
+</script>
 
 </body>
 </html>
