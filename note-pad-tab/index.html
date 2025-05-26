@@ -91,12 +91,38 @@ Licensed for educational and personal use only.
   <textarea id="editor"></textarea>
 
   <script>
+    const STORAGE_KEY = 'notepadTabs';
     const tabs = [];
     const editor = document.getElementById('editor');
     const tabsContainer = document.getElementById('tabs');
     let activeTabIndex = 0;
 
-    tabs.push(''); // First tab
+    // Restore saved data
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        data.tabs.forEach((content, index) => {
+          if (index === 0) {
+            tabs[0] = content;
+          } else {
+            addTab();
+            tabs[index] = content;
+          }
+        });
+        switchTab(data.activeTab);
+      } else {
+        tabs.push('');
+      }
+    });
+
+    // Save to localStorage
+    function saveTabs() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        tabs,
+        activeTab: activeTabIndex
+      }));
+    }
 
     function switchTab(index) {
       tabs[activeTabIndex] = editor.value;
@@ -105,18 +131,25 @@ Licensed for educational and personal use only.
       document.querySelectorAll('.tab').forEach((t, i) => {
         t.classList.toggle('active', i === index);
       });
+      saveTabs();
     }
 
     function addTab() {
       tabs.push('');
       const newIndex = tabs.length - 1;
+
       const tab = document.createElement('div');
       tab.className = 'tab';
       tab.textContent = 'Tab ' + (newIndex + 1);
       tab.onclick = () => switchTab(newIndex);
+
       tabsContainer.insertBefore(tab, document.getElementById('addTab'));
       switchTab(newIndex);
+      saveTabs(); // Save immediately after adding
     }
+
+    // Save on input
+    editor.addEventListener('input', saveTabs);
 
     // Tab key support
     editor.addEventListener('keydown', function(e) {
@@ -126,64 +159,12 @@ Licensed for educational and personal use only.
         const end = this.selectionEnd;
         this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
         this.selectionStart = this.selectionEnd = start + 1;
+        saveTabs();
       }
     });
 
-  const STORAGE_KEY = 'notepadTabs';
-
-  // Load from localStorage
-  window.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const data = JSON.parse(saved);
-      data.tabs.forEach((content, index) => {
-        if (index === 0) {
-          tabs[0] = content;
-        } else {
-          addTab();
-          tabs[index] = content;
-        }
-      });
-      switchTab(data.activeTab);
-    }
-  });
-
-  // Save to localStorage on input
-  editor.addEventListener('input', saveTabs);
-
-  // Save on tab switch
-  function switchTab(index) {
-    tabs[activeTabIndex] = editor.value;
-    activeTabIndex = index;
-    editor.value = tabs[index];
-    document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', i === index);
-    });
-    saveTabs();
-  }
-
-  // Save after adding new tab
-  function addTab() {
-    tabs.push('');
-    const newIndex = tabs.length - 1;
-    const tab = document.createElement('div');
-    tab.className = 'tab';
-    tab.textContent = 'Tab ' + (newIndex + 1);
-    tab.onclick = () => switchTab(newIndex);
-    tabsContainer.insertBefore(tab, document.getElementById('addTab'));
-    switchTab(newIndex);
-  }
-
-  function saveTabs() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      tabs,
-      activeTab: activeTabIndex
-    }));
-  }
-
-  // Optional: Save on unload
-  window.addEventListener('beforeunload', saveTabs);
-    
+    // Save when leaving the page (optional redundancy)
+    window.addEventListener('beforeunload', saveTabs);
   </script>
 </body>
 </html>
