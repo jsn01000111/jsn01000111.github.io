@@ -5,8 +5,8 @@ Licensed for educational and personal use only.
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notepad Tabbed</title>
   <style>
     * {
@@ -82,9 +82,8 @@ Licensed for educational and personal use only.
   </style>
 </head>
 <body>
-
   <div class="tabs" id="tabs">
-    <div class="tab active" onclick="switchTab(0)">Notepad Tab 1</div>
+    <!-- Tabs will be added dynamically -->
     <div class="tab" id="addTab" onclick="addTab()">+</div>
   </div>
 
@@ -93,30 +92,12 @@ Licensed for educational and personal use only.
   <script>
     const STORAGE_KEY = 'notepadTabs';
     const tabs = [];
-    const editor = document.getElementById('editor');
-    const tabsContainer = document.getElementById('tabs');
     let activeTabIndex = 0;
 
-    // Restore saved data
-    window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const data = JSON.parse(saved);
-        data.tabs.forEach((content, index) => {
-          if (index === 0) {
-            tabs[0] = content;
-          } else {
-            addTab();
-            tabs[index] = content;
-          }
-        });
-        switchTab(data.activeTab);
-      } else {
-        tabs.push('');
-      }
-    });
+    const editor = document.getElementById('editor');
+    const tabsContainer = document.getElementById('tabs');
+    const addTabBtn = document.getElementById('addTab');
 
-    // Save to localStorage
     function saveTabs() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         tabs,
@@ -124,34 +105,58 @@ Licensed for educational and personal use only.
       }));
     }
 
+    function renderTabs() {
+      // Remove all tabs except the addTab button
+      Array.from(tabsContainer.children).forEach(child => {
+        if (child !== addTabBtn) child.remove();
+      });
+
+      tabs.forEach((_, index) => {
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.textContent = 'Tab ' + (index + 1);
+        if (index === activeTabIndex) tab.classList.add('active');
+        tab.onclick = () => switchTab(index);
+        tabsContainer.insertBefore(tab, addTabBtn);
+      });
+    }
+
     function switchTab(index) {
       tabs[activeTabIndex] = editor.value;
       activeTabIndex = index;
       editor.value = tabs[index];
-      document.querySelectorAll('.tab').forEach((t, i) => {
-        t.classList.toggle('active', i === index);
-      });
+      renderTabs();
       saveTabs();
     }
 
     function addTab() {
       tabs.push('');
-      const newIndex = tabs.length - 1;
-
-      const tab = document.createElement('div');
-      tab.className = 'tab';
-      tab.textContent = 'Tab ' + (newIndex + 1);
-      tab.onclick = () => switchTab(newIndex);
-
-      tabsContainer.insertBefore(tab, document.getElementById('addTab'));
-      switchTab(newIndex);
-      saveTabs(); // Save immediately after adding
+      activeTabIndex = tabs.length - 1;
+      renderTabs();
+      editor.value = '';
+      saveTabs();
     }
 
-    // Save on input
-    editor.addEventListener('input', saveTabs);
+    // Restore saved data
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        tabs.push(...data.tabs);
+        activeTabIndex = data.activeTab || 0;
+      } else {
+        tabs.push('');
+      }
+      renderTabs();
+      editor.value = tabs[activeTabIndex];
+    });
 
-    // Tab key support
+    editor.addEventListener('input', () => {
+      tabs[activeTabIndex] = editor.value;
+      saveTabs();
+    });
+
+    // Support for Tab key
     editor.addEventListener('keydown', function(e) {
       if (e.key === 'Tab') {
         e.preventDefault();
@@ -159,11 +164,11 @@ Licensed for educational and personal use only.
         const end = this.selectionEnd;
         this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
         this.selectionStart = this.selectionEnd = start + 1;
+        tabs[activeTabIndex] = this.value;
         saveTabs();
       }
     });
 
-    // Save when leaving the page (optional redundancy)
     window.addEventListener('beforeunload', saveTabs);
   </script>
 </body>
