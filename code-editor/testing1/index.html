@@ -154,7 +154,7 @@
 
     /* Styles for the live edit tools */
     .live-edit-tools {
-      position: relative; /* Changed to relative */
+      position: absolute;
       top: 0;
       left: 0;
       right: 0;
@@ -793,15 +793,7 @@
         disconnectObserver();
         hideSelectionOverlay();
         hideEditTooltip();
-        // Ensure checkboxes are reset when going back to editor
-        enableContentEditCheckbox.checked = false;
-        enableLayoutEditCheckbox.checked = false;
-        enableTapToEditCheckbox.checked = false;
-        // Re-apply preview iframe body cursor if it was changed
-        const doc = previewIframe.contentDocument;
-        if (doc && doc.body) {
-            doc.body.style.cursor = 'default';
-        }
+        disableTapToEdit(); // Ensure tap-to-edit is off when back in editor
         closeModal(); // Ensure modal is closed when switching back to editor
         editor.refresh(); // Important for CodeMirror to re-adjust its layout
       } else {
@@ -846,21 +838,14 @@
       // Use a more robust regex to handle various attribute positions/spacing
       updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
       updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
-      updatedHtml = updatedHtml.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, ''); // Remove outline and min-height if added by script
-      updatedHtml = updatedHtml.replace(/\s*contenteditable="true"/ig, ''); // Remove contenteditable from all elements
+      updatedHtml = updatedHtml.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, 'style="min-height: 100vh;"'); // Remove outline
 
-      // Remove resizer-related inline styles (width, height, position) if they were applied by the script for resizing
-      updatedHtml = updatedHtml.replace(/style="width:\s*(\d+)px;\s*height:\s*(\d+)px;\s*position:\s*relative;"/g, 'width="$1" height="$2"');
-      updatedHtml = updatedHtml.replace(/style="width:\s*(\d+)px;\s*height:\s*(\d+)px;\s*position:\s*absolute;"/g, 'width="$1" height="$2"');
-      // For elements where position: relative was already set, we might need a more complex cleanup
-      // For simplicity here, we're assuming relative was only added by the script.
-      // If position was originally something else, this would need more context.
 
       if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
         try {
             updatedHtml = html_beautify(updatedHtml, { indent_size: 2, preserve_newlines: true });
         } catch (e) {
-            console.error("Beautify error during live update:", e);
+            console.error("HTML Beautify error:", e);
         }
       }
       editor.setValue(updatedHtml);
@@ -890,27 +875,7 @@
         mutationObserver = new MutationObserver(mutations => {
           // Only trigger update if mutations occurred within the body or its children
           // and not from our own attribute changes (like contenteditable itself)
-          const relevantMutation = mutations.some(m => {
-            const isTargetBodyOrChild = (m.target === doc.body || doc.body.contains(m.target));
-            // Ignore changes to style or contenteditable attributes we apply
-            const isAttributeChange = m.type === 'attributes';
-            const isContenteditableAttribute = m.attributeName === 'contenteditable';
-            const isStyleAttribute = m.attributeName === 'style';
-
-            if (isTargetBodyOrChild && isAttributeChange && (isContenteditableAttribute || isStyleAttribute)) {
-                // Check if it's the specific style we apply, or a contenteditable change
-                const styleValue = m.target.getAttribute('style');
-                if (isStyleAttribute && styleValue && (styleValue.includes('outline') || styleValue.includes('min-height'))) {
-                    return false; // Ignore our own outline/min-height style changes
-                }
-                if (isContenteditableAttribute) {
-                    return false; // Ignore our own contenteditable changes
-                }
-            }
-            return isTargetBodyOrChild;
-          });
-
-          if (relevantMutation) {
+          if (mutations.some(m => m.target === doc.body || doc.body.contains(m.target))) {
             updateEditorFromPreview();
           }
         });
@@ -924,7 +889,6 @@
       } else {
         doc.body.removeAttribute('contenteditable'); // Remove contenteditable
         doc.body.style.outline = ''; // Remove visual cue
-        doc.body.style.minHeight = '';
       }
     }
 
@@ -937,11 +901,12 @@
       clearTimeout(liveEditDebounceTimer);
     }
 
+    // MODIFICATION START: Call setupLiveEditingObserver directly on change
     enableContentEditCheckbox.addEventListener('change', () => {
-      // Re-render preview to apply/remove contenteditable attribute correctly
-      renderPreview(editor.getValue());
+      setupLiveEditingObserver(); // Call the setup function directly
       liveEditTools.classList.add('active'); // Show tools temporarily
     });
+    // MODIFICATION END
 
     // --- Layout Editing Features (Resizing & Selection) ---
 
@@ -964,19 +929,19 @@
             doc.addEventListener('mousedown', handleIframeMouseDownForSelection); // Add new selection listener
             console.log('Layout editing enabled.');
         } else {
-            if (!enableTapToEditCheckbox.checked) { // Only reset cursor if tap-to-edit is also off
-                doc.body.style.cursor = 'default';
-            }
+            doc.body.style.cursor = 'default';
             hideSelectionOverlay();
             console.log('Layout editing disabled.');
         }
     }
 
+    // MODIFICATION START: Call setupLayoutEditing directly on change
     enableLayoutEditCheckbox.addEventListener('change', () => {
-        setupLayoutEditing();
+        setupLayoutEditing(); // Call the setup function directly
         hideSelectionOverlay();
         liveEditTools.classList.add('active');
     });
+    // MODIFICATION END
 
     function handleIframeMouseDownForSelection(e) {
         if (!enableLayoutEditCheckbox.checked || isResizing) return;
@@ -984,23 +949,26 @@
         const target = e.target;
         const doc = previewIframe.contentDocument;
 
-        // Avoid selecting body, html, or contenteditable elements, or resizers
-        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target.isContentEditable || target.closest('[contenteditable="true"]') || Array.from(resizers).some(r => r === e.target)) {
+        // Avoid selecting body, html, or contenteditable elements
+        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target.isContentEditable || target.closest('[contenteditable="true"]')) {
             hideSelectionOverlay();
             selectedElementInIframe = null;
-            hideEditTooltip(); // Also hide tooltip if we deselect
             return;
+        }
+
+        // Check if click was on a resizer or the overlay itself (though pointer-events: none should prevent overlay clicks)
+        if (Array.from(resizers).some(r => r === e.target) || e.target === selectionOverlay) {
+            return; // Don't re-select if initiating a resize
         }
 
         selectedElementInIframe = target;
         updateSelectionOverlay();
-        hideEditTooltip(); // Hide tooltip when a new selection is made
         e.stopPropagation(); // Prevent event from bubbling up to document
     }
 
 
     function updateSelectionOverlay() {
-        if (!selectedElementInIframe || !selectedElementInIframe.isConnected || !document.getElementById('previewBox').classList.contains('active')) {
+        if (!selectedElementInIframe || !selectedElementInIframe.isConnected) { // Check if element is still in DOM
             hideSelectionOverlay();
             return;
         }
@@ -1145,11 +1113,10 @@
         }
         let updatedHtml = doc.documentElement.outerHTML;
 
-        // Remove our temporary contenteditable attribute and styles
+        // Remove contenteditable attribute for saving to editor
         updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
         updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
-        updatedHtml = updatedHtml.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, '');
-        updatedHtml = updatedHtml.replace(/\s*contenteditable="true"/ig, ''); // Remove from all elements if any
+        updatedHtml = updatedHtml.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, 'style="min-height: 100vh;"');
 
 
         if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
@@ -1207,13 +1174,10 @@
       } else if (type === 'js') {
         modalTitle.textContent = 'Inspect JavaScript Properties';
         const listeners = [];
-        // Iterate through all properties of the element to find 'on' event handlers
         for (const key in element) {
-            // Check if the property starts with 'on' and is a function
             if (key.startsWith("on") && typeof element[key] === "function") {
-                // Get the function's string representation
+                // Limit the function string to first line for brevity
                 const funcString = element[key].toString();
-                // Add to listeners array, limiting string length for readability
                 listeners.push(`${key} = ${funcString.substring(0, funcString.indexOf('\n') > -1 ? funcString.indexOf('\n') : funcString.length).trim().slice(0, 100)}...`);
             }
         }
@@ -1302,19 +1266,9 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
              return;
         }
         try {
-          // Create a new <head> element from the edited content
-          const parser = new DOMParser();
-          const parsedDoc = parser.parseFromString(editedContent, 'text/html');
-          const newHead = parsedDoc.head;
-
-          if (newHead) {
-            // Replace the existing head with the new one from the parsed content
-            doc.head.replaceWith(doc.importNode(newHead, true));
-          } else {
-            alert("Invalid HTML provided for head. No changes saved.");
-            closeModal();
-            return;
-          }
+          const tempHead = doc.createElement('head'); // Create a temp head in iframe document
+          tempHead.innerHTML = editedContent;
+          doc.head.replaceWith(tempHead);
         } catch (e) {
           alert("Error parsing HTML for head. No changes saved.");
           console.error(e);
@@ -1344,20 +1298,30 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
             }
             console.log('Tap-to-Edit enabled.');
         } else {
-            // If tap-to-edit is disabled, ensure its specific cursor is removed
-            if (!enableLayoutEditCheckbox.checked) { // Only reset cursor if layout edit is also off
-                doc.body.style.cursor = 'default';
-            }
-            hideEditTooltip();
-            console.log('Tap-to-Edit disabled.');
+            disableTapToEdit();
         }
     }
 
+    function disableTapToEdit() {
+        const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+        if (doc) {
+            doc.removeEventListener('click', handlePreviewClickForTapToEdit, true);
+            // Only reset body cursor if layout edit is also OFF
+            if (!enableLayoutEditCheckbox.checked) {
+                doc.body.style.cursor = 'default';
+            }
+        }
+        hideEditTooltip();
+        console.log('Tap-to-Edit disabled.');
+    }
+
+    // MODIFICATION START: Call setupTapToEdit directly on change
     enableTapToEditCheckbox.addEventListener('change', () => {
-        setupTapToEdit();
+        setupTapToEdit(); // Call the setup function directly
         hideEditTooltip();
         liveEditTools.classList.add('active');
     });
+    // MODIFICATION END
 
     function handlePreviewClickForTapToEdit(e) {
         if (!enableTapToEditCheckbox.checked) return;
@@ -1371,34 +1335,17 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const doc = previewIframe.contentDocument;
 
         // If clicking on head, offer to edit head
-        // Calculate the effective top of the iframe content for clicking on head
-        const iframeBodyRect = doc.body.getBoundingClientRect();
-        const iframeHtmlRect = doc.documentElement.getBoundingClientRect();
-        const effectiveHeadClickArea = {
-            top: iframeHtmlRect.top,
-            left: iframeHtmlRect.left,
-            width: iframeHtmlRect.width,
-            height: iframeBodyRect.top - iframeHtmlRect.top // Height of head area
-        };
-
-        const clickX = e.clientX;
-        const clickY = e.clientY;
-
-        // Check if the click is within the calculated head area
-        if (clickX >= effectiveHeadClickArea.left && clickX <= (effectiveHeadClickArea.left + effectiveHeadClickArea.width) &&
-            clickY >= effectiveHeadClickArea.top && clickY <= (effectiveHeadClickArea.top + effectiveHeadClickArea.height)) {
+        if (target.tagName === 'HEAD' || target === doc.head) {
             selectedElementInIframe = doc.head; // Explicitly set to head
+            const rect = selectedElementInIframe.getBoundingClientRect();
             const iframeRect = previewIframe.getBoundingClientRect();
-            // Position tooltip at the top-center of the iframe itself, or slightly below its top bar
-            const tooltipX = iframeRect.left + iframeRect.width / 2;
-            const tooltipY = iframeRect.top + liveEditTools.offsetHeight + 10; // Below live edit tools
+            const tooltipX = iframeRect.left + rect.left + rect.width / 2;
+            const tooltipY = iframeRect.top + rect.top;
             showEditTooltip(tooltipX, tooltipY, selectedElementInIframe, 'head');
-            hideSelectionOverlay(); // Hide selection overlay for head
             e.preventDefault();
             e.stopPropagation();
             return;
         }
-
         // If clicking on body or html directly, clear selection
         if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === doc.documentElement) {
              hideEditTooltip();
@@ -1466,17 +1413,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         // Need to display first to get height for positioning
         editTooltip.style.display = 'block';
         editTooltip.style.left = `${x}px`;
-        // Adjust tooltip position to stay within previewBox bounds, especially at the top
-        const previewBoxRect = document.getElementById('previewBox').getBoundingClientRect();
-        let newTooltipTop = y - editTooltip.offsetHeight - 5;
-        if (newTooltipTop < previewBoxRect.top + liveEditTools.offsetHeight) {
-             newTooltipTop = y + 5; // Position below if not enough space above
-             // If still too high (e.g. element is near top), push it further down or adjust for viewport
-             if (newTooltipTop + editTooltip.offsetHeight > previewBoxRect.bottom) {
-                 newTooltipTop = previewBoxRect.bottom - editTooltip.offsetHeight - 5; // Constrain to bottom
-             }
-        }
-        editTooltip.style.top = `${newTooltipTop}px`;
+        editTooltip.style.top = `${y - editTooltip.offsetHeight - 5}px`; // Position above element
     }
 
     function hideEditTooltip() {
@@ -1486,17 +1423,16 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
     // Global click listener to hide tooltip/selection if clicked outside (on the main page)
     document.addEventListener('click', (event) => {
         // Only act if modal is NOT active AND tooltip is currently visible
-        if (editModalOverlay.classList.contains('active') || fileOverlay.classList.contains('active')) {
+        if (editModalOverlay.classList.contains('active') || editTooltip.style.display !== 'block') {
             return;
         }
 
         const isClickInsideTooltip = editTooltip.contains(event.target);
         const isClickInsidePreview = previewIframe.contains(event.target);
         const isClickOnResizer = Array.from(resizers).some(r => r.contains(event.target)); // Check if any resizer is clicked
-        const isClickOnLiveEditTools = liveEditTools.contains(event.target); // Don't hide if clicking on the tool checkboxes/buttons
 
-        // Hide if click is outside tooltip, outside iframe, not on a resizer, and not on live edit tools
-        if (!isClickInsideTooltip && !isClickInsidePreview && !isClickOnResizer && !isClickOnLiveEditTools) {
+        // Hide if click is outside tooltip, outside iframe, and not on a resizer
+        if (!isClickInsideTooltip && !isClickInsidePreview && !isClickOnResizer) {
             hideEditTooltip();
             hideSelectionOverlay();
             selectedElementInIframe = null; // Clear selection if clicked outside
@@ -1587,9 +1523,9 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         selectedElementInIframe = null; // Clear selection on iframe reload
 
         // Force setup based on current checkbox states
-        setupLiveEditingObserver(); // This will enable/disable contenteditable on body
-        setupLayoutEditing(); // This will enable/disable layout selection/resizing
-        setupTapToEdit(); // This will enable/disable element tap-to-edit
+        setupLiveEditingObserver();
+        setupLayoutEditing();
+        setupTapToEdit();
         console.log("Iframe content loaded and editing features re-initialized.");
     };
 
@@ -1686,13 +1622,6 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
             return;
         }
         let htmlToCopy = doc.documentElement.outerHTML;
-
-        // Remove our temporary contenteditable attribute and styles for copying
-        htmlToCopy = htmlToCopy.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
-        htmlToCopy = htmlToCopy.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
-        htmlToCopy = htmlToCopy.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, '');
-        htmlToCopy = htmlToCopy.replace(/\s*contenteditable="true"/ig, ''); // Remove from all elements if any
-
 
         // Beautify the HTML before copying to clipboard for readability
         if (typeof html_beautify === 'function') {
