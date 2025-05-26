@@ -2,187 +2,132 @@
 Copyright © 2025 JSN01000111
 Licensed for educational and personal use only.
 -->
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Notepad Tabbed</title>
-
   <style>
-    body {
-    
-      margin: 0;
-    
-      font-family: Consolas, monospace;
-    
-      background: #1e1e1e;
-    
-      color: #d4d4d4;
-    
-    }
-    
-    .tabs {
-    
-      display: flex;
-    
-      background: #2d2d2d;
-    
-      border-bottom: 1px solid #444;
-    
-    }
-    
-    .tab {
-    
-      padding: 10px 15px;
-    
-      cursor: pointer;
-    
-      background: #2d2d2d;
-    
-      border-right: 1px solid #444;
-    
-    }
-    
-    .tab.active {
-    
-      background: #1e1e1e;
-    
-      font-weight: bold;
-    
-    }
-    
-    .tab:hover {
-    
-      background: #3a3a3a;
-    
-    }
-    
-    #addTab {
-    
-      background: #007acc;
-    
-      color: white;
-    
-      font-weight: bold;
-    
-    }
-    
-    textarea {
-    
-      width: 100%;
-    
-      height: calc(100vh - 40px);
-    
-      padding: 10px;
-    
+    * {
       box-sizing: border-box;
-    
-      border: none;
-    
-      resize: none;
-    
-      background: #282a36;
-    
-      color: #d4d4d4;
-    
-      font-size: 16px;
-    
-      line-height: 1.5;
-    
-      outline: none;
-    
     }
-    
+
+    body {
+      margin: 0;
+      font-family: Consolas, monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      background: #2d2d2d;
+      border-bottom: 1px solid #444;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 10px 15px;
+      cursor: pointer;
+      background: #2d2d2d;
+      border-right: 1px solid #444;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tab.active {
+      background: #1e1e1e;
+      font-weight: bold;
+    }
+
+    .tab:hover {
+      background: #3a3a3a;
+    }
+
+    #addTab {
+      background: #007acc;
+      color: white;
+      font-weight: bold;
+    }
+
+    #editor {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      resize: none;
+      background: #282a36;
+      color: #d4d4d4;
+      font-size: 16px;
+      line-height: 1.5;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    @media (max-width: 600px) {
+      .tab {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      #editor {
+        font-size: 14px;
+      }
+    }
   </style>
-
 </head>
-
 <body>
 
   <div class="tabs" id="tabs">
-
     <div class="tab active" onclick="switchTab(0)">Notepad Tab 1</div>
-
     <div class="tab" id="addTab" onclick="addTab()">+</div>
-
   </div>
 
   <textarea id="editor"></textarea>
 
   <script>
     const tabs = [];
-    
     const editor = document.getElementById('editor');
-    
     const tabsContainer = document.getElementById('tabs');
-    
     let activeTabIndex = 0;
-    
+
     tabs.push(''); // First tab
-    
+
     function switchTab(index) {
-    
       tabs[activeTabIndex] = editor.value;
-    
       activeTabIndex = index;
-    
       editor.value = tabs[index];
-    
       document.querySelectorAll('.tab').forEach((t, i) => {
-    
         t.classList.toggle('active', i === index);
-    
       });
-    
     }
-    
+
     function addTab() {
-    
       tabs.push('');
-    
       const newIndex = tabs.length - 1;
-    
       const tab = document.createElement('div');
-    
       tab.className = 'tab';
-    
       tab.textContent = 'Tab ' + (newIndex + 1);
-    
       tab.onclick = () => switchTab(newIndex);
-    
       tabsContainer.insertBefore(tab, document.getElementById('addTab'));
-    
       switchTab(newIndex);
-    
     }
-    
+
     // Tab key support
-    
     editor.addEventListener('keydown', function(e) {
-    
       if (e.key === 'Tab') {
-    
         e.preventDefault();
-    
         const start = this.selectionStart;
-    
         const end = this.selectionEnd;
-    
         this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-    
         this.selectionStart = this.selectionEnd = start + 1;
-    
       }
-    
     });
-    
   </script>
-
 </body>
-
 </html>
