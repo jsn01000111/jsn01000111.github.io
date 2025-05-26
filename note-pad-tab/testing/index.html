@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notepad Tabbed with LanguageTool Spell/Grammar Check</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Consolas, monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      background: #2d2d2d;
+      border-bottom: 1px solid #444;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 10px 15px;
+      cursor: pointer;
+      background: #2d2d2d;
+      border-right: 1px solid #444;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tab.active {
+      background: #1e1e1e;
+      font-weight: bold;
+    }
+
+    .tab:hover {
+      background: #3a3a3a;
+    }
+
+    .tab .close-btn {
+      color: #aaa;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tab .close-btn:hover {
+      color: #f55;
+    }
+
+    #addTab {
+      background: #007acc;
+      color: white;
+      font-weight: bold;
+    }
+
+    #editor {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      background: #282a36;
+      color: #d4d4d4;
+      font-size: 16px;
+      line-height: 1.5;
+      width: 100%;
+      height: 100%;
+      outline: none;
+      overflow-y: auto;
+      white-space: pre-wrap; /* Preserve whitespace and wrap */
+      word-wrap: break-word;
+      /* Optional: Hide browser's native spellcheck to avoid double underlines */
+      spellcheck="false"
+    }
+
+    .misspelled {
+      text-decoration: underline wavy red;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .misspelled .suggestion {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #3a3a3a;
+        color: white;
+        padding: 5px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        white-space: nowrap;
+        z-index: 10;
+        display: none;
+        cursor: pointer;
+    }
+
+    .misspelled:hover .suggestion {
+        display: block;
+    }
+
+    /* Optional: Loader for API calls */
+    #loader {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-size: 14px;
+      display: none; /* Hidden by default */
+    }
+
+    @media (max-width: 600px) {
+      .tab {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      #editor {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs" id="tabs">
+    <div class="tab" id="addTab" onclick="addTab()">+</div>
+  </div>
+
+  <div id="editor" contenteditable="true" placeholder="Start typing..."></div>
+  <div id="loader">Checking...</div>
+
+  <script>
+    const STORAGE_KEY = 'notepadTabs_v11_languagetool_spellcheck'; // Updated key for LanguageTool
+    const tabs = [];
+    let activeTabIndex = 0;
+
+    const editor = document.getElementById('editor');
+    const tabsContainer = document.getElementById('tabs');
+    const addTabBtn = document.getElementById('addTab');
+    const loader = document.getElementById('loader');
+
+    // --- LanguageTool API Integration ---
+    // You can replace this with your actual API key if you register for a free account
+    // It's safer to use your own API key to avoid public rate limits.
+    const LANGUAGE_TOOL_API_URL = 'https://api.languagetool.org/v2/check';
+    const API_KEY = 'YOUR_API_KEY_HERE'; // <--- REPLACE WITH YOUR ACTUAL API KEY IF YOU HAVE ONE
+
+    // Debounce function to limit API calls
+    let debounceTimer;
+    function debounce(func, delay) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(func, delay);
+    }
+
+    async function checkSpellingAndHighlightAPI() {
+        if (!editor) return; // Ensure editor exists
+
+        const currentText = editor.textContent.trim();
+        if (currentText.length === 0) {
+            editor.innerHTML = ''; // Clear highlights if text is empty
+            saveTabs();
+            return;
+        }
+
+        loader.style.display = 'block'; // Show loader
+
+        const formData = new URLSearchParams();
+        formData.append('language', 'en-US'); // Or 'en-GB', 'de-DE', etc.
+        formData.append('text', currentText);
+        // formData.append('apiKey', API_KEY); // Uncomment if using a personalized API key
+
+        try {
+            const response = await fetch(LANGUAGE_TOOL_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                // Handle API errors (e.g., rate limits, invalid key)
+                const errorData = await response.json();
+                console.error("LanguageTool API Error:", response.status, errorData);
+                // Optionally display an error message to the user
+                return;
+            }
+
+            const data = await response.json();
+            const matches = data.matches;
+
+            let highlightedContent = '';
+            let lastIndex = 0;
+
+            // Sort matches by offset to correctly apply highlights
+            matches.sort((a, b) => a.offset - b.offset);
+
+            for (const match of matches) {
+                // Extract plain text up to the error
+                highlightedContent += currentText.substring(lastIndex, match.offset);
+
+                const misspelledWord = currentText.substring(match.offset, match.offset + match.length);
+                const firstSuggestion = match.replacements && match.replacements.length > 0
+                                      ? match.replacements[0].value
+                                      : ''; // Get the first suggestion
+
+                // Only highlight if there's a suggestion, and it's not a general grammar/style issue
+                // We're specifically targeting basic spelling for this UI
+                // LanguageTool's ruleId for spelling errors can be "MORFOLOGIK_RULE_EN_US" or similar.
+                // For simplicity, we'll highlight anything that has a suggestion.
+                if (firstSuggestion) {
+                    highlightedContent += `<span class="misspelled" data-original-word="${misspelledWord}"><span class="original-text">${misspelledWord}</span><span class="suggestion">${firstSuggestion}</span></span>`;
+                } else {
+                    highlightedContent += misspelledWord; // No suggestion, so don't highlight
+                }
+                lastIndex = match.offset + match.length;
+            }
+
+            // Add any remaining text after the last error
+            highlightedContent += currentText.substring(lastIndex);
+
+            // Save and restore selection carefully.
+            const savedSelection = saveSelection();
+            if (editor.innerHTML !== highlightedContent) {
+                editor.innerHTML = highlightedContent;
+            }
+            restoreSelection(savedSelection, editor);
+
+        } catch (error) {
+            console.error("Error during API call:", error);
+        } finally {
+            loader.style.display = 'none'; // Hide loader
+        }
+    }
+
+
+    function saveSelection() {
+        if (window.getSelection && window.getSelection().rangeCount > 0) {
+            const range = window.getSelection().getRangeAt(0);
+            return {
+                startContainer: range.startContainer,
+                startOffset: range.startOffset,
+                endContainer: range.endContainer,
+                endOffset: range.endOffset
+            };
+        }
+        return null;
+    }
+
+    function restoreSelection(savedSelection, editorElement) {
+        if (!savedSelection || !editorElement) return;
+
+        const selection = window.getSelection();
+        const range = document.createRange();
+
+        try {
+            range.setStart(savedSelection.startContainer, savedSelection.startOffset);
+            range.setEnd(savedSelection.endContainer, savedSelection.endOffset);
+        } catch (e) {
+            range.selectNodeContents(editorElement);
+            range.collapse(false);
+        }
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    editor.addEventListener('click', (event) => {
+        const target = event.target;
+        // The actual word is now inside a span with class "original-text"
+        let misspelledSpan = target.closest('.misspelled');
+
+        if (misspelledSpan) {
+            const suggestionSpan = misspelledSpan.querySelector('.suggestion');
+            if (suggestionSpan) {
+                const suggestion = suggestionSpan.textContent;
+
+                const savedSelection = saveSelection();
+
+                // Create a new text node with the corrected word
+                const correctedTextNode = document.createTextNode(suggestion);
+                // Replace the entire 'misspelled' span with the new text node
+                misspelledSpan.parentNode.replaceChild(correctedTextNode, misspelledSpan);
+
+                const newRange = document.createRange();
+                const newSelection = window.getSelection();
+                newRange.setStart(correctedTextNode, correctedTextNode.length);
+                newRange.setEnd(correctedTextNode, correctedTextNode.length);
+                newSelection.removeAllRanges();
+                newSelection.addRange(newRange);
+
+                tabs[activeTabIndex].content = editor.innerHTML;
+                saveTabs();
+                // Debounce API call after manual correction
+                debounce(checkSpellingAndHighlightAPI, 500);
+            }
+        }
+    });
+
+    editor.addEventListener('paste', (event) => {
+        event.preventDefault();
+        const text = event.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+
+        tabs[activeTabIndex].content = editor.innerHTML;
+        saveTabs();
+        // Debounce API call after paste
+        debounce(checkSpellingAndHighlightAPI, 500);
+    });
+    // --- End LanguageTool API Integration ---
+
+    function saveTabs() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        tabs,
+        activeTab: activeTabIndex
+      }));
+    }
+
+    function renderTabs() {
+      Array.from(tabsContainer.children).forEach(child => {
+        if (child !== addTabBtn) child.remove();
+      });
+
+      tabs.forEach((tabData, index) => {
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        if (index === activeTabIndex) tab.classList.add('active');
+
+        const title = document.createElement('span');
+        title.textContent = tabData.name;
+
+        if (index !== 0) {
+          title.ondblclick = () => renameTab(index);
+        }
+
+        tab.appendChild(title);
+
+        if (tabs.length > 1) {
+          const close = document.createElement('span');
+          close.textContent = '×';
+          close.className = 'close-btn';
+          close.onclick = (e) => {
+            e.stopPropagation();
+            closeTab(index);
+          };
+          tab.appendChild(close);
+        }
+
+        tab.onclick = () => switchTab(index);
+        tabsContainer.insertBefore(tab, addTabBtn);
+      });
+    }
+
+    function switchTab(index) {
+      tabs[activeTabIndex].content = editor.innerHTML;
+      activeTabIndex = index;
+      editor.innerHTML = tabs[index].content;
+      renderTabs();
+      saveTabs();
+      // Trigger API check on tab switch
+      debounce(checkSpellingAndHighlightAPI, 500);
+    }
+
+    function addTab() {
+      tabs.push({ name: 'Tab ' + (tabs.length + 1), content: '' });
+      activeTabIndex = tabs.length - 1;
+      editor.innerHTML = '';
+      renderTabs();
+      saveTabs();
+      // No need to check spelling on an empty tab initially
+    }
+
+    function closeTab(index) {
+      if (tabs.length === 1) return;
+
+      tabs.splice(index, 1);
+      if (activeTabIndex >= index) activeTabIndex = Math.max(0, activeTabIndex - 1);
+
+      editor.innerHTML = tabs[activeTabIndex].content;
+      renderTabs();
+      saveTabs();
+      // Trigger API check after closing tab
+      debounce(checkSpellingAndHighlightAPI, 500);
+    }
+
+    function renameTab(index) {
+      const newName = prompt("Rename tab:", tabs[index].name);
+      if (newName !== null && newName.trim() !== '') {
+        tabs[index].name = newName.trim();
+        renderTabs();
+        saveTabs();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.tabs && data.tabs.length > 0) {
+          tabs.push(...data.tabs);
+          activeTabIndex = data.activeTab || 0;
+        } else {
+          tabs.push({ name: 'Notepad Tab 1', content: '' });
+        }
+      } else {
+        tabs.push({ name: 'Notepad Tab 1', content: '' });
+      }
+
+      if (tabs.length > 0 && tabs[0].name === undefined) {
+          tabs[0].name = 'Notepad Tab 1';
+      }
+
+      renderTabs();
+      editor.innerHTML = tabs[activeTabIndex].content; // Set initial content
+      // Initial API check when the page loads
+      debounce(checkSpellingAndHighlightAPI, 500);
+    });
+
+    editor.addEventListener('input', () => {
+      tabs[activeTabIndex].content = editor.innerHTML;
+      saveTabs();
+      // Debounce API call on every input
+      debounce(checkSpellingAndHighlightAPI, 500);
+    });
+
+    editor.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        document.execCommand('insertText', false, '\t');
+        tabs[activeTabIndex].content = this.innerHTML;
+        saveTabs();
+        // Debounce API call after tab insertion
+        debounce(checkSpellingAndHighlightAPI, 500);
+      }
+    });
+
+    window.addEventListener('beforeunload', saveTabs);
+  </script>
+</body>
+</html>
