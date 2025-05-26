@@ -15,6 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
 
   <style>
+    /* Basic Reset & Body Styles */
     * {
       box-sizing: border-box;
     }
@@ -31,16 +32,7 @@
       overflow: hidden; /* Prevent body scroll from layout changes */
     }
 
-    select {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      background: #333;
-      color: white;
-      border: none;
-      border-bottom: 1px solid #444;
-    }
-
+    /* Top Bar Styles */
     .top-bar {
       display: flex;
       gap: 0.5rem;
@@ -55,6 +47,11 @@
       min-width: 100px;
       padding: 10px;
       border-radius: 5px;
+      background: #333;
+      color: white;
+      border: none;
+      border-bottom: 1px solid #444;
+      font-size: 16px;
     }
 
     .top-bar button {
@@ -73,6 +70,7 @@
       background: #555;
     }
 
+    /* Content Area (Editor + Splitter + Preview) */
     .content-area {
       display: flex;
       flex: 1;
@@ -105,9 +103,10 @@
     }
 
     .CodeMirror-scroll {
-      overflow: auto !important;
+      overflow: auto !important; /* Ensure CodeMirror scrolls when content overflows */
     }
 
+    /* Preview Bottom Button Bar */
     .button-bar {
       display: flex;
       background: #1e1e1e;
@@ -152,18 +151,18 @@
       padding: 6px;
     }
 
-    /* Styles for the live edit tools */
+    /* Live Edit Tools (Top of Preview) */
     .live-edit-tools {
-      position: absolute;
+      position: absolute; /* Positioned within .preview-container which is relative */
       top: 0;
       left: 0;
       right: 0;
       background: rgba(0, 0, 0, 0.7);
       padding: 5px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-end; /* Align buttons to the right */
       align-items: center;
-      z-index: 10;
+      z-index: 10; /* Ensure it's above the iframe */
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
       flex-wrap: wrap;
@@ -183,8 +182,8 @@
         border-radius: 3px;
         border: none;
         cursor: pointer;
-        flex: unset;
-        margin-left: 5px;
+        flex: unset; /* Don't grow/shrink based on flex container */
+        margin-left: 5px; /* Spacing between buttons */
         transition: background 0.2s;
     }
     .live-edit-tools button:hover {
@@ -196,14 +195,14 @@
         margin-right: 10px;
         display: flex;
         align-items: center;
-        white-space: nowrap;
+        white-space: nowrap; /* Prevent text wrapping */
     }
     .live-edit-tools input[type="checkbox"] {
         margin-right: 5px;
     }
 
     #previewBox {
-        position: relative;
+        position: relative; /* Needed for positioning .live-edit-tools and overlays */
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -213,7 +212,7 @@
     #selectionOverlay {
         position: absolute;
         border: 2px dashed #007bff;
-        pointer-events: none;
+        pointer-events: none; /* Allows clicks to pass through to iframe */
         z-index: 9;
         display: none;
         transition: all 0.05s ease-out; /* Smooth update for selection */
@@ -225,8 +224,8 @@
         background: #007bff;
         border: 1px solid white;
         position: absolute;
-        z-index: 11;
-        pointer-events: all;
+        z-index: 11; /* Above overlay */
+        pointer-events: all; /* Allows interaction */
         cursor: grab;
         display: none; /* Hidden by default */
         transition: all 0.05s ease-out;
@@ -240,20 +239,20 @@
     .resizer.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
     .resizer.w { top: 50%; left: -5px; margin-top: -5px; cursor: ew-resize; }
 
-    #previewEditTools {
+    #previewEditTools { /* This seems to be an old ID or unused? Retaining from original */
       flex-wrap: wrap;
       gap: 6px;
       padding: 0.5rem;
       display: flex;
       justify-content: center;
       background: #1e1e1e;
-      position: sticky;
+      position: sticky; /* Keep it at the bottom of the preview box */
       bottom: 0;
       z-index: 999;
       border-top: 1px solid #444;
     }
 
-    #previewEditTools button {
+    #previewEditTools button { /* This seems to be an old ID or unused? Retaining from original */
       flex: 1 1 45%;
       min-width: 130px;
       padding: 12px;
@@ -266,13 +265,13 @@
       transition: background 0.3s;
     }
 
-    #previewEditTools button:hover {
+    #previewEditTools button:hover { /* This seems to be an old ID or unused? Retaining from original */
       background: #555;
     }
 
-    #previewBox .button-bar {
+    #previewBox .button-bar { /* Overrides static position for the button-bar */
         position: static;
-        margin-top: auto;
+        margin-top: auto; /* Pushes it to the bottom */
     }
 
     /* Splitter Styles */
@@ -280,7 +279,7 @@
       background-color: #3e3e3e;
       position: relative;
       z-index: 10;
-      flex-shrink: 0;
+      flex-shrink: 0; /* Prevent it from shrinking */
       transition: background-color 0.2s;
     }
     #splitter:hover {
@@ -294,7 +293,7 @@
         height: 100%;
         left: 0;
         top: 0;
-        pointer-events: none; /* Allow events to pass through */
+        pointer-events: none; /* Allow events to pass through to the actual splitter element */
     }
 
     /* Media Queries for Layout */
@@ -307,7 +306,7 @@
         height: 50vh; /* Default height for stacked, will be overridden by JS for splitter */
       }
       .editor-container.active, .preview-container.active {
-        height: 100%; /* Take full height when active */
+        height: 100%; /* Take full height when active (single pane view) */
       }
       #splitter {
         height: 8px;
@@ -655,6 +654,7 @@
     });
 
     const previewIframe = document.getElementById("preview");
+    // FIX: Corrected ID reference for content edit checkbox
     const enableContentEditCheckbox = document.getElementById("enableContentEdit");
     const enableLayoutEditCheckbox = document.getElementById("enableLayoutEdit");
     const enableTapToEditCheckbox = document.getElementById("enableTapToEdit");
@@ -662,6 +662,8 @@
     const selectionOverlay = document.getElementById('selectionOverlay');
     const resizers = document.querySelectorAll('.resizer');
     const contentArea = document.getElementById('contentArea');
+    const editorBox = document.getElementById('editorBox'); // Added for splitter resizing
+    const previewBox = document.getElementById('previewBox'); // Added for splitter resizing
 
     const editModalOverlay = document.getElementById('editModalOverlay');
     const modalTitle = document.getElementById('modalTitle');
@@ -764,6 +766,7 @@
       let contentToDisplay = code;
       if (currentMode === "htmlmixed") {
         try {
+            // Beautify HTML before rendering and updating editor
             contentToDisplay = html_beautify(code, { indent_size: 2, preserve_newlines: true });
             editor.setValue(contentToDisplay); // Update editor with beautified code
         } catch (e) {
@@ -834,18 +837,26 @@
       }
       let updatedHtml = doc.documentElement.outerHTML;
 
-      // Remove contenteditable attribute for saving to editor
-      // Use a more robust regex to handle various attribute positions/spacing
+      // Remove contenteditable attribute and outline for saving to editor
+      // Using a regex to handle various attribute positions/spacing
       updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
       updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
-      updatedHtml = updatedHtml.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, 'style="min-height: 100vh;"'); // Remove outline
+      updatedHtml = updatedHtml.replace(/style="[^"]*min-height:\s*100vh;[^"]*outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?"/g, (match) => {
+        // Remove only the specific min-height and outline, keep others if present
+        return match
+          .replace(/min-height:\s*100vh;?\s*/g, '')
+          .replace(/outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?\s*/g, '')
+          .trim();
+      });
+      // Clean up empty style attributes potentially left by the regex
+      updatedHtml = updatedHtml.replace(/style=""/g, '');
 
 
       if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
         try {
             updatedHtml = html_beautify(updatedHtml, { indent_size: 2, preserve_newlines: true });
         } catch (e) {
-            console.error("HTML Beautify error:", e);
+            console.error("Beautify error during live update:", e);
         }
       }
       editor.setValue(updatedHtml);
@@ -901,12 +912,11 @@
       clearTimeout(liveEditDebounceTimer);
     }
 
-    // MODIFICATION START: Call setupLiveEditingObserver directly on change
     enableContentEditCheckbox.addEventListener('change', () => {
-      setupLiveEditingObserver(); // Call the setup function directly
+      // Re-render preview to apply/remove contenteditable attribute correctly
+      renderPreview(editor.getValue());
       liveEditTools.classList.add('active'); // Show tools temporarily
     });
-    // MODIFICATION END
 
     // --- Layout Editing Features (Resizing & Selection) ---
 
@@ -935,13 +945,11 @@
         }
     }
 
-    // MODIFICATION START: Call setupLayoutEditing directly on change
     enableLayoutEditCheckbox.addEventListener('change', () => {
-        setupLayoutEditing(); // Call the setup function directly
+        setupLayoutEditing();
         hideSelectionOverlay();
         liveEditTools.classList.add('active');
     });
-    // MODIFICATION END
 
     function handleIframeMouseDownForSelection(e) {
         if (!enableLayoutEditCheckbox.checked || isResizing) return;
@@ -949,7 +957,7 @@
         const target = e.target;
         const doc = previewIframe.contentDocument;
 
-        // Avoid selecting body, html, or contenteditable elements
+        // Avoid selecting body, html, or contenteditable elements directly for layout edit
         if (target.tagName === 'HTML' || target.tagName === 'BODY' || target.isContentEditable || target.closest('[contenteditable="true"]')) {
             hideSelectionOverlay();
             selectedElementInIframe = null;
@@ -1113,10 +1121,16 @@
         }
         let updatedHtml = doc.documentElement.outerHTML;
 
-        // Remove contenteditable attribute for saving to editor
+        // Remove contenteditable attribute and outline for saving to editor
         updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
         updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
-        updatedHtml = updatedHtml.replace(/style="min-height: 100vh; outline: 1px dashed rgb\(0, 188, 212\);"/, 'style="min-height: 100vh;"');
+        updatedHtml = updatedHtml.replace(/style="[^"]*min-height:\s*100vh;[^"]*outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?"/g, (match) => {
+          return match
+            .replace(/min-height:\s*100vh;?\s*/g, '')
+            .replace(/outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?\s*/g, '')
+            .trim();
+        });
+        updatedHtml = updatedHtml.replace(/style=""/g, ''); // Clean up empty style attributes
 
 
         if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
@@ -1174,6 +1188,7 @@
       } else if (type === 'js') {
         modalTitle.textContent = 'Inspect JavaScript Properties';
         const listeners = [];
+        // Iterate through properties to find 'on' event handlers
         for (const key in element) {
             if (key.startsWith("on") && typeof element[key] === "function") {
                 // Limit the function string to first line for brevity
@@ -1315,13 +1330,11 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         console.log('Tap-to-Edit disabled.');
     }
 
-    // MODIFICATION START: Call setupTapToEdit directly on change
     enableTapToEditCheckbox.addEventListener('change', () => {
-        setupTapToEdit(); // Call the setup function directly
+        setupTapToEdit();
         hideEditTooltip();
         liveEditTools.classList.add('active');
     });
-    // MODIFICATION END
 
     function handlePreviewClickForTapToEdit(e) {
         if (!enableTapToEditCheckbox.checked) return;
@@ -1518,6 +1531,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
     // has fully rendered (e.g., after a new `doc.write`).
     // ******************************************************************
     previewIframe.onload = () => {
+        console.log("Iframe content loaded. Re-initializing editing features.");
         hideEditTooltip();
         hideSelectionOverlay();
         selectedElementInIframe = null; // Clear selection on iframe reload
@@ -1526,7 +1540,6 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         setupLiveEditingObserver();
         setupLayoutEditing();
         setupTapToEdit();
-        console.log("Iframe content loaded and editing features re-initialized.");
     };
 
 
