@@ -103,7 +103,7 @@ Licensed for educational and personal use only.
   <textarea id="editor" placeholder="Start typing..."></textarea>
 
   <script>
-    const STORAGE_KEY = 'notepadTabs_v2';
+    const STORAGE_KEY = 'notepadTabs_v3';
     const tabs = [];
     let activeTabIndex = 0;
 
@@ -129,21 +129,26 @@ Licensed for educational and personal use only.
         if (index === activeTabIndex) tab.classList.add('active');
 
         const title = document.createElement('span');
-        title.textContent = tabData.name;
-        title.ondblclick = () => renameTab(index);
+        title.textContent = index === 0 ? 'Notepad Tab 1' : tabData.name;
 
-        const close = document.createElement('span');
-        close.textContent = '×';
-        close.className = 'close-btn';
-        close.onclick = (e) => {
-          e.stopPropagation();
-          closeTab(index);
-        };
+        if (index !== 0) {
+          title.ondblclick = () => renameTab(index);
+        }
 
         tab.appendChild(title);
-        tab.appendChild(close);
-        tab.onclick = () => switchTab(index);
 
+        if (index !== 0) {
+          const close = document.createElement('span');
+          close.textContent = '×';
+          close.className = 'close-btn';
+          close.onclick = (e) => {
+            e.stopPropagation();
+            closeTab(index);
+          };
+          tab.appendChild(close);
+        }
+
+        tab.onclick = () => switchTab(index);
         tabsContainer.insertBefore(tab, addTabBtn);
       });
     }
@@ -165,7 +170,7 @@ Licensed for educational and personal use only.
     }
 
     function closeTab(index) {
-      if (tabs.length === 1) return; // At least one tab should remain
+      if (tabs.length === 1 || index === 0) return; // Cannot close first tab
       tabs.splice(index, 1);
       if (activeTabIndex >= index) activeTabIndex = Math.max(0, activeTabIndex - 1);
       editor.value = tabs[activeTabIndex].content;
@@ -182,7 +187,6 @@ Licensed for educational and personal use only.
       }
     }
 
-    // Load tabs on page load
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -191,10 +195,10 @@ Licensed for educational and personal use only.
           tabs.push(...data.tabs);
           activeTabIndex = data.activeTab || 0;
         } else {
-          tabs.push({ name: 'Tab 1', content: '' });
+          tabs.push({ name: 'Notepad Tab 1', content: '' });
         }
       } else {
-        tabs.push({ name: 'Tab 1', content: '' });
+        tabs.push({ name: 'Notepad Tab 1', content: '' });
       }
       renderTabs();
       editor.value = tabs[activeTabIndex].content;
