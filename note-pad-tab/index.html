@@ -36,6 +36,9 @@ Licensed for educational and personal use only.
       cursor: pointer;
       background: #2d2d2d;
       border-right: 1px solid #444;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -47,6 +50,16 @@ Licensed for educational and personal use only.
 
     .tab:hover {
       background: #3a3a3a;
+    }
+
+    .tab .close-btn {
+      color: #aaa;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tab .close-btn:hover {
+      color: #f55;
     }
 
     #addTab {
@@ -83,14 +96,14 @@ Licensed for educational and personal use only.
 </head>
 <body>
   <div class="tabs" id="tabs">
-    <!-- Tabs will be added dynamically -->
+    <!-- Tabs will be dynamically added -->
     <div class="tab" id="addTab" onclick="addTab()">+</div>
   </div>
 
-  <textarea id="editor"></textarea>
+  <textarea id="editor" placeholder="Start typing..."></textarea>
 
   <script>
-    const STORAGE_KEY = 'notepadTabs';
+    const STORAGE_KEY = 'notepadTabs_v2';
     const tabs = [];
     let activeTabIndex = 0;
 
@@ -106,65 +119,100 @@ Licensed for educational and personal use only.
     }
 
     function renderTabs() {
-      // Remove all tabs except the addTab button
       Array.from(tabsContainer.children).forEach(child => {
         if (child !== addTabBtn) child.remove();
       });
 
-      tabs.forEach((_, index) => {
+      tabs.forEach((tabData, index) => {
         const tab = document.createElement('div');
         tab.className = 'tab';
-        tab.textContent = 'Tab ' + (index + 1);
         if (index === activeTabIndex) tab.classList.add('active');
+
+        const title = document.createElement('span');
+        title.textContent = tabData.name;
+        title.ondblclick = () => renameTab(index);
+
+        const close = document.createElement('span');
+        close.textContent = '×';
+        close.className = 'close-btn';
+        close.onclick = (e) => {
+          e.stopPropagation();
+          closeTab(index);
+        };
+
+        tab.appendChild(title);
+        tab.appendChild(close);
         tab.onclick = () => switchTab(index);
+
         tabsContainer.insertBefore(tab, addTabBtn);
       });
     }
 
     function switchTab(index) {
-      tabs[activeTabIndex] = editor.value;
+      tabs[activeTabIndex].content = editor.value;
       activeTabIndex = index;
-      editor.value = tabs[index];
+      editor.value = tabs[index].content;
       renderTabs();
       saveTabs();
     }
 
     function addTab() {
-      tabs.push('');
+      tabs.push({ name: 'Tab ' + (tabs.length + 1), content: '' });
       activeTabIndex = tabs.length - 1;
-      renderTabs();
       editor.value = '';
+      renderTabs();
       saveTabs();
     }
 
-    // Restore saved data
+    function closeTab(index) {
+      if (tabs.length === 1) return; // At least one tab should remain
+      tabs.splice(index, 1);
+      if (activeTabIndex >= index) activeTabIndex = Math.max(0, activeTabIndex - 1);
+      editor.value = tabs[activeTabIndex].content;
+      renderTabs();
+      saveTabs();
+    }
+
+    function renameTab(index) {
+      const newName = prompt("Rename tab:", tabs[index].name);
+      if (newName !== null && newName.trim() !== '') {
+        tabs[index].name = newName.trim();
+        renderTabs();
+        saveTabs();
+      }
+    }
+
+    // Load tabs on page load
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const data = JSON.parse(saved);
-        tabs.push(...data.tabs);
-        activeTabIndex = data.activeTab || 0;
+        if (data.tabs && data.tabs.length > 0) {
+          tabs.push(...data.tabs);
+          activeTabIndex = data.activeTab || 0;
+        } else {
+          tabs.push({ name: 'Tab 1', content: '' });
+        }
       } else {
-        tabs.push('');
+        tabs.push({ name: 'Tab 1', content: '' });
       }
       renderTabs();
-      editor.value = tabs[activeTabIndex];
+      editor.value = tabs[activeTabIndex].content;
     });
 
     editor.addEventListener('input', () => {
-      tabs[activeTabIndex] = editor.value;
+      tabs[activeTabIndex].content = editor.value;
       saveTabs();
     });
 
-    // Support for Tab key
-    editor.addEventListener('keydown', function(e) {
+    editor.addEventListener('keydown', function (e) {
       if (e.key === 'Tab') {
         e.preventDefault();
         const start = this.selectionStart;
         const end = this.selectionEnd;
         this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
         this.selectionStart = this.selectionEnd = start + 1;
-        tabs[activeTabIndex] = this.value;
+        tabs[activeTabIndex].content = this.value;
         saveTabs();
       }
     });
