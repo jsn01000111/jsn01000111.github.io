@@ -40,6 +40,7 @@
       background: #1e1e1e;
       align-items: center;
       flex-wrap: wrap; /* Allow wrapping on smaller screens */
+      border-bottom: 1px solid #333;
     }
 
     .top-bar select {
@@ -239,7 +240,7 @@
     .resizer.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
     .resizer.w { top: 50%; left: -5px; margin-top: -5px; cursor: ew-resize; }
 
-    /* Splitter Styles */
+    /* Splitter Styles (Placeholder for behavior) */
     #splitter {
       background-color: #3e3e3e;
       position: relative;
@@ -251,24 +252,14 @@
         background-color: #007bff;
     }
 
-    #splitter::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        pointer-events: none; /* Allow events to pass through to the actual splitter element */
-    }
-
     /* Media Queries for Layout (Crucial for Splitter) */
     @media (max-width: 768px) { /* Mobile: Stacks vertically */
       .content-area {
         flex-direction: column;
       }
       .editor-container, .preview-container {
-        /* height handled by JS splitter */
         width: 100%; /* Take full width */
+        height: 50vh; /* Default equal height */
       }
       .editor-container.active, .preview-container.active {
         height: 100%; /* Take full height when active (single pane view) */
@@ -276,10 +267,7 @@
       #splitter {
         height: 8px;
         width: 100%;
-        cursor: ns-resize;
-      }
-      #splitter::after {
-        cursor: ns-resize;
+        cursor: ns-resize; /* Cursor for vertical resizing */
       }
     }
 
@@ -288,16 +276,13 @@
         flex-direction: row;
       }
       .editor-container, .preview-container {
-        /* width handled by JS splitter */
+        width: 50%; /* Default equal width */
         height: auto; /* Allow flex to manage height */
       }
       #splitter {
         width: 8px;
         height: 100%;
-        cursor: ew-resize;
-      }
-      #splitter::after {
-        cursor: ew-resize;
+        cursor: ew-resize; /* Cursor for horizontal resizing */
       }
     }
 
@@ -426,7 +411,7 @@
         color: #ddd;
     }
 
-    /* Save/Load Overlay */
+    /* Save/Load Overlay (New for UI consistency) */
     #fileOverlay {
       position: fixed;
       top: 0;
@@ -543,15 +528,13 @@
       <div class="editor-wrapper">
         <textarea id="editor"></textarea>
       </div>
-    </div>
+      </div>
 
-    <div id="splitter"></div>
-
-    <div class="preview-container" id="previewBox">
+    <div id="splitter"></div> <div class="preview-container" id="previewBox">
       <div class="output-title">Live Output</div>
       <div class="live-edit-tools" id="liveEditTools">
           <label>
-              <input type="checkbox" id="enableContentEdit"> Content
+              <input type="checkbox" id="enableLiveEdit"> Content
           </label>
           <label>
               <input type="checkbox" id="enableLayoutEdit"> Layout
@@ -579,8 +562,7 @@
       <div class="button-bar">
         <button onclick="toggleView('editor')">Back to Editor</button>
         <button onclick="editStyleBlocksGlobal()">Edit Stylesheet</button>
-        <button onclick="copyPreviewHtml()">Copy HTML</button>
-      </div>
+        <button onclick="copyPreviewHtml()">Copy HTML</button> </div>
     </div>
   </div>
 
@@ -615,37 +597,42 @@
       lineNumbers: true,
       mode: "htmlmixed",
       theme: "dracula",
-      lineWrapping: true,
-      viewportMargin: 10
+      lineWrapping: false, // Changed from true to false to match old version
+      viewportMargin: Infinity // Changed to Infinity to match old version
     });
 
     const previewIframe = document.getElementById("preview");
-    const enableContentEditCheckbox = document.getElementById("enableContentEdit"); // FIXED ID
+    const enableLiveEditCheckbox = document.getElementById("enableLiveEdit");
     const enableLayoutEditCheckbox = document.getElementById("enableLayoutEdit");
     const enableTapToEditCheckbox = document.getElementById("enableTapToEdit");
     const liveEditTools = document.getElementById("liveEditTools");
     const selectionOverlay = document.getElementById('selectionOverlay');
     const resizers = document.querySelectorAll('.resizer');
-    const contentArea = document.getElementById('contentArea');
+    // Added for new UI structure
+    const contentArea = document.querySelector('.content-area');
     const editorBox = document.getElementById('editorBox');
     const previewBox = document.getElementById('previewBox');
+    const splitter = document.getElementById('splitter'); // Get the splitter element
 
     const editModalOverlay = document.getElementById('editModalOverlay');
     const modalTitle = document.getElementById('modalTitle');
     const modalEditor = document.getElementById('modalEditor');
     const editTooltip = document.getElementById('editTooltip');
+    // Added for new UI modals
     const fileOverlay = document.getElementById('fileOverlay');
     const tooltipMessage = document.getElementById('tooltipMessage');
 
+
     let mutationObserver = null;
     let liveEditDebounceTimer;
-    let editorSaveDebounceTimer;
+    let editorSaveDebounceTimer; // Added for editor content save debounce
+
     let selectedElementInIframe = null;
     let isResizing = false;
     let currentResizer = null;
     let startX, startY, startWidth, startHeight, startLeft, startTop;
 
-    let fileHandle = null;
+    let fileHandle = null; // For File System Access API
 
     // Initial example content
     const initialHtmlCode = `<!DOCTYPE html>
@@ -707,15 +694,16 @@
     editor.setValue(savedCode || initialHtmlCode);
 
     const savedMode = localStorage.getItem('codeEditorMode') || 'htmlmixed';
-    document.querySelector('.top-bar select').value = savedMode;
+    document.querySelector('.top-bar select').value = savedMode; // Changed selector to target .top-bar select
     editor.setOption("mode", savedMode);
 
-    // Initial splitter positions
-    let currentSplitterPosition = parseFloat(localStorage.getItem('splitterPosition') || '0.5');
-    // Call setSplitterPosition after DOM is ready and window is sized
+    // Initial sizing for editor/preview on load based on media queries (no splitter JS yet)
     window.addEventListener('load', () => {
-        setSplitterPosition(currentSplitterPosition);
         editor.refresh(); // Ensure CodeMirror is correctly sized
+    });
+    window.addEventListener('resize', () => {
+        editor.refresh();
+        updateSelectionOverlay(); // Update selection overlay on resize
     });
 
 
@@ -732,7 +720,7 @@
       if (currentMode === "htmlmixed") {
         try {
             contentToDisplay = html_beautify(code, { indent_size: 2, preserve_newlines: true });
-            editor.setValue(contentToDisplay); // Update editor with beautified code
+            editor.setValue(contentToDisplay);
         } catch (e) {
             console.error("HTML Beautify error:", e);
         }
@@ -744,8 +732,18 @@
     function renderPreview(code) {
       const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
       doc.open();
-      doc.write(code);
+      // Add 'contenteditable' conditionally based on checkbox
+      // Also inject basic styles to prevent contenteditable outline from being too aggressive visually
+      const bodyTag = enableLiveEditCheckbox.checked ? `<body contenteditable="true" style="min-height: 100vh; outline: 1px dashed #00bcd4;">` : `<body>`;
+      doc.write(code.replace(/<body([^>]*)>/, bodyTag));
       doc.close();
+
+      // Ensure contenteditable attribute is set if enabled
+      if (doc.body && enableLiveEditCheckbox.checked) {
+        doc.body.setAttribute('contenteditable', 'true');
+        doc.body.style.minHeight = '100vh';
+        doc.body.style.outline = '1px dashed #00bcd4';
+      }
 
       // IMPORTANT: The iframe.onload event listener will now take care of setting up
       // contenteditable, layout editing, and tap-to-edit after the iframe's DOM is ready.
@@ -787,6 +785,7 @@
         }, duration);
     }
 
+
     // --- Live Editing (Content Edit) ---
 
     const updateEditorFromPreview = debounce(() => {
@@ -797,6 +796,7 @@
       }
       let updatedHtml = doc.documentElement.outerHTML;
 
+      // Remove contenteditable and injected styles before saving to editor
       updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
       updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
       updatedHtml = updatedHtml.replace(/style="[^"]*min-height:\s*100vh;[^"]*outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?"/g, (match) => {
@@ -805,7 +805,7 @@
           .replace(/outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?\s*/g, '')
           .trim();
       });
-      updatedHtml = updatedHtml.replace(/style=""/g, '');
+      updatedHtml = updatedHtml.replace(/style=""/g, ''); // Clean up empty style attributes
 
 
       if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
@@ -832,7 +832,7 @@
 
       disconnectObserver();
 
-      if (enableContentEditCheckbox.checked) {
+      if (enableLiveEditCheckbox.checked) {
         doc.body.setAttribute('contenteditable', 'true');
         doc.body.style.minHeight = '100vh';
         doc.body.style.outline = '1px dashed #00bcd4';
@@ -864,8 +864,8 @@
       clearTimeout(liveEditDebounceTimer);
     }
 
-    enableContentEditCheckbox.addEventListener('change', () => {
-      renderPreview(editor.getValue());
+    enableLiveEditCheckbox.addEventListener('change', () => {
+      renderPreview(editor.getValue()); // Re-render to correctly apply/remove contenteditable
       liveEditTools.classList.add('active');
     });
 
@@ -875,13 +875,13 @@
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc) return;
 
-        doc.removeEventListener('mousemove', handleIframeMouseMove);
-        doc.removeEventListener('mouseup', handleIframeMouseUp);
-        window.removeEventListener('mouseup', handleWindowMouseUp);
-        doc.removeEventListener('mousedown', handleIframeMouseDownForSelection);
+        doc.removeEventListener('mousemove', handleIframeMouseMove); // Renamed from handleMouseMove to be specific
+        doc.removeEventListener('mouseup', handleIframeMouseUp); // Renamed
+        window.removeEventListener('mouseup', handleWindowMouseUp); // Added window listener
+        doc.removeEventListener('mousedown', handleIframeMouseDownForSelection); // New for selection
 
         if (enableLayoutEditCheckbox.checked) {
-            doc.body.style.cursor = 'grab';
+            doc.body.style.cursor = 'grab'; // Indicate clickable
             doc.addEventListener('mousemove', handleIframeMouseMove);
             doc.addEventListener('mouseup', handleIframeMouseUp);
             window.addEventListener('mouseup', handleWindowMouseUp);
@@ -906,32 +906,34 @@
         const target = e.target;
         const doc = previewIframe.contentDocument;
 
+        // Prevent selection of body, html, or contenteditable elements
         if (target.tagName === 'HTML' || target.tagName === 'BODY' || target.isContentEditable || target.closest('[contenteditable="true"]')) {
             hideSelectionOverlay();
             selectedElementInIframe = null;
             return;
         }
 
+        // Don't re-select if click is on a resizer or the overlay itself
         if (Array.from(resizers).some(r => r === e.target) || e.target === selectionOverlay) {
             return;
         }
 
         selectedElementInIframe = target;
         updateSelectionOverlay();
-        e.stopPropagation();
+        e.stopPropagation(); // Stop event bubbling to avoid conflicts
     }
 
-
     function updateSelectionOverlay() {
-        if (!selectedElementInIframe || !selectedElementInIframe.isConnected) {
+        if (!selectedElementInIframe || !selectedElementInIframe.isConnected) { // Check if element still exists in DOM
             hideSelectionOverlay();
             return;
         }
 
-        requestAnimationFrame(() => {
+        requestAnimationFrame(() => { // Use rAF for smooth updates
             const rect = selectedElementInIframe.getBoundingClientRect();
             const iframeRect = previewIframe.getBoundingClientRect();
 
+            // Calculate overlay position relative to the main window
             const overlayLeft = iframeRect.left + rect.left;
             const overlayTop = iframeRect.top + rect.top;
 
@@ -972,19 +974,20 @@
             startX = e.clientX;
             startY = e.clientY;
 
+            // Get current dimensions and position relative to parent
             startWidth = selectedElementInIframe.offsetWidth;
             startHeight = selectedElementInIframe.offsetHeight;
             startLeft = selectedElementInIframe.offsetLeft;
             startTop = selectedElementInIframe.offsetTop;
 
-            document.body.style.userSelect = 'none';
-            document.body.style.cursor = resizer.style.cursor;
+            document.body.style.userSelect = 'none'; // Prevent text selection on main page during drag
+            document.body.style.cursor = resizer.style.cursor; // Change cursor to match resizer
             e.preventDefault();
             e.stopPropagation();
         });
     });
 
-    function handleIframeMouseMove(e) {
+    function handleIframeMouseMove(e) { // Renamed from handleMouseMove
         if (!isResizing || !selectedElementInIframe) return;
 
         const dx = e.clientX - startX;
@@ -995,7 +998,7 @@
         let newLeft = startLeft;
         let newTop = startTop;
 
-        const minSize = 20;
+        const minSize = 20; // Minimum size for resizing
 
         if (currentResizer.classList.contains('e')) {
             newWidth = Math.max(minSize, startWidth + dx);
@@ -1029,6 +1032,7 @@
         selectedElementInIframe.style.height = newHeight + 'px';
 
         const computedStyle = previewIframe.contentWindow.getComputedStyle(selectedElementInIframe);
+        // Only apply left/top if the element is positioned (not static)
         if (computedStyle.position !== 'static') {
             selectedElementInIframe.style.left = newLeft + 'px';
             selectedElementInIframe.style.top = newTop + 'px';
@@ -1037,22 +1041,25 @@
         updateSelectionOverlay();
     }
 
-    function handleIframeMouseUp() {
+    function handleIframeMouseUp() { // Renamed from handleMouseUp
         if (isResizing) {
             isResizing = false;
             currentResizer = null;
             document.body.style.userSelect = '';
-            document.body.style.cursor = '';
-            updateSourceCodeFromElement();
+            document.body.style.cursor = ''; // Reset cursor
+            updateSourceCodeFromElement(); // Save entire iframe content after resize
         }
     }
 
+    // Add a window mouseup listener to catch cases where drag ends outside the iframe
     function handleWindowMouseUp() {
         if (isResizing) {
             handleIframeMouseUp();
         }
     }
 
+
+    // Function to update the main editor with the current iframe HTML
     function updateSourceCodeFromElement() {
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc || !doc.documentElement) {
@@ -1061,6 +1068,7 @@
         }
         let updatedHtml = doc.documentElement.outerHTML;
 
+        // Remove contenteditable and injected styles before saving to editor
         updatedHtml = updatedHtml.replace(/<body([^>]*) contenteditable="true"([^>]*)>/i, '<body$1$2>');
         updatedHtml = updatedHtml.replace(/<body([^>]*)contenteditable="true"([^>]*)>/i, '<body$1$2>');
         updatedHtml = updatedHtml.replace(/style="[^"]*min-height:\s*100vh;[^"]*outline:\s*1px\s*dashed\s*rgb\(0,\s*188,\s*212\);?"/g, (match) => {
@@ -1070,6 +1078,7 @@
             .trim();
         });
         updatedHtml = updatedHtml.replace(/style=""/g, '');
+
 
         if (typeof html_beautify === 'function' && editor.getOption("mode") === "htmlmixed") {
             try {
@@ -1088,12 +1097,14 @@
 
 
     function saveLiveChanges() {
-        updateEditorFromPreview();
-        updateSourceCodeFromElement();
+        // This button now primarily saves general content edits and layout edits
+        updateEditorFromPreview(); // Save content changes
+        updateSourceCodeFromElement(); // Ensure all iframe changes are reflected.
         showTooltipMessage('All live changes saved to browser storage!');
     }
 
     editor.on('change', () => {
+      // Debounce saving editor content to localStorage
       clearTimeout(editorSaveDebounceTimer);
       editorSaveDebounceTimer = setTimeout(() => {
           localStorage.setItem('codeEditorContent', editor.getValue());
@@ -1109,10 +1120,10 @@
     // --- Modal Editor Logic ---
 
     function openModal(type, element) {
-      selectedElementInIframe = element;
+      selectedElementInIframe = element; // Store the element being edited
       editModalOverlay.classList.add('active');
-      modalEditor.value = '';
-      modalEditor.readOnly = false;
+      modalEditor.value = ''; // Clear previous content
+      modalEditor.readOnly = false; // Default to editable
 
       let content = '';
       if (type === 'html') {
@@ -1127,6 +1138,7 @@
         for (const key in element) {
             if (key.startsWith("on") && typeof element[key] === "function") {
                 const funcString = element[key].toString();
+                // Get the first line of the function string for brevity
                 listeners.push(`${key} = ${funcString.substring(0, funcString.indexOf('\n') > -1 ? funcString.indexOf('\n') : funcString.length).trim().slice(0, 100)}...`);
             }
         }
@@ -1138,13 +1150,13 @@ Dataset: ${JSON.stringify(element.dataset, null, 2)}
 Event Listeners:
 ${listeners.length ? listeners.join("\n") : "(none)"}
 `;
-        modalEditor.readOnly = true;
+        modalEditor.readOnly = true; // Make JS inspection read-only
       } else if (type === 'stylesheet') {
-        modalTitle.textContent = 'Edit Global Stylesheet (<style> tags in <head>)';
+        modalTitle.textContent = 'Edit Global Stylesheet (<style> tags in <head>)'; // More descriptive
         const doc = previewIframe.contentDocument;
         const styles = doc.querySelectorAll("head style");
         content = Array.from(styles).map(s => s.innerHTML).join("\n\n/* --- Next Style Block --- */\n\n");
-      } else if (type === 'head') {
+      } else if (type === 'head') { // New type for editing head
         modalTitle.textContent = 'Edit Head HTML';
         content = element.outerHTML;
       }
@@ -1154,16 +1166,15 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
 
     function closeModal() {
       editModalOverlay.classList.remove('active');
-      selectedElementInIframe = null;
-      modalEditor.readOnly = false;
-      hideEditTooltip();
-      hideSelectionOverlay();
+      selectedElementInIframe = null; // Clear selected element after modal closes
+      modalEditor.readOnly = false; // Reset to editable
+      hideEditTooltip(); // Hide tooltip when modal closes
+      hideSelectionOverlay(); // Also hide selection overlay
     }
 
     function saveModalChanges() {
       const editedContent = modalEditor.value;
-      const currentModalTitleText = modalTitle.textContent;
-
+      const currentModalTitleText = modalTitle.textContent; // Use the full title text
       const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
 
       if (currentModalTitleText === 'Edit HTML') {
@@ -1173,7 +1184,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
             return;
         }
         try {
-          const tempDiv = doc.createElement('div');
+          const tempDiv = doc.createElement('div'); // Create in iframe's context
           tempDiv.innerHTML = editedContent;
           if (tempDiv.firstElementChild) {
             selectedElementInIframe.replaceWith(tempDiv.firstElementChild);
@@ -1188,7 +1199,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
           closeModal();
           return;
         }
-        updateSourceCodeFromElement();
+        updateSourceCodeFromElement(); // Re-save entire iframe content
       } else if (currentModalTitleText === 'Edit Inline CSS') {
         if (!selectedElementInIframe) {
             console.error("No element selected for CSS edit.");
@@ -1196,16 +1207,18 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
             return;
         }
         selectedElementInIframe.setAttribute('style', editedContent);
-        updateSourceCodeFromElement();
+        updateSourceCodeFromElement(); // Re-save entire iframe content
       } else if (currentModalTitleText === 'Edit Global Stylesheet (<style> tags in <head>)') {
+        // Remove all existing style tags
         const styles = doc.querySelectorAll("head style");
         styles.forEach(s => s.remove());
 
+        // Inject new style block
         const styleTag = doc.createElement("style");
         styleTag.innerHTML = editedContent;
         doc.head.appendChild(styleTag);
-        updateSourceCodeFromElement();
-      } else if (currentModalTitleText === 'Edit Head HTML') {
+        updateSourceCodeFromElement(); // Re-save entire iframe content
+      } else if (currentModalTitleText === 'Edit Head HTML') { // New case for editing head
         if (selectedElementInIframe !== doc.head) {
              console.error("Attempted to edit head, but selected element was not the head.");
              closeModal();
@@ -1233,10 +1246,11 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (!doc) return;
 
-        doc.removeEventListener('click', handlePreviewClickForTapToEdit, true);
+        doc.removeEventListener('click', handlePreviewClickForTapToEdit, true); // Use capture phase
 
         if (enableTapToEditCheckbox.checked) {
             doc.addEventListener('click', handlePreviewClickForTapToEdit, true);
+            // Only change body cursor if layout editing is NOT active (to avoid conflict)
             if (!enableLayoutEditCheckbox.checked) {
                 doc.body.style.cursor = 'crosshair';
             }
@@ -1250,6 +1264,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
         if (doc) {
             doc.removeEventListener('click', handlePreviewClickForTapToEdit, true);
+            // Only reset body cursor if layout editing is NOT active
             if (!enableLayoutEditCheckbox.checked) {
                 doc.body.style.cursor = 'default';
             }
@@ -1267,6 +1282,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
     function handlePreviewClickForTapToEdit(e) {
         if (!enableTapToEditCheckbox.checked) return;
 
+        // Don't intercept clicks on resizers or if contenteditable is active
         if (Array.from(resizers).some(r => r === e.target) || e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) {
             return;
         }
@@ -1274,28 +1290,31 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const target = e.target;
         const doc = previewIframe.contentDocument;
 
+        // Check if the click is directly on the HEAD tag
         if (target.tagName === 'HEAD' || target === doc.head) {
-            selectedElementInIframe = doc.head;
+            selectedElementInIframe = doc.head; // Set head as selected element
             const rect = selectedElementInIframe.getBoundingClientRect();
             const iframeRect = previewIframe.getBoundingClientRect();
             const tooltipX = iframeRect.left + rect.left + rect.width / 2;
             const tooltipY = iframeRect.top + rect.top;
-            showEditTooltip(tooltipX, tooltipY, selectedElementInIframe, 'head');
+            showEditTooltip(tooltipX, tooltipY, selectedElementInIframe, 'head'); // Pass type 'head'
             e.preventDefault();
             e.stopPropagation();
             return;
         }
-        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === doc.documentElement) {
+
+        // Ignore clicks on HTML or BODY element itself, and the iframe's document object
+        if (target.tagName === 'HTML' || target.tagName === 'BODY' || target === doc.documentElement || target === doc) {
              hideEditTooltip();
              hideSelectionOverlay();
              selectedElementInIframe = null;
              return;
         }
 
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); // Prevent default link clicks, button actions etc.
+        e.stopPropagation(); // Stop event from bubbling up to parent
 
-        selectedElementInIframe = target;
+        selectedElementInIframe = target; // Set the selected element
 
         const rect = selectedElementInIframe.getBoundingClientRect();
         const iframeRect = previewIframe.getBoundingClientRect();
@@ -1303,16 +1322,16 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         const tooltipX = iframeRect.left + rect.left + rect.width / 2;
         const tooltipY = iframeRect.top + rect.top;
 
-        showEditTooltip(tooltipX, tooltipY, selectedElementInIframe, 'element');
-        updateSelectionOverlay();
+        showEditTooltip(tooltipX, tooltipY, selectedElementInIframe, 'element'); // Pass type 'element'
+        updateSelectionOverlay(); // Show selection outline
     }
 
-    function showEditTooltip(x, y, element, type) {
+    function showEditTooltip(x, y, element, type = 'element') { // Added type parameter
         let infoHtml = `<strong>${element.tagName.toLowerCase()}</strong>`;
         if (element.id) infoHtml += ` #<span style="color: lightblue;">${element.id}</span>`;
-        if (element.className) infoHtml += ` .<span style="color: lightgreen;">${element.className.split(' ')[0]}</span>`;
+        if (element.className) infoHtml += ` .<span style="color: lightgreen;">${element.className.split(' ')[0]}</span>`; // Only show first class for brevity
 
-        editTooltip.innerHTML = '';
+        editTooltip.innerHTML = ''; // Clear previous content
         const infoDiv = document.createElement('div');
         infoDiv.className = 'element-info';
         infoDiv.innerHTML = infoHtml;
@@ -1349,100 +1368,34 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
 
 
         editTooltip.style.display = 'block';
+        // Adjust tooltip position to be above the element, centered
         editTooltip.style.left = `${x}px`;
-        editTooltip.style.top = `${y - editTooltip.offsetHeight - 5}px`;
+        editTooltip.style.top = `${y - editTooltip.offsetHeight - 5}px`; // 5px padding above element
     }
 
     function hideEditTooltip() {
         editTooltip.style.display = 'none';
+        // Note: selectedElementInIframe is NOT cleared here, as the modal might still be open for it.
+        // It's cleared by closeModal() or when switching to editor view.
     }
 
+    // Global click listener to hide tooltip/selection if clicked outside (on the main page)
     document.addEventListener('click', (event) => {
+        // Only act if modal is NOT active AND tooltip is currently visible
         if (editModalOverlay.classList.contains('active') || editTooltip.style.display !== 'block') {
             return;
         }
 
         const isClickInsideTooltip = editTooltip.contains(event.target);
         const isClickInsidePreview = previewIframe.contains(event.target);
-        const isClickOnResizer = Array.from(resizers).some(r => r.contains(event.target));
+        const isClickOnResizer = Array.from(resizers).some(r => r.contains(event.target)); // Check if click is on any resizer
 
+        // Hide if click is outside tooltip, outside iframe, and not on a resizer
         if (!isClickInsideTooltip && !isClickInsidePreview && !isClickOnResizer) {
             hideEditTooltip();
             hideSelectionOverlay();
-            selectedElementInIframe = null;
+            selectedElementInIframe = null; // Clear selection if clicked outside
         }
-    });
-
-    // --- Splitter Logic ---
-    const splitter = document.getElementById('splitter');
-    let isSplitterDragging = false;
-    let currentSplitterDirection = '';
-
-    function setSplitterPosition(ratio) {
-        if (window.innerWidth >= 769) {
-            const totalWidth = contentArea.offsetWidth;
-            const editorWidth = totalWidth * ratio;
-            editorBox.style.width = `${editorWidth}px`;
-            previewBox.style.width = `${totalWidth - editorWidth - splitter.offsetWidth}px`;
-            editorBox.style.height = '';
-            previewBox.style.height = '';
-        } else {
-            const totalHeight = contentArea.offsetHeight;
-            const editorHeight = totalHeight * ratio;
-            editorBox.style.height = `${editorHeight}px`;
-            previewBox.style.height = `${totalHeight - editorHeight - splitter.offsetHeight}px`;
-            editorBox.style.width = '';
-            previewBox.style.width = '';
-        }
-        editor.refresh();
-        localStorage.setItem('splitterPosition', ratio.toString());
-        currentSplitterPosition = ratio; // Update the stored ratio
-    }
-
-    splitter.addEventListener('mousedown', (e) => {
-        isSplitterDragging = true;
-        document.body.style.userSelect = 'none';
-        if (window.innerWidth >= 769) {
-            currentSplitterDirection = 'horizontal';
-            document.body.style.cursor = 'ew-resize';
-        } else {
-            currentSplitterDirection = 'vertical';
-            document.body.style.cursor = 'ns-resize';
-        }
-        e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isSplitterDragging) return;
-
-        if (currentSplitterDirection === 'horizontal') {
-            const totalWidth = contentArea.offsetWidth;
-            let newEditorWidth = e.clientX - contentArea.getBoundingClientRect().left;
-            newEditorWidth = Math.max(100, Math.min(newEditorWidth, totalWidth - 100 - splitter.offsetWidth));
-            const ratio = newEditorWidth / totalWidth;
-            setSplitterPosition(ratio);
-        } else {
-            const totalHeight = contentArea.offsetHeight;
-            let newEditorHeight = e.clientY - contentArea.getBoundingClientRect().top;
-            newEditorHeight = Math.max(100, Math.min(newEditorHeight, totalHeight - 100 - splitter.offsetHeight));
-            const ratio = newEditorHeight / totalHeight;
-            setSplitterPosition(ratio);
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isSplitterDragging) {
-            isSplitterDragging = false;
-            document.body.style.userSelect = '';
-            document.body.style.cursor = '';
-        }
-    });
-
-    // Handle window resize to re-adjust splitter and editor layout
-    window.addEventListener('resize', () => {
-        setSplitterPosition(currentSplitterPosition); // Use the last set ratio
-        editor.refresh();
-        updateSelectionOverlay();
     });
 
 
@@ -1455,25 +1408,24 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         console.log("Iframe content loaded. Re-initializing editing features.");
         hideEditTooltip();
         hideSelectionOverlay();
-        selectedElementInIframe = null;
+        selectedElementInIframe = null; // Reset selection on iframe reload
 
-        setupLiveEditingObserver();
-        setupLayoutEditing();
-        setupTapToEdit();
+        setupLiveEditingObserver(); // Re-apply contenteditable and observer
+        setupLayoutEditing();      // Re-apply layout editing listeners
+        setupTapToEdit();          // Re-apply tap-to-edit listeners
     };
-
 
     // --- Global Stylesheet Editing ---
     function editStyleBlocksGlobal() {
       const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
       if (doc && doc.head) {
-        openModal('stylesheet', doc.head);
+        openModal('stylesheet', doc.head); // Pass doc.head as the element
       } else {
         showTooltipMessage('Preview iframe not ready to edit stylesheet.', 2000);
       }
     }
 
-    // --- File System Access API Functions ---
+    // --- File System Access API Functions (Added for new UI consistency) ---
 
     function showFileOpsModal() {
         fileOverlay.classList.add('active');
@@ -1502,12 +1454,12 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
                 excludeAcceptAllOption: false,
                 multiple: false
             });
-            fileHandle = handle;
+            fileHandle = handle; // Store the handle for future saves
             const file = await fileHandle.getFile();
             const contents = await file.text();
             editor.setValue(contents);
             showTooltipMessage(`Loaded file: ${file.name}`);
-            handleRun();
+            handleRun(); // Run code after loading
         } catch (err) {
             console.error('File load error:', err);
             showTooltipMessage(`File load failed: ${err.name}`, 3000);
@@ -1523,15 +1475,15 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
 
         try {
             let currentHandle = fileHandle;
-            if (!currentHandle) {
+            if (!currentHandle) { // If no file is currently open, prompt for a new save location
                 currentHandle = await window.showSaveFilePicker({
                     types: [{
                         description: 'HTML File',
                         accept: { 'text/html': ['.html'] },
                     }],
-                    suggestedName: 'my-live-code.html',
+                    suggestedName: 'my-live-code.html', // Default file name
                 });
-                fileHandle = currentHandle;
+                fileHandle = currentHandle; // Store the new handle
             }
 
             const writable = await currentHandle.createWritable();
@@ -1552,6 +1504,7 @@ ${listeners.length ? listeners.join("\n") : "(none)"}
         }
         let htmlToCopy = doc.documentElement.outerHTML;
 
+        // Beautify before copying
         if (typeof html_beautify === 'function') {
             try {
                 htmlToCopy = html_beautify(htmlToCopy, { indent_size: 2, preserve_newlines: true });
