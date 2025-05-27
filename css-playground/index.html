@@ -1,0 +1,444 @@
+  <!--
+  Copyright © 2025 JSN01000111
+  Licensed for educational and personal use only.
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS Playground with CodeMirror</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/scroll/simplescrollbars.min.css">
+
+
+  <style>
+    /* Global Resets & Basics */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f4f4; /* Slightly off-white background */
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Main Container for the Playground */
+    .playground-container {
+      display: flex;
+      flex-direction: column; /* Stack panels vertically by default */
+      flex-grow: 1;
+    }
+
+    /* Editor Panels (HTML & CSS) */
+    .editor-panel {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid #e0e0e0; /* Lighter border */
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    }
+
+    /* Header for Editor Panels */
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: #e9e9e9; /* Light grey header */
+      font-weight: bold;
+      color: #555;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Toggle Button for collapsing/expanding */
+    .toggle-btn {
+      font-size: 1.2em; /* Slightly larger arrow */
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0 5px; /* Adjust padding for better click area */
+      color: #666;
+      transition: transform 0.2s ease-in-out, color 0.2s ease;
+    }
+
+    .toggle-btn:hover {
+      color: #007bff;
+    }
+
+    /* HTML Editor Specifics */
+    /* When HTML panel is collapsed */
+    .html-editor-panel.html-collapsed {
+      /* On mobile (vertical stack), visually hide the CodeMirror content */
+      /* On desktop (horizontal stack), this will shrink the panel width */
+      overflow: hidden; /* Hide anything that overflows during transition */
+    }
+
+    .html-editor-panel.html-collapsed .CodeMirror {
+      height: 0 !important; /* Force CodeMirror height to 0 */
+      min-height: 0 !important; /* Override any min-height */
+      border: none !important; /* Remove border when collapsed */
+      margin: 0 !important; /* Remove margins */
+      padding: 0 !important; /* Remove padding */
+      /* This is important for the CodeMirror content area itself */
+    }
+
+    .html-editor-panel.html-collapsed .CodeMirror-scroll {
+      height: 0 !important; /* Ensure the scrollable area is also 0 */
+      min-height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* Rotate arrow when HTML is collapsed (desktop view) */
+    @media (min-width: 769px) {
+      .html-editor-panel.html-collapsed .editor-header .toggle-btn {
+        transform: rotate(-90deg); /* Rotate to point right */
+      }
+    }
+
+    /* Code Editor Specifics (applies to both HTML and CSS CodeMirror instances) */
+    .CodeMirror {
+      flex-grow: 1; /* Allow to fill available vertical space */
+      min-height: 200px; /* Ensure editor has a good starting height */
+      border: 1px solid #ddd; /* Match your desired border */
+      border-radius: 6px;
+      overflow: hidden; /* Important for border-radius to work */
+      margin: 10px; /* Space around the editor */
+      font-size: 14px; /* Consistent font size */
+      line-height: 1.5; /* Consistent line height */
+
+      /* Default CodeMirror White Theme (if no specific theme file is loaded) */
+      background: white; /* Ensure background is white */
+      color: black; /* Ensure text is black */
+    }
+
+    /* No margin top if it's the first child after the header in panel */
+    .editor-panel > .CodeMirror {
+        margin-top: 0; /* Let editor-panel padding handle top spacing */
+        margin-left: 15px; /* Match header padding */
+        margin-right: 15px; /* Match header padding */
+        margin-bottom: 15px; /* Space from bottom of panel */
+    }
+
+    /* Preview Panel */
+    .preview-panel {
+      flex-grow: 1; /* Take remaining vertical space */
+      padding: 15px;
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05); /* Shadow on top */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-header {
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .iframe-wrapper {
+      position: relative;
+      width: 100%;
+      flex-grow: 1; /* Allow iframe wrapper to fill space */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    #preview-iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Responsive Adjustments */
+    @media (min-width: 769px) {
+      /* On larger screens, arrange horizontally */
+      .playground-container {
+        flex-direction: row;
+      }
+      .editor-panel {
+        flex: 1; /* HTML and CSS panels take equal width */
+        border-right: 1px solid #e0e0e0; /* Vertical divider */
+        border-bottom: none; /* No bottom border when side-by-side */
+      }
+      .preview-panel {
+        flex: 1; /* Preview also takes equal width */
+        border-left: 1px solid #e0e0e0; /* Vertical divider */
+        border-top: none; /* No top border when side-by-side */
+      }
+
+      /* When HTML is collapsed, CSS and Preview expand */
+      .html-editor-panel.html-collapsed {
+        flex: 0 0 50px; /* Shrink HTML panel width */
+      }
+      /* Ensure CSS and Preview take remaining space when HTML is collapsed */
+      .html-editor-panel.html-collapsed + .css-editor-panel {
+        flex: 1.5;
+      }
+      .html-editor-panel.html-collapsed + .css-editor-panel + .preview-panel {
+        flex: 1.5;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .editor-header {
+        padding: 8px 12px;
+      }
+      .CodeMirror {
+        font-size: 13px;
+        min-height: 120px;
+      }
+      /* Ensure full width on mobile for containers */
+      .editor-panel > .CodeMirror {
+          margin-left: 10px;
+          margin-right: 10px;
+          margin-bottom: 10px;
+      }
+      /* No rotation on mobile when collapsed vertically */
+      .html-editor-panel.html-collapsed .editor-header .toggle-btn {
+        transform: rotate(0deg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      .CodeMirror {
+        font-size: 12px;
+        min-height: 100px;
+      }
+      .editor-panel > .CodeMirror {
+          margin-left: 5px;
+          margin-right: 5px;
+          margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="playground-container">
+
+    <div class="editor-panel html-editor-panel" id="html-panel">
+      <div class="editor-header">
+        HTML
+        <button class="toggle-btn" id="html-toggle-btn">▼</button>
+      </div>
+      <textarea id="html-code" class="code-input" spellcheck="false">
+<h1>Hello CodeMirror!</h1>
+<p>This playground now uses <strong>CodeMirror</strong> for a better typing experience.</p>
+<div class="my-box">I am a box!</div>
+      </textarea>
+    </div>
+
+    <div class="editor-panel css-editor-panel" id="css-panel">
+      <div class="editor-header">CSS</div>
+      <textarea id="css-code" class="code-input" spellcheck="false">
+/* Styles for your HTML content */
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: #f0f8ff; /* Light blue background */
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+h1 {
+  color: #336699; /* Dark blue heading */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.1em;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.my-box {
+  width: 150px;
+  height: 150px;
+  background-color: #ff9900; /* Orange */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 10px;
+  margin: 30px auto;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.my-box:hover {
+  background-color: #cc7a00; /* Darker orange on hover */
+  transform: scale(1.05) rotate(3deg);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Example of responsive styling for your content */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .my-box {
+    width: 120px;
+    height: 120px;
+    font-size: 1em;
+  }
+}
+      </textarea>
+    </div>
+
+    <div class="preview-panel">
+      <div class="preview-header">Preview</div>
+      <div class="iframe-wrapper">
+        <iframe id="preview-iframe"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closetag.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/scroll/simplescrollbars.min.js"></script>
+
+
+  <script>
+    // Get references to DOM elements
+    const htmlCodeInput = document.getElementById("html-code");
+    const cssCodeInput = document.getElementById("css-code");
+    const previewIframe = document.getElementById("preview-iframe");
+    const htmlPanel = document.getElementById("html-panel");
+    const htmlToggleBtn = document.getElementById("html-toggle-btn");
+    const cssPanel = document.getElementById("css-panel");
+    const previewPanel = document.querySelector(".preview-panel");
+
+    let htmlEditorCM; // Declare CodeMirror instances globally
+    let cssEditorCM;
+
+    // Function to update the live preview iframe
+    function updatePreview() {
+      // Get the current content directly from CodeMirror instances
+      const htmlContent = htmlEditorCM.getValue();
+      const cssContent = cssEditorCM.getValue();
+
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>${cssContent}</style>
+        </head>
+        <body>
+            ${htmlContent}
+        </body>
+        </html>
+      `;
+      // Use document.write in the iframe's document for a more robust update
+      previewIframe.contentWindow.document.open();
+      previewIframe.contentWindow.document.write(fullHtml);
+      previewIframe.contentWindow.document.close();
+    }
+
+    // Function to toggle HTML editor panel
+    function toggleHtmlEditor() {
+      const isCollapsed = htmlPanel.classList.toggle('html-collapsed');
+
+      // Adjust button text immediately
+      htmlToggleBtn.textContent = isCollapsed ? '▶' : '▼';
+
+      // Use a brief timeout to allow CSS transitions to start
+      // before telling CodeMirror to refresh or adjusting flex properties
+      setTimeout(() => {
+        if (isCollapsed) {
+            // When collapsing, adjust flex properties to give more space
+            if (window.innerWidth >= 769) { // Apply only on desktop
+                htmlPanel.style.flex = '0 0 50px'; /* Shrink HTML panel width */
+                cssPanel.style.flex = '1.5';
+                previewPanel.style.flex = '1.5';
+            }
+        } else {
+            // When expanding, reset flex properties
+            if (window.innerWidth >= 769) { // Apply only on desktop
+                htmlPanel.style.flex = '1';
+                cssPanel.style.flex = '1';
+                previewPanel.style.flex = '1';
+            }
+        }
+
+        // Refresh CodeMirror instances after potential size changes
+        // It's crucial for CodeMirror to recalculate its layout.
+        htmlEditorCM.refresh();
+        cssEditorCM.refresh();
+      }, 50); // Small delay to allow CSS transitions
+    }
+
+    // Initial setup on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize CodeMirror for HTML
+      htmlEditorCM = CodeMirror.fromTextArea(htmlCodeInput, {
+          mode: 'htmlmixed',
+          // theme: 'duotone-light', // No specific theme, defaults to white
+          lineNumbers: true,
+          matchBrackets: true,
+          autoCloseTags: true,
+          // scrollbarStyle: "null", // Use native scrollbars, often better for mobile
+      });
+
+      // Initialize CodeMirror for CSS
+      cssEditorCM = CodeMirror.fromTextArea(cssCodeInput, {
+          mode: 'css',
+          // theme: 'duotone-light', // No specific theme, defaults to white
+          lineNumbers: true,
+          matchBrackets: true,
+          // scrollbarStyle: "null",
+      });
+
+      // Attach event listeners for CodeMirror changes to update preview
+      htmlEditorCM.on('change', updatePreview);
+      cssEditorCM.on('change', updatePreview);
+
+      // Event listener for the toggle button
+      htmlToggleBtn.addEventListener('click', toggleHtmlEditor);
+
+      // Perform initial update of the preview
+      updatePreview();
+
+      // Collapse HTML editor on initial load (optional, but requested behavior)
+      toggleHtmlEditor(); // This will trigger the initial collapse and refresh
+
+      // Optional: Add a window resize listener for CodeMirror refresh
+      window.addEventListener('resize', () => {
+          htmlEditorCM.refresh();
+          cssEditorCM.refresh();
+          // Re-evaluate flex on resize for desktop/mobile toggle if HTML is collapsed
+          if (htmlPanel.classList.contains('html-collapsed')) {
+              toggleHtmlEditor(); // Toggle again to re-apply flex logic based on new window size
+          }
+      });
+    });
+  </script>
+</body>
+</html>
