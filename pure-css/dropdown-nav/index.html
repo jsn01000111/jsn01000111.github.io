@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Dropdown Nav</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f0f0f0;
+    }
+
+    nav {
+      background: #222;
+      padding: 0.75em 1em;
+      position: relative;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+    }
+
+    nav li {
+      position: relative;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.75em 1em;
+      display: block;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background: #444;
+    }
+
+    /* Dropdown menu */
+    nav li ul {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #333;
+      min-width: 180px;
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+    }
+
+    nav li:hover > ul {
+      display: flex;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile toggle */
+    .menu-toggle {
+      display: none;
+    }
+
+    .menu-icon {
+      display: none;
+      font-size: 1.8em;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .menu-icon {
+        display: block;
+      }
+
+      nav ul {
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        background: #222;
+      }
+
+      .menu-toggle:checked + .menu-icon + ul {
+        max-height: 1000px;
+      }
+
+      nav li ul {
+        position: static;
+        display: none;
+      }
+
+      nav li:has(input:checked) ul {
+        display: flex;
+      }
+
+      /* Mobile submenu toggle */
+      nav li input {
+        display: none;
+      }
+
+      nav li label {
+        display: block;
+        padding: 0.75em 1em;
+        color: white;
+        cursor: pointer;
+      }
+
+      nav li label:hover {
+        background: #444;
+      }
+
+      nav li label::after {
+        content: " ▼";
+        float: right;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li>
+        <a href="#">Services</a>
+        <ul>
+          <li><a href="#">Web Design</a></li>
+          <li><a href="#">SEO</a></li>
+          <li><a href="#">Hosting</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">About</a>
+      </li>
+      <li>
+        <input type="checkbox" id="sub-toggle" />
+        <label for="sub-toggle">More</label>
+        <ul>
+          <li><a href="#">Team</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+</body>
+</html>
