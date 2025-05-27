@@ -363,18 +363,8 @@ button:hover {
       updatePreview();
 
       // Collapse HTML editor on initial load
-      toggleHtmlEditor(); // This will trigger the initial collapse and refresh
-
-      // Optional: Add a window resize listener for CodeMirror refresh
-      window.addEventListener('resize', () => {
-          htmlEditorCM.refresh();
-          cssEditorCM.refresh();
-          // Re-evaluate flex on resize if HTML is collapsed
-          // Toggling again re-applies the logic
-          if (htmlPanel.classList.contains('html-collapsed')) {
-              toggleHtmlEditor();
-          }
-      });
+      toggleHtmlEditor(); // This will trigger the initial collapse and refresh   
+      
     });
   </script>
 </body>
