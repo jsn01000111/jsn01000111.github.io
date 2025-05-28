@@ -1,3 +1,18 @@
+(function () {
+  if (document.getElementById('snakeCanvas')) return; // prevent duplicate
+
+  // Create game canvas
+  const canvas = document.createElement('canvas');
+  canvas.id = 'snakeCanvas';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;pointer-events:none;';
+  document.body.appendChild(canvas);
+
+  // Add other necessary HTML elements dynamically here:
+  // score div, controls, ready message, audio elements, etc.
+  
+  // Then run your game logic...
+})();
+
 <!--
 Project: Snake Ready
 Creator: JSN01000111
