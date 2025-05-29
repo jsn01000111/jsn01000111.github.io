@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Code Editor Educational</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/lint/lint.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h2, h3, p {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        #header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        #run-btn, #autocomplete-btn {
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 5px; /* Spacing between buttons */
+        }
+        #autocomplete-btn {
+            background: #007bff; /* Different color for autocomplete */
+        }
+        #run-btn:active, #autocomplete-btn:active {
+            opacity: 0.9;
+        }
+
+        #editor-container {
+            width: 100%;
+            height: 350px; /* Increased height for better mobile experience */
+            border: 1px solid #ccc;
+            overflow: hidden; /* Important for CodeMirror's internal scroll */
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .CodeMirror {
+            height: 100%; /* Make CodeMirror take full height of its container */
+            font-size: 1.1em; /* Larger font size for mobile readability */
+            line-height: 1.5; /* Better line spacing */
+        }
+        .CodeMirror-scroll {
+            overflow: auto !important; /* Ensure scrolling works properly */
+        }
+        textarea {
+            display: none; /* Hide the original textarea as CodeMirror replaces it */
+        }
+
+        #output {
+            margin-top: 15px;
+            padding: 15px;
+            background: #282c34; /* Darker background for console */
+            color: #abb2bf; /* Light gray text */
+            min-height: 100px; /* Increased min-height */
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap; /* Preserve formatting and wrap long lines */
+            word-break: break-word; /* Break long words */
+            font-size: 0.95em;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            overflow-y: auto; /* Allow scrolling for long output */
+            max-height: 250px; /* Max height for console output */
+        }
+        .output-line {
+            margin-bottom: 3px;
+        }
+        .output-log { color: #abb2bf; }
+        .output-error { color: #e06c75; font-weight: bold; } /* Reddish for errors */
+        .output-warn { color: #e5c07b; } /* Yellowish for warnings */
+        .output-return { color: #61afef; } /* Blueish for return value */
+
+        #instructions {
+            margin-top: 15px;
+            background: #e9e9e9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #007bff;
+        }
+        #instructions code {
+            background: #ddd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        /* Tippy.js custom style for better visibility */
+        .tippy-box[data-theme~='custom-tooltip'] {
+            background-color: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            max-width: 250px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .tippy-box[data-theme~='custom-tooltip'][data-placement^='top'] > .tippy-arrow {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>JS Code Editor</h2>
+    
+    <div id="header-controls">
+        <button id="run-btn">Run Code</button>
+        <button id="autocomplete-btn">Get Suggestions</button>
+    </div>
+
+    <div id="editor-container">
+        <textarea id="editor"></textarea>
+    </div>
+
+    <div id="output">
+        <div class="output-line output-log">Output Console:</div>
+    </div>
+
+    <div id="instructions">
+        <h3>Instructions:</h3>
+        <p>Type JavaScript code in the editor.</p>
+        <p>Tap "Run Code" to execute it and see output below.</p>
+        <p>Tap "Get Suggestions" for autocomplete options.</p>
+        <p><strong>Example:</strong> Type <code>console.log("Hello World");</code></p>
+        <p><strong>For Tooltips:</strong> Tap on keywords like <code>function</code>, <code>const</code>, <code>let</code> to see info.</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/javascript-hint.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/lint/lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/lint/javascript-lint.min.js"></script> <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <script>
+        // Set up JSHint for basic linting (optional, but good for learning)
+        // You'd typically load jshint.js separately, but for a quick setup:
+        // window.JSHINT = function() { /* a stub or real jshint.js */ };
+        // For a full linter, you'd integrate JSHint/ESLint correctly.
+        // For now, let's keep it simple or remove if JSHINT global isn't provided.
+
+        // Initialize CodeMirror
+        let editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+            lineNumbers: true,
+            mode: "javascript",
+            theme: "dracula",
+            indentUnit: 2,
+            tabSize: 2,
+            autoCloseBrackets: true, // Automatically close brackets, parentheses, quotes
+            matchBrackets: true,     // Highlight matching brackets
+            styleActiveLine: true,   // Highlight the active line
+            lint: true,              // Enable linting (requires javascript-lint.js and JSHint)
+        });
+
+        // Set initial content for the editor
+        editor.setValue(`// Type your JavaScript code here!
+// Tap "Run Code" to execute.
+// Tap "Get Suggestions" for autocomplete.
+// Try typing: cons, doc, for, fun, if, arr
+// Then tap "Get Suggestions"
+
+function greet(name) {
+  console.log("Hello, " + name + "!");
+}
+
+greet("Learner");
+
+// Example of array methods:
+let numbers = [1, 2, 3];
+numbers.forEach(num => console.log(num));
+`);
+
+        // --- Custom Autocomplete Suggestions ---
+        CodeMirror.commands.autocomplete = function(cm) {
+            CodeMirror.showHint(cm, CodeMirror.hint.javascript, {
+                hint: function(cm, options) {
+                    let cursor = cm.getCursor();
+                    let token = cm.getTokenAt(cursor);
+                    let start = token.start;
+                    let end = cursor.ch;
+                    let currentWord = token.string.slice(0, end - start);
+                    
+                    // Comprehensive list of suggestions
+                    let allCompletions = [
+                        // Core JavaScript
+                        { text: "console.log();", displayText: "console.log" },
+                        { text: "console.error();", displayText: "console.error" },
+                        { text: "console.warn();", displayText: "console.warn" },
+                        { text: "alert('');", displayText: "alert" },
+                        { text: "prompt('');", displayText: "prompt" },
+                        { text: "confirm('');", displayText: "confirm" },
+                        { text: "function name() {\n  \n}", displayText: "function declaration" },
+                        { text: "() => {\n  \n}", displayText: "arrow function" },
+                        { text: "return;", displayText: "return" },
+                        { text: "const ", displayText: "const variable" },
+                        { text: "let ", displayText: "let variable" },
+                        { text: "var ", displayText: "var variable (legacy)" },
+                        { text: "if () {\n  \n}", displayText: "if statement" },
+                        { text: "else if () {\n  \n}", displayText: "else if" },
+                        { text: "else {\n  \n}", displayText: "else" },
+                        { text: "for (let i = 0; i < ; i++) {\n  \n}", displayText: "for loop" },
+                        { text: "while () {\n  \n}", displayText: "while loop" },
+                        { text: "do {\n  \n} while ();", displayText: "do...while loop" },
+                        { text: "for (const item of array) {\n  \n}", displayText: "for...of loop (arrays)" },
+                        { text: "for (const key in object) {\n  \n}", displayText: "for...in loop (objects)" },
+                        { text: "switch () {\n  case :\n    break;\n  default:\n    break;\n}", displayText: "switch statement" },
+                        { text: "break;", displayText: "break" },
+                        { text: "continue;", displayText: "continue" },
+                        { text: "try {\n  \n} catch (error) {\n  console.error(error);\n}", displayText: "try...catch" },
+                        { text: "throw new Error('');", displayText: "throw new Error" },
+                        { text: "true", displayText: "true (boolean)" },
+                        { text: "false", displayText: "false (boolean)" },
+                        { text: "null", displayText: "null (value)" },
+                        { text: "undefined", displayText: "undefined (value)" },
+                        { text: "class MyClass {\n  constructor() {\n    \n  }\n}", displayText: "class declaration" },
+                        { text: "super();", displayText: "super (in class constructor)" },
+                        { text: "extends", displayText: "extends (for classes)" },
+                        { text: "async function name() {\n  \n}", displayText: "async function" },
+                        { text: "await ", displayText: "await (in async function)" },
+                        { text: "new Promise((resolve, reject) => {\n  \n});", displayText: "new Promise" },
+
+                        // DOM Manipulation
+                        { text: "document.getElementById('');", displayText: "document.getElementById" },
+                        { text: "document.querySelector('');", displayText: "document.querySelector" },
+                        { text: "document.querySelectorAll('');", displayText: "document.querySelectorAll" },
+                        { text: "document.createElement('');", displayText: "document.createElement" },
+                        { text: "element.appendChild();", displayText: "appendChild (DOM)" },
+                        { text: "element.remove();", displayText: "remove (DOM)" },
+                        { text: "element.innerHTML = '';", displayText: "innerHTML" },
+                        { text: "element.textContent = '';", displayText: "textContent" },
+                        { text: "element.classList.add('');", displayText: "classList.add" },
+                        { text: "element.classList.remove('');", displayText: "classList.remove" },
+                        { text: "element.addEventListener('', () => {\n  \n});", displayText: "addEventListener" },
+                        { text: "event.preventDefault();", displayText: "event.preventDefault" },
+                        { text: "window.onload = function() {\n  \n};", displayText: "window.onload" },
+
+                        // Common Global Functions/Objects
+                        { text: "setTimeout(function() {\n  \n}, 1000);", displayText: "setTimeout (delay)" },
+                        { text: "setInterval(function() {\n  \n}, 1000);", displayText: "setInterval (repeat)" },
+                        { text: "clearInterval();", displayText: "clearInterval" },
+                        { text: "clearTimeout();", displayText: "clearTimeout" },
+                        { text: "isNaN();", displayText: "isNaN (Is Not a Number)" },
+                        { text: "parseInt('');", displayText: "parseInt (string to integer)" },
+                        { text: "parseFloat('');", displayText: "parseFloat (string to float)" },
+                        { text: "Math.random();", displayText: "Math.random (0-1)" },
+                        { text: "Math.floor();", displayText: "Math.floor (round down)" },
+                        { text: "Math.ceil();", displayText: "Math.ceil (round up)" },
+                        { text: "Math.round();", displayText: "Math.round (round nearest)" },
+
+                        // Array Methods
+                        { text: "array.length", displayText: "array.length" },
+                        { text: "array.push();", displayText: "array.push (add to end)" },
+                        { text: "array.pop();", displayText: "array.pop (remove from end)" },
+                        { text: "array.shift();", displayText: "array.shift (remove from start)" },
+                        { text: "array.unshift();", displayText: "array.unshift (add to start)" },
+                        { text: "array.splice();", displayText: "array.splice (change content)" },
+                        { text: "array.slice();", displayText: "array.slice (copy portion)" },
+                        { text: "array.indexOf('');", displayText: "array.indexOf (find index)" },
+                        { text: "array.includes('');", displayText: "array.includes (check presence)" },
+                        { text: "array.map(item => );", displayText: "array.map (transform elements)" },
+                        { text: "array.filter(item => );", displayText: "array.filter (select elements)" },
+                        { text: "array.reduce((acc, item) => acc + item, 0);", displayText: "array.reduce (accumulate)" },
+                        { text: "array.forEach(item => console.log(item));", displayText: "array.forEach (iterate)" },
+                        { text: "Array.isArray();", displayText: "Array.isArray (check if array)" },
+
+                        // String Methods
+                        { text: "string.length", displayText: "string.length" },
+                        { text: "string.toUpperCase();", displayText: "string.toUpperCase" },
+                        { text: "string.toLowerCase();", displayText: "string.toLowerCase" },
+                        { text: "string.substring();", displayText: "string.substring" },
+                        { text: "string.indexOf('');", displayText: "string.indexOf" },
+                        { text: "string.includes('');", displayText: "string.includes" },
+                        { text: "string.replace('', '');", displayText: "string.replace" },
+                        { text: "string.split('');", displayText: "string.split (string to array)" },
+                    ];
+
+                    let filtered = allCompletions.filter(item =>
+                        item.displayText.toLowerCase().includes(currentWord.toLowerCase()) // Use includes for broader search
+                    );
+
+                    return {
+                        list: filtered,
+                        from: CodeMirror.Pos(cursor.line, start),
+                        to: CodeMirror.Pos(cursor.line, end)
+                    };
+                }
+            });
+        };
+
+        // --- Autocomplete Button Trigger ---
+        document.getElementById("autocomplete-btn").addEventListener("click", function() {
+            editor.execCommand("autocomplete");
+        });
+
+
+        // --- Tooltip Definitions (Tap-Based for Mobile) ---
+        const tapTooltips = {
+            "function": "Defines a reusable block of code that can be called by name. E.g., function greet() { ... }",
+            "const": "Declares a constant (read-only) variable. Its value cannot be reassigned after initial assignment. E.g., const PI = 3.14;",
+            "let": "Declares a block-scoped local variable. Its value can be reassigned. E.g., let count = 0;",
+            "var": "Declares a function-scoped or globally-scoped variable. (Modern JS prefers 'let'/'const'). E.g., var oldVar = 1;",
+            "console": "A global object used to log messages to the browser's console for debugging. E.g., console.log()",
+            "log": "A method of the 'console' object to output messages or values to the console. E.g., console.log('Message');",
+            "error": "A method of the 'console' object to output an error message to the console. E.g., console.error('Error!');",
+            "warn": "A method of the 'console' object to output a warning message to the console. E.g., console.warn('Warning!');",
+            "if": "Executes a block of code if a specified condition is true. E.g., if (x > 0) { ... }",
+            "else": "Used with 'if' to execute an alternative block of code if the 'if' condition is false.",
+            "for": "Creates a loop that consists of three optional expressions and a statement. E.g., for (let i = 0; i < 5; i++) { ... }",
+            "while": "Creates a loop that executes a specified statement as long as a test condition evaluates to true. E.g., while (x < 10) { ... }",
+            "do": "Used with 'while' to create a loop that executes its block once before checking the condition. E.g., do { ... } while (x < 10);",
+            "switch": "Evaluates an expression, matching the expression's value to a case clause, and executes statements associated with that case. E.g., switch (day) { case 1: ... }",
+            "case": "A clause within a switch statement that specifies a value to match.",
+            "break": "Terminates the current loop, switch, or label statement and transfers program control to the statement following the terminated statement.",
+            "continue": "Terminates execution of the statements in the current iteration of the current loop, and continues execution of the loop with the next iteration.",
+            "try": "Defines a block of code to be tested for errors while it is being executed.",
+            "catch": "Defines a block of code to be executed, if an error occurs in the try block.",
+            "throw": "Throws (generates) a user-defined exception.",
+            "return": "Terminates function execution and specifies a value to be returned to the function caller.",
+            "true": "Represents the boolean value true. E.g., let isActive = true;",
+            "false": "Represents the boolean value false. E.g., let isDone = false;",
+            "null": "Represents the intentional absence of any object value. E.g., let data = null;",
+            "undefined": "Indicates that a variable has been declared but has not yet been assigned a value.",
+            "document": "Represents the web page loaded in the browser. It's the entry point to the web page's content.",
+            "getElementById": "A method of 'document' to select an HTML element by its unique ID attribute. E.g., document.getElementById('myDiv');",
+            "querySelector": "A method of 'document' to select the first HTML element that matches a specified CSS selector. E.g., document.querySelector('.myClass');",
+            "querySelectorAll": "A method of 'document' to select all HTML elements that match a specified CSS selector.",
+            "createElement": "Creates a new HTML element with the specified tag name. E.g., document.createElement('div');",
+            "appendChild": "Adds a node to the end of the list of children of a specified parent node.",
+            "remove": "Removes the object from the tree it belongs to.",
+            "innerHTML": "Gets or sets the HTML content (markup) of an element. E.g., myDiv.innerHTML = '<b>Hello</b>';",
+            "textContent": "Gets or sets the text content of an element, ignoring HTML tags. E.g., myDiv.textContent = 'Hello';",
+            "classList": "A DOMTokenList collection that allows access to the classes of an element.",
+            "add": "A method of 'classList' to add one or more class names to an element.",
+            "remove": "A method of 'classList' to remove one or more class names from an element.",
+            "addEventListener": "Attaches an event handler to the specified element without overwriting existing event handlers. E.g., btn.addEventListener('click', () => { ... });",
+            "event": "A global object that represents an event that takes place in the DOM.",
+            "preventDefault": "A method of the 'event' object that stops the default action of an element from happening.",
+            "setTimeout": "Executes a function, or evaluates an expression, after a specified delay (in milliseconds).",
+            "setInterval": "Repeats a function or evaluates an expression at specified intervals (in milliseconds).",
+            "clearInterval": "Clears a timer set with setInterval().",
+            "clearTimeout": "Clears a timer set with setTimeout().",
+            "Math": "A built-in object that has properties and methods for mathematical constants and functions.",
+            "random": "A method of 'Math' that returns a floating-point, pseudo-random number in the range 0 (inclusive) to 1 (exclusive).",
+            "floor": "A method of 'Math' that returns the largest integer less than or equal to a given number.",
+            "ceil": "A method of 'Math' that returns the smallest integer greater than or equal to a given number.",
+            "round": "A method of 'Math' that returns the value of a number rounded to the nearest integer.",
+            "Array": "A global object that is used in the construction of arrays.",
+            "length": "A property of Array and String objects that returns the number of elements or characters.",
+            "push": "A method of Array that adds one or more elements to the end of an array.",
+            "pop": "A method of Array that removes the last element from an array.",
+            "shift": "A method of Array that removes the first element from an array.",
+            "unshift": "A method of Array that adds one or more elements to the front of an array.",
+            "map": "A method of Array that creates a new array populated with the results of calling a provided function on every element in the calling array.",
+            "filter": "A method of Array that creates a new array with all elements that pass the test implemented by the provided function.",
+            "forEach": "A method of Array that executes a provided function once for each array element.",
+            "indexOf": "A method of Array and String that returns the first index at which a given element can be found.",
+            "includes": "A method of Array and String that determines whether an array or string includes a certain value among its entries.",
+            "splice": "A method of Array that changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.",
+            "slice": "A method of Array that returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included).",
+            "isNaN": "A global function that determines whether a value is an illegal number (Not-a-Number).",
+            "parseInt": "A global function that parses a string argument and returns an integer.",
+            "parseFloat": "A global function that parses a string argument and returns a floating-point number.",
+            "class": "A blueprint for creating objects (a particular JavaScript object).",
+            "constructor": "A special method for creating and initializing an object created with a class.",
+            "extends": "Used in class declarations or class expressions to create a class as a child of another class.",
+            "super": "Used in a class constructor to call the constructor of its parent class.",
+            "async": "Used to define an asynchronous function, which returns a Promise.",
+            "await": "Used to wait for a Promise to resolve within an async function.",
+            "Promise": "An object representing the eventual completion or failure of an asynchronous operation.",
+            "fetch": "A global method for making network requests to get resources. E.g., fetch('api/data.json').then(response => response.json());",
+            "toUpperCase": "A method of String that returns the calling string value converted to uppercase.",
+            "toLowerCase": "A method of String that returns the calling string value converted to lowercase.",
+            "replace": "A method of String that returns a new string with some or all matches of a pattern replaced by a replacement.",
+            "split": "A method of String that divides a String into an ordered list of substrings, puts these substrings into an array, and returns the array.",
+            "JSON": "A global object that provides utility functions for working with JSON (JavaScript Object Notation).",
+            "stringify": "A method of JSON that converts a JavaScript value to a JSON string. E.g., JSON.stringify({a:1});",
+            "parse": "A method of JSON that parses a JSON string, constructing the JavaScript value or object described by the string. E.g., JSON.parse('{\"a\":1}');"
+            // Continue adding more useful suggestions
+        };
+
+        let activeTippy = null; // To manage the single active tooltip instance
+
+        editor.on("touchstart", function(instance, event) {
+            // Get the word at the tapped position
+            let pos = instance.coordsChar({left: event.changedTouches[0].clientX, top: event.changedTouches[0].clientY});
+            let wordInfo = instance.findWordAt(pos);
+            let word = instance.getRange(wordInfo.anchor, wordInfo.head);
+
+            // Filter out empty words or punctuation
+            if (word && /^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(word) && tapTooltips[word]) {
+                // If there's an active tippy, hide it first
+                if (activeTippy) {
+                    activeTippy.destroy();
+                    activeTippy = null;
+                }
+
+                // Create a dummy element at the word's position for Tippy to anchor to
+                const coords = instance.charCoords(pos, "local");
+                const dummyElement = document.createElement('div');
+                dummyElement.style.position = 'absolute';
+                dummyElement.style.left = coords.left + 'px';
+                dummyElement.style.top = coords.top + 'px';
+                dummyElement.style.width = '1px';
+                dummyElement.style.height = instance.defaultTextHeight() + 'px';
+                // Append to the CodeMirror wrapper element to ensure correct positioning
+                editor.getWrapperElement().appendChild(dummyElement); 
+
+                // Create new tippy instance
+                activeTippy = tippy(dummyElement, {
+                    content: tapTooltips[word],
+                    trigger: 'manual',
+                    placement: 'top',
+                    theme: 'custom-tooltip',
+                    arrow: true,
+                    animation: 'shift-away',
+                    onHidden: (instance) => {
+                        // Clean up dummy element when hidden
+                        instance.reference.remove();
+                    },
+                    appendTo: editor.getWrapperElement() // Append tippy to editor wrapper
+                });
+                activeTippy.show();
+
+                // Hide after a short delay (e.g., 5 seconds) or on next tap
+                setTimeout(() => {
+                    if (activeTippy) {
+                        activeTippy.hide();
+                    }
+                }, 5000); // Hide after 5 seconds
+
+                // Prevent CodeMirror from potentially doing something else on tap that dismisses it
+                event.preventDefault();
+            } else {
+                // If no tooltip, hide any active one
+                if (activeTippy) {
+                    activeTippy.hide();
+                    activeTippy = null;
+                }
+            }
+        });
+
+        // --- Run Code Button (Executes JavaScript and Captures Console Output) ---
+        document.getElementById("run-btn").addEventListener("click", function() {
+            let code = editor.getValue();
+            const outputDiv = document.getElementById("output");
+            outputDiv.innerHTML = '<div class="output-line output-log">Output Console:</div>'; // Clear previous output
+
+            // Override console.log, .error, .warn to capture output
+            const originalConsoleLog = console.log;
+            const originalConsoleError = console.error;
+            const originalConsoleWarn = console.warn;
+
+            function appendOutput(type, ...args) {
+                const message = args.map(arg => {
+                    if (typeof arg === 'object' && arg !== null) {
+                        try {
+                            // Handle potential circular references for stringify
+                            const cache = new Set();
+                            return JSON.stringify(arg, (key, value) => {
+                                if (typeof value === 'object' && value !== null) {
+                                    if (cache.has(value)) {
+                                        // Circular reference found, discard key
+                                        return;
+                                    }
+                                    // Store value in our collection
+                                    cache.add(value);
+                                }
+                                return value;
+                            }, 2);
+                        } catch (e) {
+                            return String(arg); // Fallback for complex/unstringifiable objects
+                        }
+                    }
+                    return String(arg);
+                }).join(' ');
+                const lineDiv = document.createElement("div");
+                lineDiv.classList.add("output-line", `output-${type}`);
+                lineDiv.textContent = message;
+                outputDiv.appendChild(lineDiv);
+                outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
+            }
+
+            console.log = (...args) => appendOutput("log", ...args);
+            console.error = (...args) => appendOutput("error", ...args);
+            console.warn = (...args) => appendOutput("warn", ...args);
+
+            try {
+                // Execute code in a sandboxed Function constructor
+                const func = new Function(code);
+                let result = func(); // Execute the function
+                if (result !== undefined) {
+                    appendOutput("return", "Return Value:", result);
+                }
+                appendOutput("log", "--- Code execution finished ---");
+            } catch (error) {
+                appendOutput("error", "Runtime Error:", error.message);
+                originalConsoleError("Full error object:", error); // Log full error to browser console for deeper debugging
+            } finally {
+                // Restore original console methods
+                console.log = originalConsoleLog;
+                console.error = originalConsoleError;
+                console.warn = originalConsoleWarn;
+            }
+        });
+
+        // Initial console message
+        document.getElementById("output").innerHTML = '<div class="output-line output-log">Output Console:</div><div class="output-line output-log">Tap "Run Code" to execute your JavaScript.</div>';
+    </script>
+
+</body>
+          </html>
