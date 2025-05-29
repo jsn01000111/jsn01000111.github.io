@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JS Editor - Mobile Fix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    #controls {
+      padding: 10px;
+      background: #eee;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    #editor-wrapper {
+      flex-grow: 1;
+      overflow: hidden;
+      height: 100%;
+    }
+    #editor {
+      height: 100%;
+    }
+    #output-console {
+      flex-shrink: 0;
+      min-height: 80px;
+      background: #111;
+      color: #fff;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      overflow-y: auto;
+    }
+    .console-message { margin-bottom: 5px; }
+    .console-log { color: #ccc; }
+    .console-error { color: #ff6b6b; }
+    .console-warn { color: #ffd166; }
+    button {
+      padding: 8px 14px;
+      font-size: 1rem;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="controls">
+      <button id="runButton">Run</button>
+      <span style="font-size: 0.9rem;">👆 Tap & type JS below</span>
+    </div>
+    <div id="editor-wrapper"><div id="editor">Loading editor...</div></div>
+    <div id="output-console">
+      <div class="console-message console-log">Console ready.</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { EditorView, basicSetup } from "https://esm.sh/@codemirror/basic-setup";
+    import { javascript } from "https://esm.sh/@codemirror/lang-javascript";
+
+    let editor;
+    try {
+      const state = EditorView.state({
+        doc: `// Type JS here and tap Run
+console.log("Hello Mobile!");`,
+        extensions: [
+          basicSetup,
+          javascript(),
+          EditorView.lineWrapping
+        ]
+      });
+
+      editor = new EditorView({
+        state,
+        parent: document.getElementById("editor")
+      });
+
+      // Resize fix on mobile
+      window.addEventListener("resize", () => {
+        document.getElementById("editor").style.height = "100%";
+        editor.requestMeasure();
+      });
+    } catch (err) {
+      document.getElementById("editor").innerText = "⚠️ Failed to load CodeMirror. Try reloading.";
+      console.error(err);
+    }
+
+    const runButton = document.getElementById("runButton");
+    const consoleEl = document.getElementById("output-console");
+
+    runButton.addEventListener("click", () => {
+      const code = editor?.state.doc.toString();
+      consoleEl.innerHTML = '';
+      try {
+        const result = new Function(code)();
+        consoleLog("log", "--- Done ---");
+      } catch (e) {
+        consoleLog("error", e.message);
+      }
+    });
+
+    function consoleLog(type, ...args) {
+      const div = document.createElement("div");
+      div.className = `console-message console-${type}`;
+      div.textContent = args.join(" ");
+      consoleEl.appendChild(div);
+    }
+  </script>
+</body>
+</html>
