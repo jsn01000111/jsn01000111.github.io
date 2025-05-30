@@ -1,8 +1,3 @@
-<!-- Dev Tool with Dark Mode Toggle and CodeMirror Highlighting -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
-
 (() => {
   if (window.__devToolLoaded) return;
   window.__devToolLoaded = true;
@@ -14,7 +9,7 @@
       bottom: 10px;
       right: 10px;
       width: 320px;
-      height: 300px;
+      height: 280px;
       z-index: 99999;
       font-family: monospace;
       background: #fff;
@@ -24,14 +19,6 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    #devTool.dark {
-      background: #111;
-      color: #eee;
-    }
-    #devTool.dark #devToolHeader {
-      background: #222;
-      border-color: #444;
     }
     #devToolHeader {
       background: #f0f0f0;
@@ -44,19 +31,28 @@
       justify-content: space-between;
       align-items: center;
     }
+    #devTool textarea {
+      flex: 1;
+      padding: 6px;
+      font-size: 13px;
+      border: none;
+      outline: none;
+      resize: none;
+    }
     #devToolFooter {
       display: flex;
-      flex-wrap: wrap;
       gap: 4px;
       padding: 6px;
       background: #f9f9f9;
       border-top: 1px solid #ccc;
+      flex-wrap: wrap;
     }
     #devToolFooter button {
       flex: 1;
       padding: 4px;
       font-size: 12px;
       background: #eee;
+      color: #111;
       border: 1px solid #ccc;
       border-radius: 4px;
       cursor: pointer;
@@ -86,13 +82,18 @@
       cursor: pointer;
       line-height: 1;
     }
-    .CodeMirror {
-      flex: 1;
-      height: 100px;
+    @media (max-width: 400px) {
+      #devTool {
+        width: 95vw;
+        height: 60vh;
+        bottom: 5px;
+        right: 5px;
+      }
     }
   `;
   document.head.appendChild(style);
 
+  // Create UI
   const box = document.createElement("div");
   box.id = "devTool";
   box.innerHTML = `
@@ -100,13 +101,12 @@
       <span>Dev Tool</span>
       <button id="devToolClose">×</button>
     </div>
-    <textarea id="devToolCode">// Type JavaScript here\nconsole.log('Hello Dev Tool');</textarea>
+    <textarea id="devToolCSS">// Type JavaScript here\nconsole.log('Hello Dev Tool');</textarea>
     <div id="devToolFooter">
       <button id="runBtn">▶ Run</button>
       <button id="injectBtn">Inject CSS</button>
       <button id="inspectBtn">Click to Inspect</button>
       <button id="editToggleBtn">Edit Page</button>
-      <button id="themeToggleBtn">Toggle Theme</button>
       <button id="clearLogBtn">Clear Log</button>
     </div>
     <div id="devToolPath">Path: (none)</div>
@@ -114,24 +114,54 @@
   `;
   document.body.appendChild(box);
 
-  const codeMirror = CodeMirror.fromTextArea(document.getElementById("devToolCode"), {
-    mode: "javascript",
-    lineNumbers: true,
-    theme: "default"
-  });
+  // Dragging
+  const header = box.querySelector("#devToolHeader");
+  let offsetX = 0, offsetY = 0, isDragging = false;
+  const dragStart = (e) => {
+    isDragging = true;
+    const touch = e.touches?.[0] || e;
+    offsetX = touch.clientX - box.offsetLeft;
+    offsetY = touch.clientY - box.offsetTop;
+    e.preventDefault();
+  };
+  const dragMove = (e) => {
+    if (!isDragging) return;
+    const touch = e.touches?.[0] || e;
+    box.style.left = (touch.clientX - offsetX) + "px";
+    box.style.top = (touch.clientY - offsetY) + "px";
+    box.style.bottom = "auto";
+    box.style.right = "auto";
+  };
+  const dragEnd = () => { isDragging = false; };
+  header.addEventListener("mousedown", dragStart);
+  header.addEventListener("touchstart", dragStart);
+  document.addEventListener("mousemove", dragMove);
+  document.addEventListener("touchmove", dragMove);
+  document.addEventListener("mouseup", dragEnd);
+  document.addEventListener("touchend", dragEnd);
 
-  const runBtn = box.querySelector("#runBtn");
+  // Buttons
+  const cssBox = box.querySelector("#devToolCSS");
   const injectBtn = box.querySelector("#injectBtn");
   const inspectBtn = box.querySelector("#inspectBtn");
   const editBtn = box.querySelector("#editToggleBtn");
-  const themeBtn = box.querySelector("#themeToggleBtn");
   const clearLogBtn = box.querySelector("#clearLogBtn");
+  const runBtn = box.querySelector("#runBtn");
   const pathBox = box.querySelector("#devToolPath");
   const logBox = box.querySelector("#devToolLog");
   const closeBtn = box.querySelector("#devToolClose");
 
+  injectBtn.onclick = () => {
+    const css = cssBox.value.trim();
+    if (css) {
+      const s = document.createElement("style");
+      s.textContent = css;
+      document.head.appendChild(s);
+    }
+  };
+
   runBtn.onclick = () => {
-    const code = codeMirror.getValue();
+    const code = cssBox.value;
     logBox.innerHTML = "Console:\n";
     try {
       const originalLog = console.log;
@@ -147,15 +177,6 @@
     }
   };
 
-  injectBtn.onclick = () => {
-    const css = codeMirror.getValue().trim();
-    if (css) {
-      const s = document.createElement("style");
-      s.textContent = css;
-      document.head.appendChild(s);
-    }
-  };
-
   let isEditable = false;
   editBtn.onclick = () => {
     isEditable = !isEditable;
@@ -165,7 +186,7 @@
   };
 
   clearLogBtn.onclick = () => {
-    codeMirror.setValue("");
+    cssBox.value = "";
     logBox.innerHTML = "Console:";
     pathBox.textContent = "Path: (none)";
     isEditable = false;
@@ -174,45 +195,10 @@
     editBtn.textContent = "Edit Page";
   };
 
-  themeBtn.onclick = () => {
-    box.classList.toggle("dark");
-  };
-
   closeBtn.onclick = () => {
     document.body.removeChild(box);
     window.__devToolLoaded = false;
   };
-
-  let inspectMode = false;
-  inspectBtn.onclick = () => {
-    inspectMode = !inspectMode;
-    inspectBtn.textContent = inspectMode ? "Stop Inspect" : "Click to Inspect";
-    if (inspectMode) {
-      document.body.addEventListener("mouseover", highlight);
-      document.body.addEventListener("click", capture, true);
-    } else {
-      document.body.removeEventListener("mouseover", highlight);
-      document.body.removeEventListener("click", capture, true);
-      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
-    }
-  };
-
-  function highlight(e) {
-    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
-    e.target.classList.add("highlight-inspect");
-  }
-
-  function capture(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    codeMirror.setValue(e.target.outerHTML);
-    pathBox.textContent = "Path: " + getPath(e.target);
-    inspectMode = false;
-    inspectBtn.textContent = "Click to Inspect";
-    document.body.removeEventListener("mouseover", highlight);
-    document.body.removeEventListener("click", capture, true);
-    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
-  }
 
   function getPath(el) {
     if (!el) return "";
@@ -235,4 +221,36 @@
     }
     return parts.join(" > ");
   }
+
+  // Inspect mode (live)
+  let inspectMode = false;
+  inspectBtn.onclick = () => {
+    inspectMode = !inspectMode;
+    inspectBtn.textContent = inspectMode ? "Stop Inspect" : "Click to Inspect";
+    if (inspectMode) {
+      document.body.addEventListener("mouseover", highlight);
+      document.body.addEventListener("click", capture, true);
+    } else {
+      document.body.removeEventListener("mouseover", highlight);
+      document.body.removeEventListener("click", capture, true);
+      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    }
+  };
+
+  const highlight = (e) => {
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    e.target.classList.add("highlight-inspect");
+  };
+
+  const capture = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    cssBox.value = e.target.outerHTML;
+    pathBox.textContent = "Path: " + getPath(e.target);
+    inspectMode = false;
+    inspectBtn.textContent = "Click to Inspect";
+    document.body.removeEventListener("mouseover", highlight);
+    document.body.removeEventListener("click", capture, true);
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+  };
 })();
