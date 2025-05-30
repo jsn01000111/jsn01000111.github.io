@@ -6,7 +6,23 @@ javascript:(function() {
         delete window.__advancedCssJsEditor;
         alert('Editor closed');
         return;
-    }    
+    }
+
+    // --- Check for and remove Eruda if it exists ---
+    if (window.eruda) {
+        try {
+            eruda.destroy(); // Attempt to destroy Eruda instance
+            console.log('Eruda found and destroyed.');
+        } catch (e) {
+            console.warn('Could not destroy Eruda:', e);
+            // If destroy fails, try to hide its UI elements
+            const erudaContainer = document.querySelector('.eruda-container');
+            if (erudaContainer) {
+                erudaContainer.style.display = 'none';
+                console.log('Eruda container hidden.');
+            }
+        }
+    }
 
     // --- Create Main Editor Container ---
     let editorContainer = document.createElement('div');
@@ -31,29 +47,29 @@ javascript:(function() {
     `;
     document.body.appendChild(editorContainer);
 
-    // --- Inject Styling for Your Editor UI ---
+    // --- Inject Styling for Your Editor UI (Custom, not Eruda-like) ---
     let editorStyle = document.createElement('style');
     editorStyle.id = '__advancedEditorStyles';
     editorStyle.innerHTML = `
         #__advancedEditorContainer {
             all: initial; /* Reset all styles for this container */
-            font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Changed font */
             position: fixed;
-            bottom: 10px; /* Adjust position as desired */
-            right: 10px;
-            width: 320px; /* Responsive width */
-            height: 280px; /* Responsive height */
-            background-color: #2e3436; /* Dark background */
-            border: 1px solid #4d4d4d; /* Border color */
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            bottom: 20px; /* Adjusted position */
+            right: 20px;
+            width: 350px; /* Slightly wider */
+            height: 300px; /* Slightly taller */
+            background-color: #f8f8f8; /* Light background */
+            border: 1px solid #ddd; /* Lighter border color */
+            border-radius: 10px; /* More rounded corners */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
             z-index: 9999999;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* For rounded corners */
-            resize: both; /* Allow manual resizing */
-            min-width: 200px;
-            min-height: 150px;
+            overflow: hidden;
+            resize: both;
+            min-width: 250px;
+            min-height: 200px;
         }
         #__advancedEditorContainer * {
             box-sizing: border-box; /* Crucial */
@@ -62,49 +78,58 @@ javascript:(function() {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
-            background-color: #3e4446; /* Slightly lighter header */
-            color: #e0e0e0;
+            padding: 10px 15px; /* More padding */
+            background-color: #e0e0e0; /* Lighter header */
+            color: #333; /* Darker text */
             font-weight: bold;
-            cursor: grab; /* Indicate draggable */
+            font-size: 1.1em; /* Slightly larger header text */
+            cursor: grab;
+            border-bottom: 1px solid #ccc; /* Subtle border */
         }
         #__editorCloseBtn {
             background: none;
             border: none;
-            color: #e0e0e0;
-            font-size: 1.2em;
+            color: #666; /* Subtler close button */
+            font-size: 1.3em;
             cursor: pointer;
+            padding: 0 5px; /* Add some padding */
+            transition: color 0.2s ease;
+        }
+        #__editorCloseBtn:hover {
+            color: #000; /* Darker on hover */
         }
         .__editor-tabs {
             display: flex;
-            border-bottom: 1px solid #4d4d4d;
-            background-color: #222; /* Darker tabs background */
+            border-bottom: 1px solid #ddd; /* Lighter border */
+            background-color: #f0f0f0; /* Lighter tabs background */
         }
         .__tab-btn {
             flex-grow: 1;
-            padding: 8px 0;
+            padding: 10px 0; /* More padding */
             background-color: transparent;
             border: none;
-            color: #999;
-            font-size: 0.9em;
+            color: #777; /* Subtler tab text */
+            font-size: 0.95em; /* Slightly larger */
             cursor: pointer;
             outline: none;
             transition: color 0.2s ease, background-color 0.2s ease;
         }
         .__tab-btn.active {
-            color: #007bff; /* Accent blue */
-            border-bottom: 2px solid #007bff;
+            color: #1a73e8; /* Google blue accent */
+            border-bottom: 2px solid #1a73e8;
             font-weight: bold;
+            background-color: #fff; /* White active tab background */
         }
         .__tab-btn:hover:not(.active) {
-            color: #ccc;
-            background-color: #333;
+            color: #555;
+            background-color: #e5e5e5; /* Lighter hover background */
         }
         .__editor-content {
             flex-grow: 1;
-            display: flex; /* Use flex to manage panes */
-            position: relative; /* For absolute positioning of panes */
+            display: flex;
+            position: relative;
             overflow: hidden;
+            border-top: 1px solid #eee; /* Light border top */
         }
         .__editor-pane {
             position: absolute;
@@ -112,39 +137,40 @@ javascript:(function() {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #1a1a1a; /* Editor background */
-            color: #0f0; /* Green for code */
+            background-color: #ffffff; /* White editor background */
+            color: #000; /* Black for code */
             border: none;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 14px;
-            line-height: 1.4;
+            padding: 15px; /* More padding */
+            font-family: Consolas, 'Courier New', monospace; /* Changed monospace font */
+            font-size: 13px; /* Slightly smaller font for code */
+            line-height: 1.5;
             resize: none;
             outline: none;
-            display: none; /* Hidden by default */
+            display: none;
+            caret-color: #1a73e8; /* Blue cursor */
         }
         .__editor-pane.active {
-            display: block; /* Show active pane */
+            display: block;
         }
         .__editor-footer {
             display: flex;
             justify-content: space-around;
-            padding: 8px;
-            border-top: 1px solid #4d4d4d;
-            background-color: #3e4446;
+            padding: 10px; /* More padding */
+            border-top: 1px solid #ddd; /* Lighter border */
+            background-color: #e0e0e0; /* Lighter footer */
         }
         .__editor-footer button {
-            background-color: #007bff; /* Accent blue */
+            background-color: #1a73e8; /* Google blue accent */
             color: white;
             border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 8px 15px; /* Larger buttons */
+            border-radius: 5px; /* More rounded buttons */
             cursor: pointer;
-            font-size: 0.8em;
+            font-size: 0.9em;
             transition: background-color 0.2s ease;
         }
         .__editor-footer button:hover {
-            background-color: #0056b3;
+            background-color: #155bb5; /* Darker blue on hover */
         }
     `;
     document.head.appendChild(editorStyle);
@@ -172,28 +198,8 @@ javascript:(function() {
 
     // Apply HTML changes (more complex, consider impact)
     applyChangesBtn.addEventListener('click', function() {
-        // APPLY CSS (already handled by input listener, but can force a refresh)
         userStyleEl.textContent = cssEditor.value;
-
-        // APPLY HTML: You need to define how you want to apply HTML changes.
-        // Option 1: Replace innerHTML of a specific element (safest for targeted edits)
-        // Example:
-        // const targetId = prompt('Enter ID of element to update with HTML:');
-        // if (targetId) {
-        //     const targetEl = document.getElementById(targetId);
-        //     if (targetEl) {
-        //         targetEl.innerHTML = htmlEditor.value;
-        //         console.log(`Updated HTML of #${targetId}`);
-        //     } else {
-        //         console.warn(`Element with ID #${targetId} not found.`);
-        //     }
-        // }
-        
-        // Option 2 (DANGEROUS if not careful): Append to body.
-        // document.body.insertAdjacentHTML('beforeend', htmlEditor.value);
-        // console.log('Appended HTML to body.');
-
-        console.log('Applying changes...'); // Will go to browser's native console if no Eruda
+        console.log('Applying changes...');
     });
 
     // Toggle contentEditable (HTML editing)
@@ -203,7 +209,7 @@ javascript:(function() {
         document.body.contentEditable = isContentEditable ? 'true' : 'false';
         document.body.style.webkitUserModify = isContentEditable ? 'read-write' : 'initial'; // For mobile browsers
         toggleContentEditableBtn.textContent = isContentEditable ? 'Disable Page Edit' : 'Enable Page Edit';
-        alert('Page content editable: ' + isContentEditable); // Will go to browser's native alert
+        alert('Page content editable: ' + isContentEditable);
     });
 
     // Close Editor
@@ -212,7 +218,7 @@ javascript:(function() {
         document.body.contentEditable = 'false';
         delete window.__advancedEditorContainer;
         delete window.__advancedCssJsEditor;
-        alert('Editor closed.'); // Will go to browser's native alert
+        alert('Editor closed.');
     });
 
     // Tab switching logic
@@ -254,5 +260,5 @@ javascript:(function() {
 
     // Store a reference to the editor for removal
     window.__advancedCssJsEditor = editorContainer;
-    alert('Advanced Editor loaded. Page is NOT editable by default. Use "Toggle Page Edit" button.'); // Will go to browser's native alert
+    alert('Advanced Editor loaded. Page is NOT editable by default. Use "Toggle Page Edit" button.');
 })();
