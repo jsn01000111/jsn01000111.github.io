@@ -1,12 +1,12 @@
 javascript:(function() {
-    // Prevent multiple injections
+    // Prevent multiple injections of *your* editor
     if (window.__advancedCssJsEditor) {
         window.__advancedCssJsEditor.remove(); // Removes the UI
         document.body.contentEditable = 'false'; // Disable page editing
         delete window.__advancedCssJsEditor;
         alert('Editor closed');
         return;
-    }
+    }    
 
     // --- Create Main Editor Container ---
     let editorContainer = document.createElement('div');
@@ -31,7 +31,7 @@ javascript:(function() {
     `;
     document.body.appendChild(editorContainer);
 
-    // --- Inject Styling for Your Editor UI (Eruda-like, but self-contained) ---
+    // --- Inject Styling for Your Editor UI ---
     let editorStyle = document.createElement('style');
     editorStyle.id = '__advancedEditorStyles';
     editorStyle.innerHTML = `
