@@ -1,1 +1,238 @@
-(function(_0x2599f7,_0x161717){const _0x1c0427=_0x4787,_0x442d1f=_0x2599f7();while(!![]){try{const _0x975855=-parseInt(_0x1c0427(0x126))/0x1*(-parseInt(_0x1c0427(0xfd))/0x2)+parseInt(_0x1c0427(0x10a))/0x3*(-parseInt(_0x1c0427(0x100))/0x4)+-parseInt(_0x1c0427(0xfe))/0x5+parseInt(_0x1c0427(0x12a))/0x6+-parseInt(_0x1c0427(0x10c))/0x7+-parseInt(_0x1c0427(0x101))/0x8+parseInt(_0x1c0427(0x107))/0x9;if(_0x975855===_0x161717)break;else _0x442d1f['push'](_0x442d1f['shift']());}catch(_0xe5c36b){_0x442d1f['push'](_0x442d1f['shift']());}}}(_0x43e1,0x40e4d),((()=>{const _0x46e15f=_0x4787;if(window[_0x46e15f(0x123)])return;window[_0x46e15f(0x123)]=!![];const _0x75c2d8=document['createElement']('style');_0x75c2d8[_0x46e15f(0x11f)]=_0x46e15f(0x108),document[_0x46e15f(0x118)]['appendChild'](_0x75c2d8);const _0x27baf5=document[_0x46e15f(0x12b)]('div');_0x27baf5['id']=_0x46e15f(0x10b),_0x27baf5[_0x46e15f(0x105)]=_0x46e15f(0x12e),document[_0x46e15f(0x103)]['appendChild'](_0x27baf5);const _0x1f5179=_0x27baf5[_0x46e15f(0x133)](_0x46e15f(0x12c));let _0x3a2126=0x0,_0xc91d2c=0x0,_0x406407=![];const _0x2848e7=_0x21aa33=>{const _0x123057=_0x46e15f;_0x406407=!![];const _0x4f1e06=_0x21aa33[_0x123057(0x116)]?.[0x0]||_0x21aa33;_0x3a2126=_0x4f1e06[_0x123057(0x130)]-_0x27baf5[_0x123057(0x135)],_0xc91d2c=_0x4f1e06[_0x123057(0x111)]-_0x27baf5['offsetTop'],_0x21aa33[_0x123057(0x113)]();},_0x12b702=_0x3fbb6c=>{const _0x1b4ac2=_0x46e15f;if(!_0x406407)return;const _0x524da8=_0x3fbb6c[_0x1b4ac2(0x116)]?.[0x0]||_0x3fbb6c;_0x27baf5[_0x1b4ac2(0x109)][_0x1b4ac2(0x137)]=_0x524da8[_0x1b4ac2(0x130)]-_0x3a2126+'px',_0x27baf5[_0x1b4ac2(0x109)][_0x1b4ac2(0x11b)]=_0x524da8[_0x1b4ac2(0x111)]-_0xc91d2c+'px',_0x27baf5[_0x1b4ac2(0x109)][_0x1b4ac2(0x106)]=_0x1b4ac2(0x125),_0x27baf5['style'][_0x1b4ac2(0xfb)]=_0x1b4ac2(0x125);},_0x37dce8=()=>{_0x406407=![];};_0x1f5179[_0x46e15f(0x117)](_0x46e15f(0x131),_0x2848e7),_0x1f5179[_0x46e15f(0x117)]('touchstart',_0x2848e7),document[_0x46e15f(0x117)](_0x46e15f(0x11d),_0x12b702),document[_0x46e15f(0x117)]('touchmove',_0x12b702),document['addEventListener'](_0x46e15f(0xf3),_0x37dce8),document['addEventListener'](_0x46e15f(0xff),_0x37dce8);const _0x4c82aa=_0x27baf5[_0x46e15f(0x133)](_0x46e15f(0x129)),_0x515e66=_0x27baf5[_0x46e15f(0x133)](_0x46e15f(0xf8)),_0x5de67a=_0x27baf5['querySelector']('#inspectBtn'),_0xbaaa32=_0x27baf5[_0x46e15f(0x133)]('#clearLogBtn'),_0x576d5f=_0x27baf5[_0x46e15f(0x133)]('#runBtn'),_0xc9915a=_0x27baf5[_0x46e15f(0x133)](_0x46e15f(0x11a)),_0x484fb2=_0x27baf5['querySelector'](_0x46e15f(0x10d)),_0x57ddac=_0x27baf5[_0x46e15f(0x133)](_0x46e15f(0x11e));_0x515e66[_0x46e15f(0xfc)]=()=>{const _0x64ecf7=_0x46e15f,_0x1d68da=_0x4c82aa[_0x64ecf7(0x110)][_0x64ecf7(0xf4)]();if(_0x1d68da){const _0x29d1b8=document[_0x64ecf7(0x12b)](_0x64ecf7(0x109));_0x29d1b8[_0x64ecf7(0x11f)]=_0x1d68da,document['head'][_0x64ecf7(0xf6)](_0x29d1b8);}},_0x576d5f['onclick']=()=>{const _0x4f2801=_0x46e15f,_0x5b99f3=_0x4c82aa[_0x4f2801(0x110)];_0x484fb2[_0x4f2801(0x105)]=_0x4f2801(0x11c);try{const _0xba5a71=console[_0x4f2801(0x10e)];console[_0x4f2801(0x10e)]=(..._0xc6c87e)=>{const _0x465a10=_0x4f2801;_0x484fb2[_0x465a10(0x105)]+=_0x465a10(0x132)+_0xc6c87e[_0x465a10(0x124)]('\x20')+'\x0a',_0xba5a71(..._0xc6c87e);};const _0x325463=eval(_0x5b99f3);_0x484fb2[_0x4f2801(0x105)]+='✅\x20Result:\x20'+_0x325463+'\x0a',console[_0x4f2801(0x10e)]=_0xba5a71;}catch(_0x5276e7){_0x484fb2[_0x4f2801(0x105)]+=_0x4f2801(0x128)+_0x5276e7['message']+'\x0a';}},_0xbaaa32[_0x46e15f(0xfc)]=()=>{const _0x502624=_0x46e15f;_0x4c82aa[_0x502624(0x110)]='',_0x484fb2[_0x502624(0x105)]=_0x502624(0xf7),_0xc9915a[_0x502624(0x11f)]=_0x502624(0xf5);},_0x57ddac[_0x46e15f(0xfc)]=()=>{const _0x496535=_0x46e15f;document[_0x496535(0x103)]['removeChild'](_0x27baf5),window[_0x496535(0x123)]=![];};function _0x419362(_0x277698){const _0x456d59=_0x46e15f;if(!_0x277698)return'';const _0x21d580=[];while(_0x277698&&_0x277698[_0x456d59(0xfa)]===0x1){let _0x3e4b13=_0x277698[_0x456d59(0x121)][_0x456d59(0xf2)]();if(_0x277698['id']){_0x3e4b13+='#'+_0x277698['id'],_0x21d580[_0x456d59(0x120)](_0x3e4b13);break;}else{let _0xecbaa0=_0x277698,_0x19ef49=0x1;while(_0xecbaa0=_0xecbaa0[_0x456d59(0x12f)]){if(_0xecbaa0[_0x456d59(0x121)][_0x456d59(0xf2)]()===_0x3e4b13)_0x19ef49++;}_0x3e4b13+=':nth-of-type('+_0x19ef49+')';}_0x21d580[_0x456d59(0x120)](_0x3e4b13),_0x277698=_0x277698['parentElement'];}return _0x21d580[_0x456d59(0x124)](_0x456d59(0x136));}let _0x205c33=![];_0x5de67a[_0x46e15f(0xfc)]=()=>{const _0x999644=_0x46e15f;_0x205c33=!_0x205c33,_0x5de67a['textContent']=_0x205c33?_0x999644(0x119):'Click\x20to\x20Inspect',_0x205c33?(document[_0x999644(0x103)][_0x999644(0x117)](_0x999644(0x122),_0x3d7971),document[_0x999644(0x103)][_0x999644(0x117)](_0x999644(0x114),_0x8ce3d,!![])):(document['body'][_0x999644(0x115)](_0x999644(0x122),_0x3d7971),document[_0x999644(0x103)][_0x999644(0x115)](_0x999644(0x114),_0x8ce3d,!![]),document[_0x999644(0x134)](_0x999644(0x104))[_0x999644(0x112)](_0x1da94a=>_0x1da94a[_0x999644(0xf9)]['remove'](_0x999644(0x102))));};const _0x3d7971=_0x193989=>{const _0x15b4ab=_0x46e15f;document[_0x15b4ab(0x134)]('.highlight-inspect')['forEach'](_0x5d2c65=>_0x5d2c65[_0x15b4ab(0xf9)][_0x15b4ab(0x12d)](_0x15b4ab(0x102))),_0x193989[_0x15b4ab(0x138)][_0x15b4ab(0xf9)][_0x15b4ab(0x127)](_0x15b4ab(0x102));},_0x8ce3d=_0x2bce63=>{const _0x278f66=_0x46e15f;_0x2bce63['preventDefault'](),_0x2bce63['stopPropagation'](),_0x4c82aa[_0x278f66(0x110)]=_0x2bce63[_0x278f66(0x138)]['outerHTML'],_0xc9915a[_0x278f66(0x11f)]='Path:\x20'+_0x419362(_0x2bce63[_0x278f66(0x138)]),_0x205c33=![],_0x5de67a[_0x278f66(0x11f)]=_0x278f66(0x10f),document[_0x278f66(0x103)][_0x278f66(0x115)](_0x278f66(0x122),_0x3d7971),document['body'][_0x278f66(0x115)](_0x278f66(0x114),_0x8ce3d,!![]),document[_0x278f66(0x134)]('.highlight-inspect')[_0x278f66(0x112)](_0x1dd7e6=>_0x1dd7e6['classList'][_0x278f66(0x12d)](_0x278f66(0x102)));};})()));function _0x4787(_0xbdba95,_0x40a3bf){const _0x43e1a2=_0x43e1();return _0x4787=function(_0x478725,_0x3e516a){_0x478725=_0x478725-0xf2;let _0x344a54=_0x43e1a2[_0x478725];return _0x344a54;},_0x4787(_0xbdba95,_0x40a3bf);}function _0x43e1(){const _0x2566c9=['addEventListener','head','Stop\x20Inspect','#devToolPath','top','Console:\x0a','mousemove','#devToolClose','textContent','unshift','nodeName','mouseover','__devToolLoaded','join','auto','5303XAwMgK','add','❌\x20Error:\x20','#devToolCSS','1616202RrbKDZ','createElement','#devToolHeader','remove','\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolHeader\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20<span>Dev\x20Tool</span>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20id=\x22devToolClose\x22>×</button>\x0a\x0a\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20<textarea\x20id=\x22devToolCSS\x22>//\x20Type\x20JavaScript\x20here\x0aconsole.log(\x27Hello\x20Dev\x20Tool\x27);</textarea>\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolFooter\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20id=\x22runBtn\x22>▶\x20Run</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20id=\x22injectBtn\x22>Inject\x20CSS</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20id=\x22inspectBtn\x22>Click\x20to\x20Inspect</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20id=\x22clearLogBtn\x22>Clear\x20Log</button>\x0a\x0a\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolPath\x22>Path:\x20(none)</div>\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolLog\x22>Console:</div>\x0a\x0a\x20\x20','previousElementSibling','clientX','mousedown','🟢\x20','querySelector','querySelectorAll','offsetLeft','\x20>\x20','left','target','toLowerCase','mouseup','trim','Path:\x20(none)','appendChild','Console:','#injectBtn','classList','nodeType','right','onclick','2cwnSzB','1031630bPWDZD','touchend','153852CiyOTW','1285256ylOnhy','highlight-inspect','body','.highlight-inspect','innerHTML','bottom','6366537gAFNWc','\x0a\x0a\x20\x20\x20\x20#devTool\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x0a\x20\x20\x20\x20\x20\x20bottom:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20right:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20width:\x20320px;\x0a\x0a\x20\x20\x20\x20\x20\x20height:\x20280px;\x0a\x0a\x20\x20\x20\x20\x20\x20z-index:\x2099999;\x0a\x0a\x20\x20\x20\x20\x20\x20font-family:\x20monospace;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fff;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#111;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-direction:\x20column;\x0a\x0a\x20\x20\x20\x20\x20\x20box-shadow:\x200\x202px\x208px\x20rgba(0,0,0,0.2);\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolHeader\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f0f0f0;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x206px\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20move;\x0a\x0a\x20\x20\x20\x20\x20\x20user-select:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20justify-content:\x20space-between;\x0a\x0a\x20\x20\x20\x20\x20\x20align-items:\x20center;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool\x20textarea\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2013px;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20outline:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20resize:\x20none;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolFooter\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20gap:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f9f9f9;\x0a\x0a\x20\x20\x20\x20\x20\x20border-top:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-wrap:\x20wrap;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolFooter\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#eee;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#111;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolFooter\x20button:hover\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#ddd;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolPath,\x20#devToolLog\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2011px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x204px\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20border-top:\x201px\x20solid\x20#ddd;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fafafa;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x2050px;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20pre-wrap;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20.highlight-inspect\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20outline:\x202px\x20dashed\x20#f00;\x0a\x0a\x20\x20\x20\x20\x20\x20outline-offset:\x20-2px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolClose\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20transparent;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#444;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2016px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20\x20\x20line-height:\x201;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20@media\x20(max-width:\x20400px)\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20#devTool\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20width:\x2095vw;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20height:\x2060vh;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20bottom:\x205px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20right:\x205px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20','style','21LoWzHU','devTool','560238EakBAO','#devToolLog','log','Click\x20to\x20Inspect','value','clientY','forEach','preventDefault','click','removeEventListener','touches'];_0x43e1=function(){return _0x2566c9;};return _0x43e1();}
+<!-- Dev Tool with Dark Mode Toggle and CodeMirror Highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
+
+(() => {
+  if (window.__devToolLoaded) return;
+  window.__devToolLoaded = true;
+
+  const style = document.createElement("style");
+  style.textContent = `
+    #devTool {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 320px;
+      height: 300px;
+      z-index: 99999;
+      font-family: monospace;
+      background: #fff;
+      color: #111;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    #devTool.dark {
+      background: #111;
+      color: #eee;
+    }
+    #devTool.dark #devToolHeader {
+      background: #222;
+      border-color: #444;
+    }
+    #devToolHeader {
+      background: #f0f0f0;
+      padding: 6px 10px;
+      cursor: move;
+      user-select: none;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #devToolFooter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 6px;
+      background: #f9f9f9;
+      border-top: 1px solid #ccc;
+    }
+    #devToolFooter button {
+      flex: 1;
+      padding: 4px;
+      font-size: 12px;
+      background: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #devToolFooter button:hover {
+      background: #ddd;
+    }
+    #devToolPath, #devToolLog {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
+      color: #333;
+      overflow: auto;
+      max-height: 50px;
+      white-space: pre-wrap;
+    }
+    .highlight-inspect {
+      outline: 2px dashed #f00;
+      outline-offset: -2px;
+    }
+    #devToolClose {
+      background: transparent;
+      border: none;
+      color: #444;
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .CodeMirror {
+      flex: 1;
+      height: 100px;
+    }
+  `;
+  document.head.appendChild(style);
+
+  const box = document.createElement("div");
+  box.id = "devTool";
+  box.innerHTML = `
+    <div id="devToolHeader">
+      <span>Dev Tool</span>
+      <button id="devToolClose">×</button>
+    </div>
+    <textarea id="devToolCode">// Type JavaScript here\nconsole.log('Hello Dev Tool');</textarea>
+    <div id="devToolFooter">
+      <button id="runBtn">▶ Run</button>
+      <button id="injectBtn">Inject CSS</button>
+      <button id="inspectBtn">Click to Inspect</button>
+      <button id="editToggleBtn">Edit Page</button>
+      <button id="themeToggleBtn">Toggle Theme</button>
+      <button id="clearLogBtn">Clear Log</button>
+    </div>
+    <div id="devToolPath">Path: (none)</div>
+    <div id="devToolLog">Console:</div>
+  `;
+  document.body.appendChild(box);
+
+  const codeMirror = CodeMirror.fromTextArea(document.getElementById("devToolCode"), {
+    mode: "javascript",
+    lineNumbers: true,
+    theme: "default"
+  });
+
+  const runBtn = box.querySelector("#runBtn");
+  const injectBtn = box.querySelector("#injectBtn");
+  const inspectBtn = box.querySelector("#inspectBtn");
+  const editBtn = box.querySelector("#editToggleBtn");
+  const themeBtn = box.querySelector("#themeToggleBtn");
+  const clearLogBtn = box.querySelector("#clearLogBtn");
+  const pathBox = box.querySelector("#devToolPath");
+  const logBox = box.querySelector("#devToolLog");
+  const closeBtn = box.querySelector("#devToolClose");
+
+  runBtn.onclick = () => {
+    const code = codeMirror.getValue();
+    logBox.innerHTML = "Console:\n";
+    try {
+      const originalLog = console.log;
+      console.log = (...args) => {
+        logBox.innerHTML += "🟢 " + args.join(" ") + "\n";
+        originalLog(...args);
+      };
+      const result = eval(code);
+      logBox.innerHTML += "✅ Result: " + result + "\n";
+      console.log = originalLog;
+    } catch (err) {
+      logBox.innerHTML += "❌ Error: " + err.message + "\n";
+    }
+  };
+
+  injectBtn.onclick = () => {
+    const css = codeMirror.getValue().trim();
+    if (css) {
+      const s = document.createElement("style");
+      s.textContent = css;
+      document.head.appendChild(s);
+    }
+  };
+
+  let isEditable = false;
+  editBtn.onclick = () => {
+    isEditable = !isEditable;
+    document.body.contentEditable = isEditable;
+    document.designMode = isEditable ? "on" : "off";
+    editBtn.textContent = isEditable ? "Stop Edit" : "Edit Page";
+  };
+
+  clearLogBtn.onclick = () => {
+    codeMirror.setValue("");
+    logBox.innerHTML = "Console:";
+    pathBox.textContent = "Path: (none)";
+    isEditable = false;
+    document.body.contentEditable = false;
+    document.designMode = "off";
+    editBtn.textContent = "Edit Page";
+  };
+
+  themeBtn.onclick = () => {
+    box.classList.toggle("dark");
+  };
+
+  closeBtn.onclick = () => {
+    document.body.removeChild(box);
+    window.__devToolLoaded = false;
+  };
+
+  let inspectMode = false;
+  inspectBtn.onclick = () => {
+    inspectMode = !inspectMode;
+    inspectBtn.textContent = inspectMode ? "Stop Inspect" : "Click to Inspect";
+    if (inspectMode) {
+      document.body.addEventListener("mouseover", highlight);
+      document.body.addEventListener("click", capture, true);
+    } else {
+      document.body.removeEventListener("mouseover", highlight);
+      document.body.removeEventListener("click", capture, true);
+      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    }
+  };
+
+  function highlight(e) {
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    e.target.classList.add("highlight-inspect");
+  }
+
+  function capture(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    codeMirror.setValue(e.target.outerHTML);
+    pathBox.textContent = "Path: " + getPath(e.target);
+    inspectMode = false;
+    inspectBtn.textContent = "Click to Inspect";
+    document.body.removeEventListener("mouseover", highlight);
+    document.body.removeEventListener("click", capture, true);
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+  }
+
+  function getPath(el) {
+    if (!el) return "";
+    const parts = [];
+    while (el && el.nodeType === 1) {
+      let name = el.nodeName.toLowerCase();
+      if (el.id) {
+        name += `#${el.id}`;
+        parts.unshift(name);
+        break;
+      } else {
+        let sib = el, count = 1;
+        while (sib = sib.previousElementSibling) {
+          if (sib.nodeName.toLowerCase() === name) count++;
+        }
+        name += `:nth-of-type(${count})`;
+      }
+      parts.unshift(name);
+      el = el.parentElement;
+    }
+    return parts.join(" > ");
+  }
+})();
