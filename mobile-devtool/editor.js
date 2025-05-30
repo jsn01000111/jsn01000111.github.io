@@ -8,22 +8,6 @@ javascript:(function() {
         return;
     }
 
-    // --- Check for and remove Eruda if it exists ---
-    if (window.eruda) {
-        try {
-            eruda.destroy(); // Attempt to destroy Eruda instance
-            console.log('Eruda found and destroyed.');
-        } catch (e) {
-            console.warn('Could not destroy Eruda:', e);
-            // If destroy fails, try to hide its UI elements
-            const erudaContainer = document.querySelector('.eruda-container');
-            if (erudaContainer) {
-                erudaContainer.style.display = 'none';
-                console.log('Eruda container hidden.');
-            }
-        }
-    }
-
     // --- Create Main Editor Container ---
     let editorContainer = document.createElement('div');
     editorContainer.id = '__advancedEditorContainer';
@@ -35,11 +19,11 @@ javascript:(function() {
         <div class="__editor-tabs">
             <button class="__tab-btn active" data-tab="css">CSS</button>
             <button class="__tab-btn" data-tab="html">HTML</button>
-            </div>
+        </div>
         <div class="__editor-content">
             <textarea id="__cssEditor" class="__editor-pane active" placeholder="Write CSS here..."></textarea>
             <textarea id="__htmlEditor" class="__editor-pane" placeholder="Edit HTML here (use selectors to target sections)..."></textarea>
-            </div>
+        </div>
         <div class="__editor-footer">
             <button id="__applyChangesBtn">Apply CSS/HTML</button>
             <button id="__toggleContentEditableBtn">Toggle Page Edit</button>
@@ -47,22 +31,22 @@ javascript:(function() {
     `;
     document.body.appendChild(editorContainer);
 
-    // --- Inject Styling for Your Editor UI (Custom, not Eruda-like) ---
+    // --- Inject Styling for Your Editor UI (Custom, no Eruda influence) ---
     let editorStyle = document.createElement('style');
     editorStyle.id = '__advancedEditorStyles';
     editorStyle.innerHTML = `
         #__advancedEditorContainer {
             all: initial; /* Reset all styles for this container */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Changed font */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: fixed;
-            bottom: 20px; /* Adjusted position */
+            bottom: 20px;
             right: 20px;
-            width: 350px; /* Slightly wider */
-            height: 300px; /* Slightly taller */
-            background-color: #f8f8f8; /* Light background */
-            border: 1px solid #ddd; /* Lighter border color */
-            border-radius: 10px; /* More rounded corners */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
+            width: 350px;
+            height: 300px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             z-index: 9999999;
             display: flex;
             flex-direction: column;
@@ -72,64 +56,64 @@ javascript:(function() {
             min-height: 200px;
         }
         #__advancedEditorContainer * {
-            box-sizing: border-box; /* Crucial */
+            box-sizing: border-box;
         }
         .__editor-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px; /* More padding */
-            background-color: #e0e0e0; /* Lighter header */
-            color: #333; /* Darker text */
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            color: #333;
             font-weight: bold;
-            font-size: 1.1em; /* Slightly larger header text */
+            font-size: 1.1em;
             cursor: grab;
-            border-bottom: 1px solid #ccc; /* Subtle border */
+            border-bottom: 1px solid #ccc;
         }
         #__editorCloseBtn {
             background: none;
             border: none;
-            color: #666; /* Subtler close button */
+            color: #666;
             font-size: 1.3em;
             cursor: pointer;
-            padding: 0 5px; /* Add some padding */
+            padding: 0 5px;
             transition: color 0.2s ease;
         }
         #__editorCloseBtn:hover {
-            color: #000; /* Darker on hover */
+            color: #000;
         }
         .__editor-tabs {
             display: flex;
-            border-bottom: 1px solid #ddd; /* Lighter border */
-            background-color: #f0f0f0; /* Lighter tabs background */
+            border-bottom: 1px solid #ddd;
+            background-color: #f0f0f0;
         }
         .__tab-btn {
             flex-grow: 1;
-            padding: 10px 0; /* More padding */
+            padding: 10px 0;
             background-color: transparent;
             border: none;
-            color: #777; /* Subtler tab text */
-            font-size: 0.95em; /* Slightly larger */
+            color: #777;
+            font-size: 0.95em;
             cursor: pointer;
             outline: none;
             transition: color 0.2s ease, background-color 0.2s ease;
         }
         .__tab-btn.active {
-            color: #1a73e8; /* Google blue accent */
+            color: #1a73e8;
             border-bottom: 2px solid #1a73e8;
             font-weight: bold;
-            background-color: #fff; /* White active tab background */
+            background-color: #fff;
         }
         .__tab-btn:hover:not(.active) {
             color: #555;
-            background-color: #e5e5e5; /* Lighter hover background */
+            background-color: #e5e5e5;
         }
         .__editor-content {
             flex-grow: 1;
             display: flex;
             position: relative;
             overflow: hidden;
-            border-top: 1px solid #eee; /* Light border top */
+            border-top: 1px solid #eee;
         }
         .__editor-pane {
             position: absolute;
@@ -137,41 +121,42 @@ javascript:(function() {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffffff; /* White editor background */
-            color: #000; /* Black for code */
+            background-color: #ffffff;
+            color: #000;
             border: none;
-            padding: 15px; /* More padding */
-            font-family: Consolas, 'Courier New', monospace; /* Changed monospace font */
-            font-size: 13px; /* Slightly smaller font for code */
+            padding: 15px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 13px;
             line-height: 1.5;
             resize: none;
             outline: none;
             display: none;
-            caret-color: #1a73e8; /* Blue cursor */
+            caret-color: #1a73e8;
         }
         .__editor-pane.active {
             display: block;
         }
         .__editor-footer {
             display: flex;
-            justify-content: space-around;
-            padding: 10px; /* More padding */
-            border-top: 1px solid #ddd; /* Lighter border */
-            background-color: #e0e0e0; /* Lighter footer */
+            justify-content: space-around; /* Changed from space-between to space-around for balanced buttons */
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #e0e0e0;
         }
         .__editor-footer button {
-            background-color: #1a73e8; /* Google blue accent */
+            background-color: #1a73e8;
             color: white;
             border: none;
-            padding: 8px 15px; /* Larger buttons */
-            border-radius: 5px; /* More rounded buttons */
+            padding: 8px 15px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 0.9em;
             transition: background-color 0.2s ease;
         }
         .__editor-footer button:hover {
-            background-color: #155bb5; /* Darker blue on hover */
+            background-color: #155bb5;
         }
+        /* Removed any specific styles for Eruda-related icons/buttons */
     `;
     document.head.appendChild(editorStyle);
 
@@ -239,7 +224,8 @@ javascript:(function() {
     let offsetX, offsetY;
 
     editorContainer.addEventListener('mousedown', function(e) {
-        if (e.target === editorContainer || e.target.classList.contains('__editor-header')) {
+        // Ensure dragging only happens on the header or the container itself if header is not clicked
+        if (e.target === editorContainer || e.target.classList.contains('__editor-header') || e.target.tagName === 'SPAN') { // Added SPAN for header text
             isDragging = true;
             offsetX = e.clientX - editorContainer.getBoundingClientRect().left;
             offsetY = e.clientY - editorContainer.getBoundingClientRect().top;
