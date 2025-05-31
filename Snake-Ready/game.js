@@ -1,52 +1,42 @@
-(function () {
-  if (document.getElementById('snakeCanvas')) return; // prevent duplicate
+javascript:(function(){
+  if (!document.getElementById('snakeCanvas')) {
+    const html = `<canvas id="snakeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;pointer-events:none;"></canvas>
+    <div id="snakeScore" style="position:fixed;top:10px;left:10px;z-index:10001;font-size:20px;font-family:monospace;color:lime;display:none;">Score: 0</div>
+    <div id="snakeControls" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10001;display:none;">
+      <button onclick="togglePause()" style="padding:10px 20px;margin:5px;font-size:16px;background-color:rgba(0,0,0,0.5);color:lime;border:2px solid lime;">Pause</button>
+      <button onclick="stopGame()" style="padding:10px 20px;margin:5px;font-size:16px;background-color:rgba(0,0,0,0.5);color:red;border:2px solid red;">Exit</button>
+    </div>
+    <div id="snakeReady" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background: rgba(0, 255, 0, 0.8);color: black;font-size: 50px;font-family: monospace;padding: 12px 20px;border-radius: 12px;display: none;z-index: 10001; text-align:center;">
+      Snake Ready! Tap to Play <br />
+      <button id="cancelReady" style="margin-top: 10px; font-size: 20px; padding: 5px 15px; cursor: pointer;">
+        Cancel</button>
+    </div>
+    <div id="pauseOverlay" style="position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.5);color: lime;font-family: monospace;font-size: 50px;display: none;justify-content: center;align-items: center;z-index: 10002;pointer-events:none;">
+      Paused
+    </div>
+    <div id="gameOverOverlay" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.85);color: lime;font-family: monospace;font-size: 30px;padding: 20px 30px;
+      border-radius: 12px;display: none;z-index: 10003; text-align: center;">
+      <div id="gameOverText">Game Over!</div>
+      <div id="finalScore" style="margin: 10px 0;"></div>
+      <button id="playAgainBtn" style="padding:10px 20px;font-size: 20px; cursor: pointer; background: lime; color: black; border:none; border-radius:6px; margin-right:10px;">Play Again</button>
+      <button id="exitGameBtn" style="padding:10px 20px; margin-top: 10px; font-size: 20px; cursor: pointer; background: red; color: white; border:none; border-radius:6px;">Exit</button>
+    </div>
+    <audio id="eatSound" src="https://github.com/jsn01000111/media-file/raw/main/wav/snake_move.mp3" preload="auto"></audio>
+    <audio id="gameOverSound" src="https://github.com/jsn01000111/media-file/raw/main/wav/snake_gameover.mp3" preload="auto"></audio>`;
+    
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.appendChild(container);
 
-  // Create game canvas
-  const canvas = document.createElement('canvas');
-  canvas.id = 'snakeCanvas';
-  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;pointer-events:none;';
-  document.body.appendChild(canvas);
-
-  // Add other necessary HTML elements dynamically here:
-  // score div, controls, ready message, audio elements, etc.
-  
-  // Then run your game logic...
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/gh/jsn01000111/snake-game@latest/game.js';
+    script.onload = () => console.log('Snake game loaded!');
+    document.body.appendChild(script);
+  } else {
+    console.log('Snake already running!');
+  }
 })();
-
-// Project: Snake Ready
-// Creator: JSN01000111
-// License: Custom – Copy & Modify with Permission Only
-
-<canvas id="snakeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;pointer-events:none;"></canvas>
-<div id="snakeScore" style="position:fixed;top:10px;left:10px;z-index:10001;font-size:20px;font-family:monospace;color:lime;display:none;">Score: 0</div>
-<div id="snakeControls" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10001;display:none;">
-  <button onclick="togglePause()" style="padding:10px 20px;margin:5px;font-size:16px;background-color:rgba(0,0,0,0.5);color:lime;border:2px solid lime;">Pause</button>
-  <button onclick="stopGame()" style="padding:10px 20px;margin:5px;font-size:16px;background-color:rgba(0,0,0,0.5);color:red;border:2px solid red;">Exit</button>
-</div>
-<div id="snakeReady" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background: rgba(0, 255, 0, 0.8);color: black;font-size: 50px;font-family: monospace;padding: 12px 20px;border-radius: 12px;display: none;z-index: 10001; text-align:center;">
-  Snake Ready! Tap to Play <br />
-  <button id="cancelReady" style="margin-top: 10px; font-size: 20px; padding: 5px 15px; cursor: pointer;">
-    Cancel</button>
-</div>
-
-<!-- Pause Overlay -->
-<div id="pauseOverlay" style="position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.5);color: lime;font-family: monospace;font-size: 50px;display: none;justify-content: center;align-items: center;z-index: 10002;pointer-events:none;">
-  Paused
-</div>
-
-<!-- Game Over Overlay -->
-<div id="gameOverOverlay" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.85);color: lime;font-family: monospace;font-size: 30px;padding: 20px 30px;
-  border-radius: 12px;display: none;z-index: 10003; text-align: center;">
-  <div id="gameOverText">Game Over!</div>
-  <div id="finalScore" style="margin: 10px 0;"></div>
-  <button id="playAgainBtn" style="padding:10px 20px;font-size: 20px; cursor: pointer; background: lime; color: black; border:none; border-radius:6px; margin-right:10px;">Play Again</button>
-  <button id="exitGameBtn" style="padding:10px 20px; margin-top: 10px; font-size: 20px; cursor: pointer; background: red; color: white; border:none; border-radius:6px;">Exit</button>
-</div>
-
-<!-- Sounds -->
-<audio id="eatSound" src="https://github.com/jsn01000111/media-file/raw/main/wav/snake_move.mp3" preload="auto"></audio>
-<audio id="gameOverSound" src="https://github.com/jsn01000111/media-file/raw/main/wav/snake_gameover.mp3" preload="auto"></audio>
 
 const _0x1aa008=_0x3c24;(function(_0x341fb3,_0x174d51){const _0x2d40cc=_0x3c24,_0x2f7f92=_0x341fb3();while(!![]){try{const _0x4dbc3f=parseInt(_0x2d40cc(0xe5))/0x1+-parseInt(_0x2d40cc(0x100))/0x2+parseInt(_0x2d40cc(0xdd))/0x3+-parseInt(_0x2d40cc(0x119))/0x4*(parseInt(_0x2d40cc(0xdf))/0x5)+-parseInt(_0x2d40cc(0xdc))/0x6*(-parseInt(_0x2d40cc(0xe6))/0x7)+parseInt(_0x2d40cc(0x117))/0x8+parseInt(_0x2d40cc(0x107))/0x9*(-parseInt(_0x2d40cc(0xfc))/0xa);if(_0x4dbc3f===_0x174d51)break;else _0x2f7f92['push'](_0x2f7f92['shift']());}catch(_0xf2d0c9){_0x2f7f92['push'](_0x2f7f92['shift']());}}}(_0x2c34,0x8adc7));const canvas=document[_0x1aa008(0x114)](_0x1aa008(0xe1)),ctx=canvas['getContext']('2d'),scoreEl=document[_0x1aa008(0x114)](_0x1aa008(0xee)),controls=document[_0x1aa008(0x114)]('snakeControls'),snakeReadyMsg=document[_0x1aa008(0x114)]('snakeReady'),pauseOverlay=document[_0x1aa008(0x114)](_0x1aa008(0x11a)),gameOverOverlay=document[_0x1aa008(0x114)](_0x1aa008(0x11b)),finalScore=document[_0x1aa008(0x114)](_0x1aa008(0xf4)),playAgainBtn=document[_0x1aa008(0x114)]('playAgainBtn'),exitGameBtn=document[_0x1aa008(0x114)](_0x1aa008(0x11e)),eatSound=document[_0x1aa008(0x114)]('eatSound'),gameOverSound=document[_0x1aa008(0x114)]('gameOverSound');let w,h,snake,dir,food,playing=![],paused=![],gameLoop,score=0x0,highScore=0x0,touchStartX=0x0,touchStartY=0x0,readyToPlay=![],lastShakeTime=0x0;function resizeCanvas(){const _0x169b55=_0x1aa008;w=canvas[_0x169b55(0x111)]=window[_0x169b55(0xec)],h=canvas[_0x169b55(0x112)]=window[_0x169b55(0xe7)];}function _0x2c34(){const _0x31307c=['none','128532aIRUVC','1652418UishoV','devicemotion','65480khfaOd','setItem','snakeCanvas','stopPropagation','fillStyle','accelerationIncludingGravity','945605voulYq','42Byodad','innerHeight','clientX','snakeHighScore','textContent','random','innerWidth','ArrowRight','snakeScore','ArrowDown','key','#00FF00','changedTouches','abs','finalScore','clearRect','onclick','block','fillRect','DOWN','\x20|\x20High:\x20','auto','70uFRRSM','resize','keydown','getItem','2028654rOoBbn','cancelReady','forEach','LEFT','addEventListener','round','clientY','1204425MCjcPs','preventDefault','some','pop','touches','ArrowUp','unshift','touchmove','floor','touchstart','width','height','now','getElementById','RIGHT','style','7369008EZlOKN','play','8stNoWe','pauseOverlay','gameOverOverlay','pointerEvents','display','exitGameBtn'];_0x2c34=function(){return _0x31307c;};return _0x2c34();}function _0x3c24(_0x5ba0c5,_0x23791c){const _0x2c3417=_0x2c34();return _0x3c24=function(_0x3c2405,_0x241af5){_0x3c2405=_0x3c2405-0xdb;let _0x272199=_0x2c3417[_0x3c2405];return _0x272199;},_0x3c24(_0x5ba0c5,_0x23791c);}resizeCanvas(),window[_0x1aa008(0x104)](_0x1aa008(0xfd),resizeCanvas);function randomFood(){const _0x380187=_0x1aa008;return{'x':Math['floor'](Math['random']()*(w/0x14))*0x14,'y':Math[_0x380187(0x10f)](Math[_0x380187(0xeb)]()*(h/0x14))*0x14};}window[_0x1aa008(0x104)](_0x1aa008(0xde),_0xc041b1=>{const _0x10368c=_0x1aa008,_0x1f5dc7=Date[_0x10368c(0x113)]();if(_0x1f5dc7-lastShakeTime<0x3e8)return;const _0x424c78=_0xc041b1[_0x10368c(0xe4)];if(!_0x424c78)return;const _0x32e3d9=Math['sqrt'](_0x424c78['x']*_0x424c78['x']+_0x424c78['y']*_0x424c78['y']+_0x424c78['z']*_0x424c78['z']);_0x32e3d9>0x21&&!playing&&!readyToPlay&&(lastShakeTime=_0x1f5dc7,readyToPlay=!![],snakeReadyMsg[_0x10368c(0x116)][_0x10368c(0x11d)]=_0x10368c(0xf7));}),document[_0x1aa008(0x114)](_0x1aa008(0x101))[_0x1aa008(0xf6)]=_0x18484f=>{const _0x34f767=_0x1aa008;_0x18484f[_0x34f767(0xe2)](),readyToPlay=![],snakeReadyMsg[_0x34f767(0x116)][_0x34f767(0x11d)]=_0x34f767(0xdb);},snakeReadyMsg[_0x1aa008(0xf6)]=()=>{const _0x35589d=_0x1aa008;!playing&&readyToPlay&&(startGame(),snakeReadyMsg[_0x35589d(0x116)][_0x35589d(0x11d)]=_0x35589d(0xdb),readyToPlay=![]);};function startGame(){const _0x38e025=_0x1aa008;snake=[{'x':0xa0,'y':0xa0}],dir=_0x38e025(0x115),food=randomFood(),score=0x0,playing=!![],paused=![],canvas[_0x38e025(0x116)][_0x38e025(0x11c)]=_0x38e025(0xfb),scoreEl[_0x38e025(0x116)][_0x38e025(0x11d)]=_0x38e025(0xf7),controls['style'][_0x38e025(0x11d)]='block',pauseOverlay['style'][_0x38e025(0x11d)]='none',gameOverOverlay[_0x38e025(0x116)][_0x38e025(0x11d)]=_0x38e025(0xdb),updateScore(),gameLoop=setInterval(update,0x96);}function stopGame(){const _0x39bece=_0x1aa008;clearInterval(gameLoop),playing=![],paused=![],readyToPlay=![],snakeReadyMsg[_0x39bece(0x116)]['display']='none',canvas['style'][_0x39bece(0x11c)]=_0x39bece(0xdb),ctx['clearRect'](0x0,0x0,w,h),scoreEl[_0x39bece(0x116)]['display']='none',controls[_0x39bece(0x116)]['display']=_0x39bece(0xdb),pauseOverlay[_0x39bece(0x116)][_0x39bece(0x11d)]=_0x39bece(0xdb),gameOverOverlay[_0x39bece(0x116)][_0x39bece(0x11d)]=_0x39bece(0xdb),score>highScore&&(highScore=score,localStorage[_0x39bece(0xe0)](_0x39bece(0xe9),highScore));}function gameOver(){const _0x27b7ca=_0x1aa008;stopGame(),finalScore[_0x27b7ca(0xea)]='Your\x20Score:\x20'+score,gameOverOverlay[_0x27b7ca(0x116)][_0x27b7ca(0x11d)]='block',gameOverSound[_0x27b7ca(0x118)]();}function togglePause(){const _0x86736d=_0x1aa008;if(!playing)return;paused=!paused,pauseOverlay['style'][_0x86736d(0x11d)]=paused?'flex':_0x86736d(0xdb);}function updateScore(){const _0x54323e=_0x1aa008;highScore=localStorage[_0x54323e(0xff)]('snakeHighScore')||0x0,scoreEl[_0x54323e(0xea)]='Score:\x20'+score+_0x54323e(0xfa)+highScore;}function update(){const _0x1a36d7=_0x1aa008;if(paused)return;let _0x521f60={...snake[0x0]};if(dir===_0x1a36d7(0x115))_0x521f60['x']+=0x14;if(dir===_0x1a36d7(0x103))_0x521f60['x']-=0x14;if(dir==='UP')_0x521f60['y']-=0x14;if(dir===_0x1a36d7(0xf9))_0x521f60['y']+=0x14;_0x521f60['x']=(_0x521f60['x']+w)%w,_0x521f60['y']=(_0x521f60['y']+h)%h,_0x521f60['x']=Math[_0x1a36d7(0x105)](_0x521f60['x']/0x14)*0x14,_0x521f60['y']=Math[_0x1a36d7(0x105)](_0x521f60['y']/0x14)*0x14;if(snake[_0x1a36d7(0x109)](_0x2ddf6b=>_0x2ddf6b['x']===_0x521f60['x']&&_0x2ddf6b['y']===_0x521f60['y'])){gameOver();return;}snake[_0x1a36d7(0x10d)](_0x521f60),_0x521f60['x']===food['x']&&_0x521f60['y']===food['y']?(score++,food=randomFood(),eatSound[_0x1a36d7(0x118)]()):snake[_0x1a36d7(0x10a)](),draw();}function draw(){const _0x5153a1=_0x1aa008;ctx[_0x5153a1(0xf5)](0x0,0x0,w,h),ctx['fillStyle']=_0x5153a1(0xf1),snake[_0x5153a1(0x102)](_0x4fa68e=>ctx[_0x5153a1(0xf8)](_0x4fa68e['x'],_0x4fa68e['y'],0x12,0x12)),ctx[_0x5153a1(0xe3)]='red',ctx[_0x5153a1(0xf8)](food['x'],food['y'],0x12,0x12),updateScore();}canvas['addEventListener'](_0x1aa008(0x110),_0x38b805=>{const _0x3d32d1=_0x1aa008;if(!_0x38b805['touches'][0x0])return;touchStartX=_0x38b805['touches'][0x0][_0x3d32d1(0xe8)],touchStartY=_0x38b805[_0x3d32d1(0x10b)][0x0][_0x3d32d1(0x106)];}),canvas[_0x1aa008(0x104)]('touchend',_0x2a75a0=>{const _0x1f8ec6=_0x1aa008;if(!_0x2a75a0[_0x1f8ec6(0xf2)][0x0])return;let _0x9fbe0f=_0x2a75a0[_0x1f8ec6(0xf2)][0x0]['clientX']-touchStartX,_0x54b298=_0x2a75a0[_0x1f8ec6(0xf2)][0x0][_0x1f8ec6(0x106)]-touchStartY;if(Math[_0x1f8ec6(0xf3)](_0x9fbe0f)>Math[_0x1f8ec6(0xf3)](_0x54b298)){if(_0x9fbe0f>0x1e)changeDir(_0x1f8ec6(0x115));else{if(_0x9fbe0f<-0x1e)changeDir(_0x1f8ec6(0x103));}}else{if(_0x54b298>0x1e)changeDir(_0x1f8ec6(0xf9));else{if(_0x54b298<-0x1e)changeDir('UP');}}});function changeDir(_0x165cea){const _0x461ecb=_0x1aa008;if(dir==='LEFT'&&_0x165cea==='RIGHT')return;if(dir===_0x461ecb(0x115)&&_0x165cea===_0x461ecb(0x103))return;if(dir==='UP'&&_0x165cea==='DOWN')return;if(dir==='DOWN'&&_0x165cea==='UP')return;dir=_0x165cea;}window[_0x1aa008(0x104)](_0x1aa008(0xfe),_0x15f159=>{const _0x15f322=_0x1aa008;if(_0x15f159[_0x15f322(0xf0)]===_0x15f322(0x10c))changeDir('UP');if(_0x15f159['key']===_0x15f322(0xef))changeDir(_0x15f322(0xf9));if(_0x15f159[_0x15f322(0xf0)]==='ArrowLeft')changeDir(_0x15f322(0x103));if(_0x15f159[_0x15f322(0xf0)]===_0x15f322(0xed))changeDir(_0x15f322(0x115));}),playAgainBtn['onclick']=()=>{const _0x1415bb=_0x1aa008;gameOverOverlay[_0x1415bb(0x116)][_0x1415bb(0x11d)]=_0x1415bb(0xdb),startGame();},exitGameBtn['onclick']=()=>{stopGame();},canvas['addEventListener'](_0x1aa008(0x110),_0x48e5af=>{const _0x260b5f=_0x1aa008;if(playing)_0x48e5af['preventDefault']();if(!_0x48e5af['touches'][0x0])return;touchStartX=_0x48e5af[_0x260b5f(0x10b)][0x0][_0x260b5f(0xe8)],touchStartY=_0x48e5af[_0x260b5f(0x10b)][0x0][_0x260b5f(0x106)];},{'passive':![]}),canvas['addEventListener'](_0x1aa008(0x10e),_0x1bcbf9=>{if(playing)_0x1bcbf9['preventDefault']();},{'passive':![]}),canvas[_0x1aa008(0x104)]('touchend',_0x23ae62=>{const _0x103afa=_0x1aa008;if(playing)_0x23ae62[_0x103afa(0x108)]();if(!_0x23ae62['changedTouches'][0x0])return;let _0x327a98=_0x23ae62[_0x103afa(0xf2)][0x0]['clientX']-touchStartX,_0x31898f=_0x23ae62[_0x103afa(0xf2)][0x0][_0x103afa(0x106)]-touchStartY;if(Math[_0x103afa(0xf3)](_0x327a98)>Math['abs'](_0x31898f)){if(_0x327a98>0x1e)changeDir('RIGHT');else{if(_0x327a98<-0x1e)changeDir(_0x103afa(0x103));}}else{if(_0x31898f>0x1e)changeDir('DOWN');else{if(_0x31898f<-0x1e)changeDir('UP');}}},{'passive':![]});
 
