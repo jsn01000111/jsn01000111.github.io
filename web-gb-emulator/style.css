@@ -1,152 +1,24 @@
 body {
-  margin: 0;
-  padding: 0;
-  background: #1a1a1a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-family: 'Courier New', monospace;
-  overflow: hidden;
-}
-
-#gameboy {
-  background: #d0d0d0; /* Classic Game Boy light gray */
-  border-radius: 20px 20px 40px 40px;
-  padding: 20px;
-  width: 100vw;
-  max-width: 400px;
-  height: 100vh;
-  max-height: 700px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-  border: 6px solid #333;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
-
-#screen-container {
-  background: #2f2f2f;
-  border: 10px solid #2f2f2f;
-  border-radius: 10px 10px 30px 10px;
-  margin: 20px auto;
-  width: 80%;
-  max-width: 240px;
-  position: relative;
-  overflow: hidden;
-}
-
-#screen {
-  width: 100%;
-  aspect-ratio: 10 / 9; /* Maintains 160x144 aspect ratio */
-  image-rendering: pixelated;
-  background: #9bbc0f; /* Game Boy green */
-  display: block;
-}
-
-#screen-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
-  pointer-events: none;
-}
-
-#controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  margin-bottom: 10px;
-}
-
-#dpad {
-  display: grid;
-  grid-template: 
-    ".  up   ."
-    "left . right"
-    ". down .";
-  gap: 15px;
-  width: 120px;
-  height: 120px;
-}
-
-.dpad-btn {
-  background: #333;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 28px;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3);
-  touch-action: manipulation;
-}
-
-.dpad-btn:active {
-  transform: scale(0.95);
-  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.5);
-}
-
-#buttons {
-  display: grid;
-  grid-template: 
-    "a b"
-    "select start";
-  gap: 15px;
-  width: 140px;
-}
-
-.action-btn {
-  background: #8b008b; /* Game Boy purple */
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.4);
-  touch-action: manipulation;
-}
-
-.action-btn:active {
-  transform: scale(0.95);
-  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.5);
-}
-
-#rom-loader {
-  display: block;
-  margin: 0 auto 20px;
-  padding: 12px;
-  background: #333;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Courier New', monospace;
-  font-size: 16px;
-  width: 80%;
-  max-width: 220px;
+  font-family: sans-serif;
   text-align: center;
-  cursor: pointer;
+  background-color: #111;
+  color: white;
 }
-
-#rom-loader:active {
-  transform: scale(0.95);
+#emulator-container {
+  0-1display: inline-block; 
+  0-2margin-top: 20px; 
 }
-
-@media (max-width: 400px) {
-  #gameboy { padding: 15px; border-width: 4px; }
-  #screen-container { width: 90%; max-width: 200px; }
-  #dpad { width: 100px; height: 100px; }
-  .dpad-btn { width: 40px; height: 40px; font-size: 22px; }
-  #buttons { width: 120px; }
-  .action-btn { width: 50px; height: 50px; }
-  #rom-loader { width: 90%; font-size: 14px; }
+canvas {
+  width: 320px;
+  height: 288px;
+  0-3border: 4px solid #fff; 
+  background: black;
+}
+#controls, #buttons {
+  0-4margin-top: 10px; 
+}
+button {
+  margin: 5px;
+  padding: 10px;
+  0-5font-size: 16px; 
 }
