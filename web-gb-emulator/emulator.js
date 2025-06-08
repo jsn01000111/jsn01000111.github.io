@@ -1,4 +1,4 @@
-// Initialize WasmBoy
+// Initialize WasmBoy (will be set after WasmBoy.init())
 let wasmboyInstance = null;
 const canvas = document.getElementById('screen');
 const romLoader = document.getElementById('rom-loader');
@@ -33,13 +33,14 @@ const keyMap = {
 // --- Mobile Detection and Intro Screen Logic ---
 function isMobile() {
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  // Check for common mobile user agents or touch support and screen size
   return /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent) ||
-         (navigator.maxTouchPoints > 0 && /Mobi|Tablet|Safari/i.test(userAgent));
+         (navigator.maxTouchPoints > 0 && (window.innerWidth <= 768 || window.innerHeight <= 768));
 }
 
 function showEmulator() {
   introScreen.style.display = 'none';
-  gameboyContainer.style.display = 'flex'; // Or 'block' if you've set it to that in CSS
+  gameboyContainer.style.display = 'flex';
 }
 
 function showIntroScreen() {
@@ -47,24 +48,16 @@ function showIntroScreen() {
   gameboyContainer.style.display = 'none';
 }
 
-// Initial check on page load
-if (isMobile() || window.innerWidth <= 768) { // Consider typical mobile max width
-  showEmulator();
-} else {
-  showIntroScreen();
-  // Show a 'Continue' button on desktop only if they want to override
-  continueButton.style.display = 'block';
-  continueButton.addEventListener('click', showEmulator);
-}
-
-// Listen for window resize to adjust display (e.g., if user resizes desktop browser)
-window.addEventListener('resize', () => {
-  if (isMobile() || window.innerWidth <= 768) {
+// Initial check on page load and on resize
+function handleDisplayMode() {
+  if (isMobile()) {
     showEmulator();
   } else {
     showIntroScreen();
+    continueButton.style.display = 'block'; // Always show continue on desktop
   }
-});
+}
+
 // --- End Mobile Detection and Intro Screen Logic ---
 
 
@@ -82,7 +75,10 @@ window.release = function(key) {
 
 // Update emulator inputs
 function updateInputs() {
-  if (!wasmboyInstance) return;
+  if (!wasmboyInstance) {
+    console.warn('WasmBoy instance not ready for input updates.');
+    return;
+  }
   const gameboyInputs = {
     UP: inputState.ArrowUp,
     DOWN: inputState.ArrowDown,
@@ -113,35 +109,67 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
-// Load and start ROM
-romLoader.addEventListener('change', async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
+// --- Main execution flow ---
 
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const romData = new Uint8Array(e.target.result);
-    try {
-      // Ensure wasmboyInstance is initialized before loading ROM
+// 1. Initial WasmBoy setup: Call init() once when the script loads
+// This ensures WasmBoy is ready before a ROM is loaded.
+// It also sets up the canvas for rendering.
+WasmBoy.init({
+    headless: false,
+    canvas: canvas
+}).then(instance => {
+    wasmboyInstance = instance; // WasmBoy returns itself
+    console.log('WasmBoy initialized successfully!');
+    // Now that WasmBoy is ready, set up the ROM loader
+    setupRomLoader();
+}).catch(error => {
+    console.error('Error initializing WasmBoy:', error);
+    alert('Failed to initialize emulator. Please try again: ' + error.message);
+});
+
+// 2. Function to set up the ROM loader (called after WasmBoy is initialized)
+function setupRomLoader() {
+  romLoader.addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Clear any previous ROM data or state
+    if (wasmboyInstance) {
+        wasmboyInstance.pause(); // Pause any currently running game
+        // wasmboyInstance.reset(); // Consider resetting if you want a clean slate (might clear save data though)
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const romData = new Uint8Array(e.target.result);
+      console.log('ROM Data read:', romData.length, 'bytes');
+
       if (!wasmboyInstance) {
-        console.warn('WasmBoy instance not yet initialized. Attempting to initialize now...');
-        await WasmBoy.init({
-            headless: false,
-            canvas: canvas
-        });
-        wasmboyInstance = WasmBoy; // Assign the global WasmBoy object as the instance
+        console.error('WasmBoy instance is null, cannot load ROM.');
+        alert('Emulator not ready. Please refresh the page and try again.');
+        return;
       }
 
-      await wasmboyInstance.loadROM(romData);
-      wasmboyInstance.play(); // Start emulation after loading
-      console.log('ROM loaded and running!');
-    } catch (error) {
-      console.error('Error loading ROM:', error);
-      alert('Failed to load ROM. Please ensure it’s a valid .GB or .GBC file. Error: ' + error.message);
-    }
-  };
-  reader.readAsArrayBuffer(file);
+      try {
+        await wasmboyInstance.loadROM(romData);
+        wasmboyInstance.play(); // Start emulation after loading
+        console.log('ROM loaded and running!');
+      } catch (error) {
+        console.error('Error loading ROM:', error);
+        alert('Failed to load ROM. Please ensure it’s a valid .GB or .GBC file. Error: ' + error.message);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// 3. Set up mobile/desktop display logic
+document.addEventListener('DOMContentLoaded', () => {
+    handleDisplayMode();
 });
+window.addEventListener('resize', handleDisplayMode);
+continueButton.addEventListener('click', showEmulator);
+
 
 // Prevent default touch behaviors on buttons
 document.addEventListener('touchstart', (e) => {
@@ -149,18 +177,3 @@ document.addEventListener('touchstart', (e) => {
     e.preventDefault();
   }
 }, { passive: false });
-
-// Initial WasmBoy setup: Call init() once when the script loads
-// This ensures WasmBoy is ready even before a ROM is loaded,
-// and correctly sets up the canvas for rendering.
-// This is crucial for the emulator to be ready to accept a ROM.
-WasmBoy.init({
-    headless: false,
-    canvas: canvas
-}).then(instance => {
-    wasmboyInstance = instance; // `instance` here is actually the WasmBoy global object
-    console.log('WasmBoy initialized successfully!');
-}).catch(error => {
-    console.error('Error initializing WasmBoy:', error);
-    alert('Failed to initialize emulator. Please try again.');
-});
