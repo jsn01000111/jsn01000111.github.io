@@ -122,14 +122,14 @@ romLoader.addEventListener('change', async (event) => {
   reader.onload = async (e) => {
     const romData = new Uint8Array(e.target.result);
     try {
+      // Ensure wasmboyInstance is initialized before loading ROM
       if (!wasmboyInstance) {
-        // Initialize WasmBoy if it hasn't been already
-        // This is important for subsequent ROM loads
+        console.warn('WasmBoy instance not yet initialized. Attempting to initialize now...');
         await WasmBoy.init({
             headless: false,
-            canvas: canvas // Pass the canvas element here
+            canvas: canvas
         });
-        wasmboyInstance = WasmBoy;
+        wasmboyInstance = WasmBoy; // Assign the global WasmBoy object as the instance
       }
 
       await wasmboyInstance.loadROM(romData);
@@ -150,14 +150,15 @@ document.addEventListener('touchstart', (e) => {
   }
 }, { passive: false });
 
-// Initial WasmBoy setup: Call init() once
+// Initial WasmBoy setup: Call init() once when the script loads
 // This ensures WasmBoy is ready even before a ROM is loaded,
 // and correctly sets up the canvas for rendering.
+// This is crucial for the emulator to be ready to accept a ROM.
 WasmBoy.init({
     headless: false,
     canvas: canvas
 }).then(instance => {
-    wasmboyInstance = instance;
+    wasmboyInstance = instance; // `instance` here is actually the WasmBoy global object
     console.log('WasmBoy initialized successfully!');
 }).catch(error => {
     console.error('Error initializing WasmBoy:', error);
