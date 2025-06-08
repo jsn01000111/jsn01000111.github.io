@@ -1,24 +1,119 @@
 body {
-  font-family: sans-serif;
-  text-align: center;
-  background-color: #111;
-  color: white;
+  margin: 0;
+  padding: 0;
+  background: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
 }
-#emulator-container {
-  display: inline-block;
-  margin-top: 20px;
+
+#gameboy {
+  background: #9b9b9b; /* Classic Game Boy gray */
+  border-radius: 20px 20px 40px 40px;
+  padding: 20px;
+  width: 90vw;
+  max-width: 360px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  border: 4px solid #333;
 }
-canvas {
-  width: 320px;
-  height: 288px;
-  border: 4px solid #fff;
-  background: black;
+
+#screen-container {
+  background: #2f2f2f;
+  border: 8px solid #2f2f2f;
+  border-radius: 10px 10px 30px 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
-#controls, #buttons {
-  margin-top: 10px;
+
+#screen {
+  width: 160px; /* Game Boy resolution: 160x144 */
+  height: 144px;
+  image-rendering: pixelated; /* Keep pixel art crisp */
+  background: #9bbc0f; /* Game Boy screen green */
 }
-button {
-  margin: 5px;
-  padding: 10px;
-  font-size: 16px;
+
+#controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#dpad {
+  display: grid;
+  grid-template: 
+    "  .  up   .  "
+    "left  .  right"
+    "  .  down  . ";
+  gap: 5px;
+  width: 100px;
+  height: 100px;
+}
+
+.dpad-btn {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 24px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation; /* Prevent default touch behaviors */
+}
+
+#up { grid-area: up; }
+#down { grid-area: down; }
+#left { grid-area: left; }
+#right { grid-area: right; }
+
+#buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
+  background: #8b008b; /* Game Boy button purple */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  touch-action: manipulation;
+}
+
+#start, #select {
+  border-radius: 10px;
+  width: 50px;
+  height: 20px;
+  font-size: 14px;
+}
+
+#rom-loader {
+  display: block;
+  margin: 10px auto;
+  color: #fff;
+  background: #333;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+@media (max-width: 400px) {
+  #gameboy {
+    padding: 15px;
+  }
+  #screen {
+    width: 140px;
+    height: 126px;
+  }
+  .dpad-btn { width: 25px; height: 25px; }
+  .action-btn { width: 35px; height: 35px; }
 }
