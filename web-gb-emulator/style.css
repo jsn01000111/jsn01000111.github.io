@@ -11,45 +11,73 @@ body {
 }
 
 #gameboy {
-  background: #9b9b9b; /* Classic Game Boy gray */
+  background: #d0d0d0; /* Classic Game Boy light gray */
   border-radius: 20px 20px 40px 40px;
   padding: 20px;
-  width: 90vw;
-  max-width: 360px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-  border: 4px solid #333;
+  width: 100vw;
+  max-width: 400px;
+  height: 100vh;
+  max-height: 700px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  border: 6px solid #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 #screen-container {
   background: #2f2f2f;
-  border: 8px solid #2f2f2f;
+  border: 10px solid #2f2f2f;
   border-radius: 10px 10px 30px 10px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 240px; /* Scaled up from 160px for visibility */
+  position: relative;
+  overflow: hidden;
 }
 
 #screen {
-  width: 160px; /* Game Boy resolution: 160x144 */
-  height: 144px;
-  image-rendering: pixelated; /* Keep pixel art crisp */
-  background: #9bbc0f; /* Game Boy screen green */
+  width: 100%;
+  aspect-ratio: 10 / 9; /* Game Boy resolution: 160x144 */
+  image-rendering: pixelated;
+  background: #9bbc0f; /* Game Boy green */
+  display: block;
+}
+
+/* Screen overlay for LCD effect */
+#screen-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  ); /* Scanline effect */
+  pointer-events: none;
 }
 
 #controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px;
   margin-bottom: 20px;
 }
 
 #dpad {
   display: grid;
   grid-template: 
-    "  .  up   .  "
-    "left  .  right"
-    "  .  down  . ";
-  gap: 5px;
+    ".  up   ."
+    "left . right"
+    ". down .";
+  gap: 8px;
   width: 100px;
   height: 100px;
 }
@@ -58,14 +86,15 @@ body {
   background: #333;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 24px;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  touch-action: manipulation; /* Prevent default touch behaviors */
+  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3);
+  touch-action: manipulation;
 }
 
 #up { grid-area: up; }
@@ -74,46 +103,86 @@ body {
 #right { grid-area: right; }
 
 #buttons {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template: 
+    "a b"
+    "select start";
   gap: 10px;
+  width: 120px;
 }
 
 .action-btn {
-  background: #8b008b; /* Game Boy button purple */
+  background: #8b008b; /* Game Boy purple */
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.4);
   touch-action: manipulation;
 }
 
 #start, #select {
   border-radius: 10px;
-  width: 50px;
-  height: 20px;
+  width: 60px;
+  height: 25px;
   font-size: 14px;
 }
 
+#a { grid-area: a; }
+#b { grid-area: b; }
+#start { grid-area: start; }
+#select { grid-area: select; }
+
 #rom-loader {
   display: block;
-  margin: 10px auto;
-  color: #fff;
+  margin: 0 auto 20px;
+  padding: 10px;
   background: #333;
-  padding: 5px;
-  border-radius: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  width: 80%;
+  max-width: 200px;
+  text-align: center;
+  cursor: pointer;
 }
 
 @media (max-width: 400px) {
   #gameboy {
     padding: 15px;
+    border-width: 4px;
   }
-  #screen {
-    width: 140px;
-    height: 126px;
+  #screen-container {
+    width: 90%;
+    max-width: 200px;
   }
-  .dpad-btn { width: 25px; height: 25px; }
-  .action-btn { width: 35px; height: 35px; }
+  #dpad {
+    width: 80px;
+    height: 80px;
+  }
+  .dpad-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+  #buttons {
+    width: 100px;
+  }
+  .action-btn {
+    width: 40px;
+    height: 40px;
+  }
+  #start, #select {
+    width: 50px;
+    height: 20px;
+    font-size: 12px;
+  }
+  #rom-loader {
+    width: 90%;
+    font-size: 14px;
+  }
 }
