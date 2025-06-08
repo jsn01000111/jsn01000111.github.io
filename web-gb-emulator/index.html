@@ -2,33 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Web Game Boy Emulator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="gameboy">
-    <div id="screen-container">
-      <canvas id="screen" width="160" height="144"></canvas>
-    </div>
-    <div id="controls">
-      <div id="dpad">
-        <button class="dpad-btn" id="btn-up">▲</button>
-        <button class="dpad-btn" id="btn-left">◀</button>
-        <button class="dpad-btn" id="btn-down">▼</button>
-        <button class="dpad-btn" id="btn-right">▶</button>
-      </div>
-      <div id="buttons">
-        <button class="action-btn" id="btn-a">A</button>
-        <button class="action-btn" id="btn-b">B</button>
-        <button class="action-btn" id="btn-start">Start</button>
-        <button class="action-btn" id="btn-select">Select</button>
-      </div>
-    </div>
-    <input type="file" id="rom-loader" accept=".gb,.gbc" />
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/wasmboy@0.7.1/dist/wasmboy.wasm.umd.js"></script>
+  <canvas id="screen" width="160" height="144"></canvas><br />
+  <input type="file" id="rom-loader" accept=".gb,.gbc" />
+  <script src="https://unpkg.com/wasmboy@0.7.1/dist/wasmboy.js"></script>
   <script src="emulator.js"></script>
 </body>
 </html>
