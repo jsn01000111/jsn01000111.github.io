@@ -1,17 +1,40 @@
+(async () => {
+  const canvas = document.getElementById("screen");
+  const loader = document.getElementById("rom-loader");
 
-function press(button) {
-  console.log("Button pressed:", button);
-  // Integrate with emulator key mapping
-}
+  // Initialize WasmBoy
+  const wasmboy = await WasmBoy.init({
+    canvas,
+    rom: null
+  });
 
-document.getElementById('rom-loader').addEventListener('change', function(evt) {
-  const file = evt.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const romData = new Uint8Array(e.target.result);
-    console.log("ROM loaded. Length:", romData.length);
-    // Here you'd pass romData to the emulator instance
+  // Handle ROM file input
+  loader.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const buffer = await file.arrayBuffer();
+    wasmboy.loadROM(new Uint8Array(buffer));
+    wasmboy.start();
+  });
+
+  // Button press helper
+  window.press = (code) => {
+    const mapping = {
+      ArrowUp: wasmboy.BUTTONS.UP,
+      ArrowDown: wasmboy.BUTTONS.DOWN,
+      ArrowLeft: wasmboy.BUTTONS.LEFT,
+      ArrowRight: wasmboy.BUTTONS.RIGHT,
+      KeyZ: wasmboy.BUTTONS.A,
+      KeyX: wasmboy.BUTTONS.B,
+      Enter: wasmboy.BUTTONS.START,
+      ShiftRight: wasmboy.BUTTONS.SELECT,
+    };
+    const btn = mapping[code];
+    if (!btn) return;
+    wasmboy.setButtonPressed(btn);
+    setTimeout(() => wasmboy.setButtonReleased(btn), 100);
   };
-  reader.readAsArrayBuffer(file);
-});
+
+  // Keyboard support
+  window.addEventListener("keydown", e => window.press(e.code));
+})();
