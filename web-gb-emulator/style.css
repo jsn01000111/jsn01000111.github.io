@@ -7,10 +7,16 @@ body {
   align-items: center;
   min-height: 100vh;
   font-family: 'Courier New', monospace;
-  overflow: hidden;
-  color: #eee; /* Added for intro screen text */
+  overflow: hidden; /* Prevent scrolling on mobile, let content manage its own layout */
+  color: #eee;
+  /* Ensure full screen on mobile */
+  width: 100vw;
+  height: 100vh;
+  /* Prevents iOS from scrolling and showing Safari UI */
+  overscroll-behavior: contain;
 }
 
+/* Intro Screen Styles */
 #intro-screen {
   display: flex;
   flex-direction: column;
@@ -22,16 +28,22 @@ body {
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   max-width: 90%;
+  height: 80%; /* Occupy a good portion of the screen */
+  box-sizing: border-box; /* Include padding in height */
+  /* Hide initially, controlled by JS */
+  display: none;
 }
 
 #intro-screen h1 {
   color: #9bbc0f; /* Game Boy green color */
   margin-bottom: 20px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem); /* Responsive font size */
 }
 
 #intro-screen p {
   margin-bottom: 10px;
   line-height: 1.5;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* Responsive font size */
 }
 
 #intro-screen button {
@@ -40,7 +52,7 @@ body {
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
-  font-size: 18px;
+  font-size: clamp(1rem, 3vw, 1.2rem); /* Responsive font size */
   cursor: pointer;
   margin-top: 20px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
@@ -51,14 +63,14 @@ body {
   background: #a000a0;
 }
 
-
+/* GameBoy Emulator Styles */
 #gameboy {
   background: #d0d0d0; /* Classic Game Boy light gray */
   border-radius: 20px 20px 40px 40px;
   padding: 20px;
-  width: 100vw;
+  width: 95vw; /* Use vw for better fit on small screens */
   max-width: 400px;
-  height: 100vh;
+  height: 95vh; /* Use vh for better fit on small screens */
   max-height: 700px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   border: 6px solid #333;
@@ -66,6 +78,9 @@ body {
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
+  /* Hide initially, controlled by JS */
+  display: none;
+  touch-action: manipulation; /* Prevent default touch actions like double-tap zoom */
 }
 
 #screen-container {
@@ -74,9 +89,10 @@ body {
   border-radius: 10px 10px 30px 10px;
   margin: 20px auto;
   width: 80%;
-  max-width: 240px; /* Scaled up from 160px for visibility */
+  max-width: 240px;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0; /* Prevent screen from shrinking in flex container */
 }
 
 #screen {
@@ -107,10 +123,12 @@ body {
 
 #controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around; /* Distribute space evenly */
   align-items: center;
   padding: 0 20px;
   margin-bottom: 20px;
+  flex-grow: 1; /* Allow controls to take available space */
+  align-items: flex-end; /* Align controls to the bottom if space allows */
 }
 
 #dpad {
@@ -122,6 +140,7 @@ body {
   gap: 8px;
   width: 100px;
   height: 100px;
+  flex-shrink: 0; /* Prevent dpad from shrinking */
 }
 
 .dpad-btn {
@@ -137,6 +156,7 @@ body {
   justify-content: center;
   box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3);
   touch-action: manipulation;
+  cursor: pointer; /* Indicate clickable */
 }
 
 #up { grid-area: up; }
@@ -151,22 +171,24 @@ body {
     "select start";
   gap: 10px;
   width: 120px;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .action-btn {
   background: #8b008b; /* Game Boy purple */
   color: #fff;
   border: none;
-  border-radius: 50%;
+  border-radius: 50%; /* Circle for A and B */
   width: 50px;
   height: 50px;
   font-size: 20px;
   box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.4);
   touch-action: manipulation;
+  cursor: pointer; /* Indicate clickable */
 }
 
 #start, #select {
-  border-radius: 10px;
+  border-radius: 10px; /* Rounded rectangle for Start/Select */
   width: 60px;
   height: 25px;
   font-size: 14px;
@@ -191,40 +213,50 @@ body {
   max-width: 200px;
   text-align: center;
   cursor: pointer;
+  appearance: none; /* Remove default file input styling */
+  -webkit-appearance: none; /* For Safari */
 }
 
+/* Smaller screen adjustments */
 @media (max-width: 400px) {
   #gameboy {
-    padding: 15px;
+    padding: 10px;
     border-width: 4px;
+    max-width: none; /* Allow it to fill more width on very small screens */
+    max-height: none; /* Allow it to fill more height */
   }
   #screen-container {
+    margin: 10px auto;
     width: 90%;
-    max-width: 200px;
+    max-width: 200px; /* Keeps aspect ratio better */
   }
   #dpad {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
+    gap: 5px;
   }
   .dpad-btn {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     font-size: 20px;
   }
   #buttons {
     width: 100px;
+    gap: 8px;
   }
   .action-btn {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
   }
   #start, #select {
-    width: 50px;
-    height: 20px;
-    font-size: 12px;
+    width: 55px;
+    height: 22px;
+    font-size: 13px;
   }
   #rom-loader {
     width: 90%;
     font-size: 14px;
+    padding: 8px;
   }
 }
