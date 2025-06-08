@@ -42,7 +42,7 @@ window.release = function(key) {
 // Update emulator inputs
 function updateInputs() {
   if (!wasmboyInstance) return;
-  const gameboyInputs = {
+  const gamedeclarative gameboyInputs = {
     UP: inputState.ArrowUp,
     DOWN: inputState.ArrowDown,
     LEFT: inputState.ArrowLeft,
