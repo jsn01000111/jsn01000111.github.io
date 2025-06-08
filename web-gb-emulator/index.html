@@ -25,6 +25,11 @@
         <button class="action-btn" id="select" ontouchstart="press('ShiftRight')" ontouchend="release('ShiftRight')" onclick="press('ShiftRight')" onmouseup="release('ShiftRight')">Select</button>
       </div>
     </div>
+    <div id="extra-controls">
+      <button class="extra-btn" onclick="saveState()">Save</button>
+      <button class="extra-btn" onclick="loadState()">Load</button>
+      <button class="extra-btn" onclick="toggleFullscreen()">Fullscreen</button>
+    </div>
     <input type="file" id="rom-loader" accept=".gb,.gbc" />
   </div>
 
