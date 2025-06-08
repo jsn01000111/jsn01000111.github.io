@@ -13,25 +13,19 @@
     </div>
     <div id="controls">
       <div id="dpad">
-        <button class="dpad-btn" id="btn-up" ontouchstart="press('ArrowUp')" ontouchend="release('ArrowUp')" onclick="press('ArrowUp')" onmouseup="release('ArrowUp')">▲</button>
-        <button class="dpad-btn" id="btn-left" ontouchstart="press('ArrowLeft')" ontouchend="release('ArrowLeft')" onclick="press('ArrowLeft')" onmouseup="release('ArrowLeft')">◀</button>
-        <button class="dpad-btn" id="btn-down" ontouchstart="press('ArrowDown')" ontouchend="release('ArrowDown')" onclick="press('ArrowDown')" onmouseup="release('ArrowDown')">▼</button>
-        <button class="dpad-btn" id="btn-right" ontouchstart="press('ArrowRight')" ontouchend="release('ArrowRight')" onclick="press('ArrowRight')" onmouseup="release('ArrowRight')">▶</button>
+        <button class="dpad-btn" id="up" ontouchstart="press('ArrowUp')" ontouchend="release('ArrowUp')" onclick="press('ArrowUp')" onmouseup="release('ArrowUp')">▲</button>
+        <button class="dpad-btn" id="left" ontouchstart="press('ArrowLeft')" ontouchend="release('ArrowLeft')" onclick="press('ArrowLeft')" onmouseup="release('ArrowLeft')">◀</button>
+        <button class="dpad-btn" id="down" ontouchstart="press('ArrowDown')" ontouchend="release('ArrowDown')" onclick="press('ArrowDown')" onmouseup="release('ArrowDown')">▼</button>
+        <button class="dpad-btn" id="right" ontouchstart="press('ArrowRight')" ontouchend="release('ArrowRight')" onclick="press('ArrowRight')" onmouseup="release('ArrowRight')">▶</button>
       </div>
       <div id="buttons">
-        <button class="action-btn" id="btn-a" ontouchstart="press('KeyZ')" ontouchend="release('KeyZ')" onclick="press('KeyZ')" onmouseup="release('KeyZ')">A</button>
-        <button class="action-btn" id="btn-b" ontouchstart="press('KeyX')" ontouchend="release('KeyX')" onclick="press('KeyX')" onmouseup="release('KeyX')">B</button>
-        <button class="action-btn" id="btn-start" ontouchstart="press('Enter')" ontouchend="release('Enter')" onclick="press('Enter')" onmouseup="release('Enter')">Start</button>
-        <button class="action-btn" id="btn-select" ontouchstart="press('ShiftRight')" ontouchend="release('ShiftRight')" onclick="press('ShiftRight')" onmouseup="release('ShiftRight')">Select</button>
+        <button class="action-btn" id="a" ontouchstart="press('KeyZ')" ontouchend="release('KeyZ')" onclick="press('KeyZ')" onmouseup="release('KeyZ')">A</button>
+        <button class="action-btn" id="b" ontouchstart="press('KeyX')" ontouchend="release('KeyX')" onclick="press('KeyX')" onmouseup="release('KeyX')">B</button>
+        <button class="action-btn" id="start" ontouchstart="press('Enter')" ontouchend="release('Enter')" onclick="press('Enter')" onmouseup="release('Enter')">Start</button>
+        <button class="action-btn" id="select" ontouchstart="press('ShiftRight')" ontouchend="release('ShiftRight')" onclick="press('ShiftRight')" onmouseup="release('ShiftRight')">Select</button>
       </div>
     </div>
-    <div id="extra-controls">
-      <button class="extra-btn" id="btn-save" onclick="saveState()">Save</button>
-      <button class="extra-btn" id="btn-load" onclick="loadState()">Load</button>
-      <button class="extra-btn" id="btn-fullscreen" onclick="toggleFullscreen()">Fullscreen</button>
-    </div>
     <input type="file" id="rom-loader" accept=".gb,.gbc" />
-    <div id="debug" style="color: white; text-align: center; font-size: 12px;"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/wasmboy@0.7.1/dist/wasmboy.wasm.umd.js"></script>
