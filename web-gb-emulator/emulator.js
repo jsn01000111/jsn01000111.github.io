@@ -1,4 +1,4 @@
-// Initialize WasmBoy (will be set after WasmBoy.init() resolves)
+// Initialize WasmBoy (will be set after WasmBoy.init())
 let wasmboyInstance = null;
 const canvas = document.getElementById('screen');
 const romLoader = document.getElementById('rom-loader');
@@ -57,6 +57,7 @@ function handleDisplayMode() {
     continueButton.style.display = 'block'; // Always show continue on desktop
   }
 }
+
 // --- End Mobile Detection and Intro Screen Logic ---
 
 
@@ -111,36 +112,20 @@ document.addEventListener('keyup', (e) => {
 // --- Main execution flow ---
 
 // 1. Initial WasmBoy setup: Call init() once when the script loads
-//    This is crucial to ensure WasmBoy's WASM module is compiled and ready.
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if WasmBoy global object is available
-    if (typeof WasmBoy === 'undefined') {
-        console.error("Error: WasmBoy library not loaded. Check the CDN link in your HTML.");
-        alert("WasmBoy emulator library failed to load. Please check your internet connection or the CDN link.");
-        return; // Stop execution if WasmBoy isn't found
-    }
-
-    WasmBoy.init({
-        headless: false,
-        canvas: canvas // Pass the canvas element
-    }).then(instance => {
-        // The `init` method returns the WasmBoy global object itself as the instance
-        wasmboyInstance = instance;
-        console.log('WasmBoy initialized successfully!');
-        // Now that WasmBoy is ready, set up the ROM loader
-        setupRomLoader();
-    }).catch(error => {
-        console.error('Error initializing WasmBoy:', error);
-        alert('Failed to initialize emulator. Please try again. Error: ' + error.message);
-    });
-
-    // Set up mobile/desktop display logic
-    handleDisplayMode();
+// This ensures WasmBoy is ready before a ROM is loaded.
+// It also sets up the canvas for rendering.
+WasmBoy.init({
+    headless: false,
+    canvas: canvas
+}).then(instance => {
+    wasmboyInstance = instance; // WasmBoy returns itself
+    console.log('WasmBoy initialized successfully!');
+    // Now that WasmBoy is ready, set up the ROM loader
+    setupRomLoader();
+}).catch(error => {
+    console.error('Error initializing WasmBoy:', error);
+    alert('Failed to initialize emulator. Please try again: ' + error.message);
 });
-
-window.addEventListener('resize', handleDisplayMode);
-continueButton.addEventListener('click', showEmulator);
-
 
 // 2. Function to set up the ROM loader (called after WasmBoy is initialized)
 function setupRomLoader() {
@@ -148,19 +133,20 @@ function setupRomLoader() {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Pause any currently running game before loading a new one
+    // Clear any previous ROM data or state
     if (wasmboyInstance) {
-        wasmboyInstance.pause();
+        wasmboyInstance.pause(); // Pause any currently running game
+        // wasmboyInstance.reset(); // Consider resetting if you want a clean slate (might clear save data though)
     }
 
     const reader = new FileReader();
     reader.onload = async (e) => {
       const romData = new Uint8Array(e.target.result);
-      console.log('ROM Data read:', file.name, '(', romData.length, 'bytes)');
+      console.log('ROM Data read:', romData.length, 'bytes');
 
       if (!wasmboyInstance) {
-        console.error('WasmBoy instance is null, cannot load ROM. Initialization failed or not complete.');
-        alert('Emulator not ready to load ROM. Please refresh the page and try again.');
+        console.error('WasmBoy instance is null, cannot load ROM.');
+        alert('Emulator not ready. Please refresh the page and try again.');
         return;
       }
 
@@ -170,12 +156,20 @@ function setupRomLoader() {
         console.log('ROM loaded and running!');
       } catch (error) {
         console.error('Error loading ROM:', error);
-        alert('Failed to load ROM. Please ensure it’s a valid .GB or .GBC file. Details: ' + error.message);
+        alert('Failed to load ROM. Please ensure it’s a valid .GB or .GBC file. Error: ' + error.message);
       }
     };
     reader.readAsArrayBuffer(file);
   });
 }
+
+// 3. Set up mobile/desktop display logic
+document.addEventListener('DOMContentLoaded', () => {
+    handleDisplayMode();
+});
+window.addEventListener('resize', handleDisplayMode);
+continueButton.addEventListener('click', showEmulator);
+
 
 // Prevent default touch behaviors on buttons
 document.addEventListener('touchstart', (e) => {
