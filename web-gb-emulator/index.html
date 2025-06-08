@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Web Game Boy</title>
+  <title>Web Game Boy Emulator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="gameboy">
     <div id="screen-container">
-      <canvas id="screen"></canvas>
+      <canvas id="screen" width="160" height="144"></canvas>
     </div>
     <div id="controls">
       <div id="dpad">
-        <button class="dpad-btn" id="up" ontouchstart="press('ArrowUp')" ontouchend="release('ArrowUp')" onclick="press('ArrowUp')" onmouseup="release('ArrowUp')">▲</button>
-        <button class="dpad-btn" id="left" ontouchstart="press('ArrowLeft')" ontouchend="release('ArrowLeft')" onclick="press('ArrowLeft')" onmouseup="release('ArrowLeft')">◀</button>
-        <button class="dpad-btn" id="down" ontouchstart="press('ArrowDown')" ontouchend="release('ArrowDown')" onclick="press('ArrowDown')" onmouseup="release('ArrowDown')">▼</button>
-        <button class="dpad-btn" id="right" ontouchstart="press('ArrowRight')" ontouchend="release('ArrowRight')" onclick="press('ArrowRight')" onmouseup="release('ArrowRight')">▶</button>
+        <button class="dpad-btn" id="btn-up">▲</button>
+        <button class="dpad-btn" id="btn-left">◀</button>
+        <button class="dpad-btn" id="btn-down">▼</button>
+        <button class="dpad-btn" id="btn-right">▶</button>
       </div>
       <div id="buttons">
-        <button class="action-btn" id="a" ontouchstart="press('KeyZ')" ontouchend="release('KeyZ')" onclick="press('KeyZ')" onmouseup="release('KeyZ')">A</button>
-        <button class="action-btn" id="b" ontouchstart="press('KeyX')" ontouchend="release('KeyX')" onclick="press('KeyX')" onmouseup="release('KeyX')">B</button>
-        <button class="action-btn" id="start" ontouchstart="press('Enter')" ontouchend="release('Enter')" onclick="press('Enter')" onmouseup="release('Enter')">Start</button>
-        <button class="action-btn" id="select" ontouchstart="press('ShiftRight')" ontouchend="release('ShiftRight')" onclick="press('ShiftRight')" onmouseup="release('ShiftRight')">Select</button>
+        <button class="action-btn" id="btn-a">A</button>
+        <button class="action-btn" id="btn-b">B</button>
+        <button class="action-btn" id="btn-start">Start</button>
+        <button class="action-btn" id="btn-select">Select</button>
       </div>
     </div>
     <input type="file" id="rom-loader" accept=".gb,.gbc" />
   </div>
 
-  <script src="https://unpkg.com/wasmboy@0.7.1/dist/wasmboy.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wasmboy@0.7.1/dist/wasmboy.wasm.umd.js"></script>
   <script src="emulator.js"></script>
 </body>
 </html>
