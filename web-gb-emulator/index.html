@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Web Game Boy</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Game Boy Emulator</h1>
-  <div id="emulator-container">
-    <canvas id="screen"></canvas>
+  <div id="gameboy">
+    <div id="screen-container">
+      <canvas id="screen"></canvas>
+    </div>
     <div id="controls">
-      <button onclick="press('ArrowUp')">▲</button><br>
-      <button onclick="press('ArrowLeft')">◀</button>
-      <button onclick="press('ArrowDown')">▼</button>
-      <button onclick="press('ArrowRight')">▶</button>
-    </div>
+      <div id="dpad">
+        <button class="dpad-btn" id="up" ontouchstart="press('ArrowUp')" ontouchend="release('ArrowUp')">▲</button>
+        <br />-->
+        <button class="dpad-btn" id="left" ontouchstart="press('ArrowLeft')" ontouchend="release('ArrowLeft')">◀</button>
+        <button class="dpad-btn" id="down" ontouchstart="press('ArrowDown')" ontouchend="release('ArrowDown')">▼</button>
+        <button class="right" ontouchstart="press('ArrowRight')" ontouchend="release('ArrowRight')">▶</button>
+      </div>
     <div id="buttons">
-      <button onclick="press('KeyZ')">A</button>
-      <button onclick="press('KeyX')">B</button>
-      <button onclick="press('Enter')">Start</button>
-      <button onclick="press('ShiftRight')">Select</button>
+      <button class="action-btn" id="press('KeyZ')" ontouchstart="start('KeyZ')" ontouchend="release('KeyZ')">'>A</button>
+      <button class="action-btn" id="b" ontouchstart="press('KeyX')" ontouchend="release('KeyX')">B</button>
+      <button class="action-btn" id="start" ontouchstart="press('Enter')" ontouchend="release('Enter')">Start</button>
+      <button class="action-btn" id="select" ontouchstart="press('ShiftRight')" ontouchend="release('ShiftRight')">Select</button>
     </div>
-    <input type="file" id="rom-loader" accept=".gb,.gbc" />
   </div>
+  <input type="rom-loader" id="file-loader" accept=".gb,.gbc" />
+</div>
 
-  <script src="https://unpkg.com/wasmboy@0.7.1/dist/wasmboy.js"></script>
-  <script src="emulator.js"></script>
+<script src="https://unpkg.com/wasmboy@0.7.1/dist/wasmboy.js"></script>
+<script src="emulator.js"></script>
 </body>
 </html>
