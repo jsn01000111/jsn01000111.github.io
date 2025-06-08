@@ -32,7 +32,7 @@ body {
   border-radius: 10px 10px 30px 10px;
   margin: 20px auto;
   width: 80%;
-  max-width: 240px; /* Scaled up from 160px for visibility */
+  max-width: 240px;
   position: relative;
   overflow: hidden;
 }
@@ -45,7 +45,7 @@ body {
   display: block;
 }
 
-/* Screen overlay for LCD effect */
+/* Stronger scanline effect */
 #screen-container::after {
   content: '';
   position: absolute;
@@ -55,11 +55,11 @@ body {
   height: 100%;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.05) 0px,
-    rgba(0, 0, 0, 0.05) 1px,
+    rgba(0, 0, 0, 0.15) 0px, /* Increased opacity */
+    rgba(0, 0, 0, 0.15) 1px,
     transparent 1px,
     transparent 2px
-  ); /* Scanline effect */
+  );
   pointer-events: none;
 }
 
@@ -68,7 +68,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #dpad {
@@ -97,10 +97,10 @@ body {
   touch-action: manipulation;
 }
 
-#up { grid-area: up; }
-#down { grid-area: down; }
-#left { grid-area: left; }
-#right { grid-area: right; }
+.dpad-btn:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.5);
+}
 
 #buttons {
   display: grid;
@@ -123,6 +123,11 @@ body {
   touch-action: manipulation;
 }
 
+.action-btn:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.5);
+}
+
 #start, #select {
   border-radius: 10px;
   width: 60px;
@@ -130,10 +135,30 @@ body {
   font-size: 14px;
 }
 
-#a { grid-area: a; }
-#b { grid-area: b; }
-#start { grid-area: start; }
-#select { grid-area: select; }
+#extra-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.extra-btn {
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.extra-btn:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+}
 
 #rom-loader {
   display: block;
@@ -149,6 +174,10 @@ body {
   max-width: 200px;
   text-align: center;
   cursor: pointer;
+}
+
+#rom-loader:active {
+  transform: scale(0.95);
 }
 
 @media (max-width: 400px) {
@@ -179,6 +208,10 @@ body {
   #start, #select {
     width: 50px;
     height: 20px;
+    font-size: 12px;
+  }
+  .extra-btn {
+    padding: 6px 10px;
     font-size: 12px;
   }
   #rom-loader {
