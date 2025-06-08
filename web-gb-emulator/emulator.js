@@ -2,6 +2,7 @@
 let wasmboyInstance = null;
 const canvas = document.getElementById('screen');
 const romLoader = document.getElementById('rom-loader');
+let savedState = null; // Store save state
 
 // Input state tracking
 const inputState = {
@@ -42,7 +43,7 @@ window.release = function(key) {
 // Update emulator inputs
 function updateInputs() {
   if (!wasmboyInstance) return;
-  const gamedeclarative gameboyInputs = {
+  const gameboyInputs = {
     UP: inputState.ArrowUp,
     DOWN: inputState.ArrowDown,
     LEFT: inputState.ArrowLeft,
@@ -54,6 +55,42 @@ function updateInputs() {
   };
   wasmboyInstance.setJoypadState(gameboyInputs);
 }
+
+// Save state
+window.saveState = function() {
+  if (!wasmboyInstance) {
+    alert('No game is running!');
+    return;
+  }
+  savedState = wasmboyInstance.saveState();
+  alert('Game state saved!');
+};
+
+// Load state
+window.loadState = function() {
+  if (!wasmboyInstance || !savedState) {
+    alert('No saved state or game running!');
+    return;
+  }
+  wasmboyInstance.loadState(savedState).then(() => {
+    alert('Game state loaded!');
+  }).catch((error) => {
+    console.error('Error loading state:', error);
+    alert('Failed to load state.');
+  });
+};
+
+// Toggle fullscreen
+window.toggleFullscreen = function() {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen().catch((err) => {
+      console.error('Fullscreen error:', err);
+      alert('Fullscreen not supported.');
+    });
+  } else {
+    document.exitFullscreen();
+  }
+};
 
 // Keyboard support
 document.addEventListener('keydown', (e) => {
@@ -80,6 +117,7 @@ romLoader.addEventListener('change', (event) => {
     const romData = new Uint8Array(e.target.result);
     WasmBoy.loadROM(romData).then(() => {
       wasmboyInstance = WasmBoy;
+      WasmBoy.enableDefaultJoypadSound(); // Enable audio
       WasmBoy.play(canvas);
       console.log('ROM loaded and running!');
     }).catch((error) => {
@@ -92,7 +130,7 @@ romLoader.addEventListener('change', (event) => {
 
 // Prevent default touch behaviors
 document.addEventListener('touchstart', (e) => {
-  if (e.target.tagName === 'BUTTON') {
+  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
     e.preventDefault();
   }
 }, { passive: false });
