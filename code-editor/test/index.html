@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Text Code Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!--
+  Copyright © 2025 JSN01000111
+  Licensed for educational and personal use only.
+  -->
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify/js/lib/beautify-html.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background: #1e1e1e;
+      color: white;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: #333;
+      color: white;
+      border: none;
+      border-bottom: 1px solid #444;
+    }
+
+    .editor-container,
+    .preview-container {
+      display: none;
+      flex-direction: column;
+      height: calc(100vh - 50px); /* Account for dropdown + button */
+    }
+
+    .editor-container.active,
+    .preview-container.active {
+      display: flex;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      overflow: auto;
+    }
+
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .CodeMirror-scroll {
+      overflow: auto !important;
+    }
+
+    .button-bar {
+      display: flex;
+      position: sticky;
+      bottom: 0;
+      background: #1e1e1e;
+      z-index: 999;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      background: #444;
+      color: white;
+      border: none;
+      border-top: 1px solid #555;
+    }
+
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    .output-title {
+      text-align: center;
+      padding: 10px;
+      background: #222;
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      padding: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <select onchange="changeMode(this.value)">
+    <option value="htmlmixed">HTML</option>
+    <option value="css">CSS</option>
+    <option value="javascript">JavaScript</option>
+    <option value="null">Plain Text</option>
+  </select>
+
+  <!-- Editor -->
+  <div class="editor-container active" id="editorBox">
+    <div class="editor-wrapper">
+      <textarea id="editor">
+
+      </textarea>
+    </div>
+    <div class="button-bar">
+      <button onclick="handleRun()">Run Code</button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview-container" id="previewBox">
+    <div class="output-title">Live Output</div>
+    <iframe id="preview"></iframe>
+    <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
+    <div class="button-bar">
+      <button onclick="toggleView('editor')">Back to Editor</button>
+    </div>
+  </div>
+
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      lineNumbers: true,
+      mode: "htmlmixed",
+      theme: "dracula",
+      lineWrapping: false,
+      viewportMargin: Infinity
+    });
+
+    function changeMode(mode) {
+      editor.setOption("mode", mode);
+    }
+
+    function handleRun() {
+      const code = editor.getValue();
+      const formatted = html_beautify(code, { indent_size: 2 });
+      editor.setValue(formatted);
+      runCode(formatted);
+      toggleView("preview");
+    }
+
+    function runCode(code) {
+      const iframe = document.getElementById("preview");
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+    }
+
+    function toggleView(view) {
+      document.getElementById("editorBox").classList.toggle("active", view === "editor");
+      document.getElementById("previewBox").classList.toggle("active", view === "preview");
+    }
+  </script>
+
+</body>
+</html>
