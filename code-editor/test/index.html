@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Mobile Code Editor</title>
+  <title>Code Editor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css" />
@@ -29,28 +29,42 @@
       background: #1e1e1e;
       color: white;
       overflow: hidden; /* Prevent body scrolling beyond what's managed */
+      display: flex;
+      flex-direction: column; /* Arrange content vertically */
     }
 
-    /* Select Element */
-    select {
+    /* Tab Bar for HTML/CSS/JS Selection */
+    .tab-bar {
+      display: flex;
       width: 100%;
-      padding: 12px;
-      font-size: 16px;
       background: #282c34; /* Darker background */
-      color: white;
-      border: none;
-      appearance: none; /* Remove default select arrow */
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      cursor: pointer;
       border-bottom: 1px solid #3a3f4b;
+    }
+
+    .tab-bar button {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 16px;
+      color: #aaa; /* Lighter grey for inactive tabs */
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .tab-bar button.active {
+      color: white; /* White for active tab text */
+      background-color: #3a3f4b; /* Slightly lighter background for active tab */
+      font-weight: bold;
     }
 
     /* Editor Container */
     .editor-container {
-      height: calc(100vh - 100px); /* Account for select and button bar */
-      display: flex; /* Use flex to manage inner editor display */
+      flex-grow: 1; /* Allow editor to take remaining height */
+      display: flex;
       flex-direction: column;
+      position: relative; /* For absolutely positioned watermarks if ever re-added */
+      overflow: hidden; /* To handle CodeMirror's internal scrollbar */
     }
 
     /* CodeMirror Editor Specifics */
@@ -61,24 +75,21 @@
       flex-grow: 1; /* Allow editor to grow within container */
     }
     .CodeMirror-gutters {
-      background-color: #282c34 !important; /* Match select background */
+      background-color: #282c34 !important; /* Match tab/button background */
       border-right: 1px solid #3a3f4b !important;
     }
     .CodeMirror-linenumber {
       color: #888 !important;
     }
 
-    /* Button Bar */
+    /* Button Bar (Run, Save, Load) */
     .button-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
       width: 100%;
       display: flex;
-      background: #282c34; /* Match select and gutter background */
+      background: #282c34; /* Match tab/gutter background */
       border-top: 1px solid #3a3f4b;
-      z-index: 999;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.3); /* Subtle shadow */
+      z-index: 999; /* Ensure it stays on top */
     }
 
     .button-bar button {
@@ -107,54 +118,43 @@
 
     /* Iframe Output */
     iframe {
-      position: fixed;
+      position: fixed; /* Position fixed relative to viewport */
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       border: none;
       background: white;
-      z-index: 998;
+      z-index: 998; /* Below the button bar if ever re-enabled */
       transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
     }
 
     /* Utility Classes */
     .hidden {
       display: none !important;
-      opacity: 0; /* For transition effect */
+      opacity: 0; /* For transition effect when showing/hiding elements that are not fixed */
       pointer-events: none; /* Prevent interaction when hidden */
     }
-
-    .watermark {
-      text-align: center;
-      font-size: 10px;
-      color: #888;
-      padding: 4px;
-      position: absolute; /* Keep it at the bottom of the editor area */
-      width: 100%;
-      bottom: 50px; /* Above the button bar */
-      z-index: 10; /* Make sure it's above other elements if not hidden */
-    }
-    .watermark.hidden-by-preview {
-        display: none; /* Hide watermark when in preview mode */
+    /* Special hidden for fixed elements to allow opacity transition */
+    .fixed-hidden {
+        opacity: 0;
+        pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-  <select id="modeSelect" onchange="switchEditor(this.value)">
-    <option value="html">HTML</option>
-    <option value="css">CSS</option>
-    <option value="js">JavaScript</option>
-  </select>
+  <div class="tab-bar" id="editorTabBar">
+    <button id="htmlTab" onclick="switchEditor('html')" class="active">HTML</button>
+    <button id="cssTab" onclick="switchEditor('css')">CSS</button>
+    <button id="jsTab" onclick="switchEditor('js')">JS</button>
+  </div>
 
   <div class="editor-container">
     <textarea id="htmlEditor"></textarea>
     <textarea id="cssEditor" class="hidden"></textarea>
     <textarea id="jsEditor" class="hidden"></textarea>
-    <div class="watermark" id="appWatermark">© 2025 JSN01000111 – Educational Use</div>
   </div>
-
 
   <div class="button-bar">
     <button id="runBtn" onclick="toggleRun()">
@@ -172,7 +172,6 @@
   </div>
 
   <iframe id="output" class="hidden"></iframe>
-
 
   <script>
     // Initialize CodeMirror editors
@@ -201,17 +200,25 @@
     let inPreview = false;
 
     /**
-     * Switches the currently active editor (HTML, CSS, JS).
+     * Switches the currently active editor (HTML, CSS, JS) and updates tab visuals.
      * @param {string} mode - The mode to switch to ('html', 'css', 'js').
      */
     function switchEditor(mode) {
       currentMode = mode;
+
+      // Update editor visibility
       for (let key in editors) {
         const wrapper = editors[key].getWrapperElement();
         wrapper.style.display = (key === mode) ? "block" : "none";
       }
       // Refresh the active editor to ensure proper rendering after display change
       editors[mode].refresh();
+
+      // Update tab button active state
+      document.querySelectorAll('.tab-bar button').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById(`${mode}Tab`).classList.add('active');
     }
 
     /**
@@ -220,9 +227,8 @@
     function toggleRun() {
       const outputIframe = document.getElementById("output");
       const editorContainer = document.querySelector('.editor-container');
-      const modeSelect = document.getElementById("modeSelect");
+      const editorTabBar = document.getElementById("editorTabBar");
       const runButton = document.getElementById("runBtn");
-      const watermark = document.getElementById("appWatermark");
       const saveButton = document.getElementById("saveBtn");
       const loadButton = document.getElementById("loadBtn");
 
@@ -248,24 +254,32 @@
 </html>`;
 
         const doc = outputIframe.contentDocument || outputIframe.contentWindow.document;
+        // Make iframe visible
         outputIframe.classList.remove("hidden");
+        // Ensure iframe content is written
         doc.open();
         doc.write(outputCode);
         doc.close();
 
+        // Hide editor elements
         editorContainer.classList.add("hidden");
-        modeSelect.classList.add("hidden");
-        watermark.classList.add("hidden-by-preview");
+        editorTabBar.classList.add("hidden");
+
+        // Update button text and hide save/load
         runButton.innerHTML = `<span class="material-icons">edit</span><span>Back to Editor</span>`;
-        saveButton.classList.add("hidden"); // Hide save/load in preview
+        saveButton.classList.add("hidden");
         loadButton.classList.add("hidden");
         inPreview = true;
       } else {
         // Switch back to Editor Mode
+        // Hide iframe
         outputIframe.classList.add("hidden");
+
+        // Show editor elements
         editorContainer.classList.remove("hidden");
-        modeSelect.classList.remove("hidden");
-        watermark.classList.remove("hidden-by-preview");
+        editorTabBar.classList.remove("hidden");
+
+        // Update button text and show save/load
         runButton.innerHTML = `<span class="material-icons">play_arrow</span><span>Run Code</span>`;
         saveButton.classList.remove("hidden");
         loadButton.classList.remove("hidden");
@@ -283,7 +297,7 @@
         localStorage.setItem('mobile_editor_html', editors.html.getValue());
         localStorage.setItem('mobile_editor_css', editors.css.getValue());
         localStorage.setItem('mobile_editor_js', editors.js.getValue());
-        alert('Code saved successfully!'); // Consider a native toast notification
+        alert('Code saved successfully!'); // Consider a native toast notification via JS interface for a real app
       } catch (e) {
         console.error("Error saving code:", e);
         alert('Could not save code. Storage might be full or permissions denied.');
@@ -299,23 +313,15 @@
         const css = localStorage.getItem('mobile_editor_css');
         const js = localStorage.getItem('mobile_editor_js');
 
-        if (html !== null) {
-          editors.html.setValue(html);
-        } else {
-          editors.html.setValue(""); // Clear if no saved content
-        }
-        if (css !== null) {
-          editors.css.setValue(css);
-        } else {
-          editors.css.setValue("");
-        }
-        if (js !== null) {
-          editors.js.setValue(js);
-        } else {
-          editors.js.setValue("");
-        }
+        editors.html.setValue(html !== null ? html : "");
+        editors.css.setValue(css !== null ? css : "");
+        editors.js.setValue(js !== null ? js : "");
 
-        alert('Code loaded!'); // Consider a native toast notification
+        alert('Code loaded!'); // Consider a native toast notification via JS interface for a real app
+        // Refresh all editors after loading new content to ensure proper display
+        editors.html.refresh();
+        editors.css.refresh();
+        editors.js.refresh();
       } catch (e) {
         console.error("Error loading code:", e);
         alert('Could not load code. No saved data or permissions denied.');
@@ -324,7 +330,7 @@
 
     // Initial setup when the page loads
     window.onload = function() {
-      switchEditor("html"); // Ensure HTML editor is visible by default
+      switchEditor("html"); // Ensure HTML editor is visible and active by default
       // Optionally, load code on startup. Uncomment if you want this behavior.
       // loadCode();
     };
