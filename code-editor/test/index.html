@@ -39,6 +39,7 @@
       width: 100%;
       background: #282c34; /* Darker background */
       border-bottom: 1px solid #3a3f4b;
+      flex-shrink: 0; /* Prevent it from shrinking */
     }
 
     .tab-bar button {
@@ -63,7 +64,7 @@
       flex-grow: 1; /* Allow editor to take remaining height */
       display: flex;
       flex-direction: column;
-      position: relative; /* For absolutely positioned watermarks if ever re-added */
+      position: relative; /* For absolutely positioned elements within */
       overflow: hidden; /* To handle CodeMirror's internal scrollbar */
     }
 
@@ -90,6 +91,7 @@
       border-top: 1px solid #3a3f4b;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.3); /* Subtle shadow */
       z-index: 999; /* Ensure it stays on top */
+      flex-shrink: 0; /* Prevent it from shrinking */
     }
 
     .button-bar button {
@@ -116,16 +118,16 @@
       font-size: 20px;
     }
 
-    /* Iframe Output */
+    /* Iframe Output - Adjusting positioning for potential browser UI */
     iframe {
       position: fixed; /* Position fixed relative to viewport */
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 100%; /* Take full available space */
       border: none;
       background: white;
-      z-index: 998; /* Below the button bar if ever re-enabled */
+      z-index: 998; /* Below the button bar */
       transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
     }
 
@@ -135,11 +137,8 @@
       opacity: 0; /* For transition effect when showing/hiding elements that are not fixed */
       pointer-events: none; /* Prevent interaction when hidden */
     }
-    /* Special hidden for fixed elements to allow opacity transition */
-    .fixed-hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
+    /* Note: "fixed-hidden" class is removed as "hidden" is generally sufficient with transition on iframe */
+
   </style>
 </head>
 <body>
@@ -239,6 +238,7 @@
         const css = editors.css.getValue();
         const js = editors.js.getValue();
 
+        // Construct the full HTML for the iframe
         const outputCode = `
 <!DOCTYPE html>
 <html>
@@ -261,11 +261,11 @@
         doc.write(outputCode);
         doc.close();
 
-        // Hide editor elements
+        // Hide editor elements (tab bar and editor container)
         editorContainer.classList.add("hidden");
         editorTabBar.classList.add("hidden");
 
-        // Update button text and hide save/load
+        // Update run button text/icon and hide save/load
         runButton.innerHTML = `<span class="material-icons">edit</span><span>Back to Editor</span>`;
         saveButton.classList.add("hidden");
         loadButton.classList.add("hidden");
@@ -275,11 +275,11 @@
         // Hide iframe
         outputIframe.classList.add("hidden");
 
-        // Show editor elements
+        // Show editor elements (tab bar and editor container)
         editorContainer.classList.remove("hidden");
         editorTabBar.classList.remove("hidden");
 
-        // Update button text and show save/load
+        // Update run button text/icon and show save/load
         runButton.innerHTML = `<span class="material-icons">play_arrow</span><span>Run Code</span>`;
         saveButton.classList.remove("hidden");
         loadButton.classList.remove("hidden");
