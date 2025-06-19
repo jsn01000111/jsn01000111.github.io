@@ -75,6 +75,7 @@
     .button-bar {
       width: 100%;
       display: flex;
+      flex-wrap: wrap;
       background: #282c34;
       border-top: 1px solid #3a3f4b;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
@@ -82,7 +83,7 @@
       flex-shrink: 0;
     }
     .button-bar button {
-      flex: 1;
+      flex: 1 1 25%;
       padding: 12px 0;
       font-size: 16px;
       background: transparent;
@@ -102,19 +103,17 @@
     .button-bar button .material-icons {
       font-size: 20px;
     }
-
     iframe {
       position: fixed;
-      top: 56px; /* Fixed: Below the button bar */
+      top: 56px;
       left: 0;
       width: 100%;
-      height: calc(100% - 56px); /* Leave space for bar */
+      height: calc(100% - 56px);
       border: none;
       background: white;
       z-index: 998;
       transition: opacity 0.3s ease;
     }
-
     .hidden {
       display: none !important;
       opacity: 0;
@@ -141,13 +140,22 @@
       <span class="material-icons">play_arrow</span>
       <span>Run Code</span>
     </button>
-    <button id="saveBtn" onclick="saveCode()">
+    <button onclick="saveCode()">
       <span class="material-icons">save</span>
       <span>Save</span>
     </button>
-    <button id="loadBtn" onclick="loadCode()">
+    <button onclick="loadCode()">
       <span class="material-icons">folder_open</span>
       <span>Load</span>
+    </button>
+    <input type="file" id="fileInput" accept=".json,.txt,.html" style="display: none;" onchange="loadFromFile(event)">
+    <button onclick="document.getElementById('fileInput').click()">
+      <span class="material-icons">upload_file</span>
+      <span>Import</span>
+    </button>
+    <button onclick="saveToFile()">
+      <span class="material-icons">download</span>
+      <span>Export</span>
     </button>
   </div>
 
@@ -194,8 +202,6 @@
       const editorContainer = document.querySelector('.editor-container');
       const editorTabBar = document.getElementById("editorTabBar");
       const runButton = document.getElementById("runBtn");
-      const saveButton = document.getElementById("saveBtn");
-      const loadButton = document.getElementById("loadBtn");
 
       if (!inPreview) {
         const html = editors.html.getValue();
@@ -207,7 +213,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>${css}</style>
 </head>
 <body>
@@ -224,18 +230,13 @@
 
         editorContainer.classList.add("hidden");
         editorTabBar.classList.add("hidden");
-
         runButton.innerHTML = `<span class="material-icons">edit</span><span>Back to Editor</span>`;
-        saveButton.classList.add("hidden");
-        loadButton.classList.add("hidden");
         inPreview = true;
       } else {
         outputIframe.classList.add("hidden");
-        editorContainer.classList.remove("hidden");
-        editorTabBar.classList.remove("hidden");
+        document.querySelector('.editor-container').classList.remove("hidden");
+        document.getElementById("editorTabBar").classList.remove("hidden");
         runButton.innerHTML = `<span class="material-icons">play_arrow</span><span>Run Code</span>`;
-        saveButton.classList.remove("hidden");
-        loadButton.classList.remove("hidden");
         inPreview = false;
         editors[currentMode].refresh();
       }
@@ -248,34 +249,63 @@
         localStorage.setItem('mobile_editor_js', editors.js.getValue());
         alert('Code saved successfully!');
       } catch (e) {
-        console.error("Error saving code:", e);
         alert('Could not save code.');
       }
     }
 
     function loadCode() {
       try {
-        const html = localStorage.getItem('mobile_editor_html');
-        const css = localStorage.getItem('mobile_editor_css');
-        const js = localStorage.getItem('mobile_editor_js');
-
-        editors.html.setValue(html || "");
-        editors.css.setValue(css || "");
-        editors.js.setValue(js || "");
+        editors.html.setValue(localStorage.getItem('mobile_editor_html') || "");
+        editors.css.setValue(localStorage.getItem('mobile_editor_css') || "");
+        editors.js.setValue(localStorage.getItem('mobile_editor_js') || "");
         editors.html.refresh();
         editors.css.refresh();
         editors.js.refresh();
         alert('Code loaded!');
       } catch (e) {
-        console.error("Error loading code:", e);
         alert('Could not load code.');
       }
     }
 
-    window.onload = function() {
-      switchEditor("html");
-      // loadCode(); // Optional: auto-load on start
-    };
+    function saveToFile() {
+      const data = {
+        html: editors.html.getValue(),
+        css: editors.css.getValue(),
+        js: editors.js.getValue()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "code-export.json";
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    }
+
+    function loadFromFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          editors.html.setValue(data.html || "");
+          editors.css.setValue(data.css || "");
+          editors.js.setValue(data.js || "");
+          editors.html.refresh();
+          editors.css.refresh();
+          editors.js.refresh();
+          alert("Code imported successfully!");
+        } catch (err) {
+          alert("Invalid file format.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    window.onload = () => switchEditor("html");
   </script>
 </body>
 </html>
