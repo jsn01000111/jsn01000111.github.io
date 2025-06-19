@@ -75,7 +75,6 @@
     .button-bar {
       width: 100%;
       display: flex;
-      flex-wrap: wrap;
       background: #282c34;
       border-top: 1px solid #3a3f4b;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
@@ -83,7 +82,7 @@
       flex-shrink: 0;
     }
     .button-bar button {
-      flex: 1 1 25%;
+      flex: 1;
       padding: 12px 0;
       font-size: 16px;
       background: transparent;
@@ -140,22 +139,14 @@
       <span class="material-icons">play_arrow</span>
       <span>Run Code</span>
     </button>
-    <button onclick="saveCode()">
+    <button onclick="saveToFile()">
       <span class="material-icons">save</span>
       <span>Save</span>
     </button>
-    <button onclick="loadCode()">
-      <span class="material-icons">folder_open</span>
-      <span>Load</span>
-    </button>
     <input type="file" id="fileInput" accept=".json,.txt,.html" style="display: none;" onchange="loadFromFile(event)">
     <button onclick="document.getElementById('fileInput').click()">
-      <span class="material-icons">upload_file</span>
-      <span>Import</span>
-    </button>
-    <button onclick="saveToFile()">
-      <span class="material-icons">download</span>
-      <span>Export</span>
+      <span class="material-icons">folder_open</span>
+      <span>Load</span>
     </button>
   </div>
 
@@ -234,36 +225,11 @@
         inPreview = true;
       } else {
         outputIframe.classList.add("hidden");
-        document.querySelector('.editor-container').classList.remove("hidden");
-        document.getElementById("editorTabBar").classList.remove("hidden");
+        editorContainer.classList.remove("hidden");
+        editorTabBar.classList.remove("hidden");
         runButton.innerHTML = `<span class="material-icons">play_arrow</span><span>Run Code</span>`;
         inPreview = false;
         editors[currentMode].refresh();
-      }
-    }
-
-    function saveCode() {
-      try {
-        localStorage.setItem('mobile_editor_html', editors.html.getValue());
-        localStorage.setItem('mobile_editor_css', editors.css.getValue());
-        localStorage.setItem('mobile_editor_js', editors.js.getValue());
-        alert('Code saved successfully!');
-      } catch (e) {
-        alert('Could not save code.');
-      }
-    }
-
-    function loadCode() {
-      try {
-        editors.html.setValue(localStorage.getItem('mobile_editor_html') || "");
-        editors.css.setValue(localStorage.getItem('mobile_editor_css') || "");
-        editors.js.setValue(localStorage.getItem('mobile_editor_js') || "");
-        editors.html.refresh();
-        editors.css.refresh();
-        editors.js.refresh();
-        alert('Code loaded!');
-      } catch (e) {
-        alert('Could not load code.');
       }
     }
 
@@ -297,7 +263,7 @@
           editors.html.refresh();
           editors.css.refresh();
           editors.js.refresh();
-          alert("Code imported successfully!");
+          alert("Code loaded from file!");
         } catch (err) {
           alert("Invalid file format.");
         }
