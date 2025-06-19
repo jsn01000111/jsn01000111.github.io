@@ -3,121 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <title>Code Editor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css" />
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    html, body {
+    * { box-sizing: border-box; }
+    body, html {
       margin: 0;
-      padding: 0;
       height: 100%;
-      font-family: 'Roboto', sans-serif;
+      font-family: sans-serif;
       background: #1e1e1e;
       color: white;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
     .tab-bar {
       display: flex;
-      width: 100%;
       background: #282c34;
       border-bottom: 1px solid #3a3f4b;
-      flex-shrink: 0;
     }
     .tab-bar button {
       flex: 1;
-      padding: 12px 0;
-      font-size: 16px;
+      padding: 10px;
       color: #aaa;
-      background: transparent;
+      background: none;
       border: none;
       cursor: pointer;
-      transition: color 0.2s ease, background-color 0.2s ease;
     }
     .tab-bar button.active {
       color: white;
-      background-color: #3a3f4b;
-      font-weight: bold;
+      background: #3a3f4b;
     }
     .editor-container {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
+      flex: 1;
       position: relative;
-      overflow: hidden;
     }
     .CodeMirror {
-      height: 100% !important;
+      height: 100%;
       font-size: 14px;
-      line-height: 1.5;
-      flex-grow: 1;
-    }
-    .CodeMirror-gutters {
-      background-color: #282c34 !important;
-      border-right: 1px solid #3a3f4b !important;
-    }
-    .CodeMirror-linenumber {
-      color: #888 !important;
     }
     .button-bar {
-      width: 100%;
       display: flex;
       background: #282c34;
       border-top: 1px solid #3a3f4b;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-      z-index: 999;
-      flex-shrink: 0;
     }
     .button-bar button {
       flex: 1;
-      padding: 12px 0;
-      font-size: 16px;
-      background: transparent;
-      color: white;
+      padding: 10px;
       border: none;
+      background: none;
+      color: white;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: background-color 0.2s ease;
+      gap: 5px;
     }
-    .button-bar button:hover,
-    .button-bar button:active {
-      background-color: #3a3f4b;
-    }
-    .button-bar button .material-icons {
-      font-size: 20px;
+    .button-bar button:hover {
+      background: #3a3f4b;
     }
     iframe {
       position: fixed;
-      top: 56px;
+      top: 48px;
       left: 0;
       width: 100%;
-      height: calc(100% - 56px);
+      height: calc(100% - 96px);
       border: none;
+      z-index: 999;
       background: white;
-      z-index: 998;
-      transition: opacity 0.3s ease;
     }
-    .hidden {
-      display: none !important;
-      opacity: 0;
-      pointer-events: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -135,137 +97,111 @@
   </div>
 
   <div class="button-bar">
-    <button id="runBtn" onclick="toggleRun()">
-      <span class="material-icons">play_arrow</span>
-      <span>Run Code</span>
-    </button>
-    <button onclick="saveToFile()">
-      <span class="material-icons">save</span>
-      <span>Save</span>
-    </button>
-    <input type="file" id="fileInput" accept=".json,.txt,.html" style="display: none;" onchange="loadFromFile(event)">
-    <button onclick="document.getElementById('fileInput').click()">
-      <span class="material-icons">folder_open</span>
-      <span>Load</span>
-    </button>
+    <button onclick="toggleRun()"><span class="material-icons">play_arrow</span>Run</button>
+    <button onclick="saveCodeFile()"><span class="material-icons">save</span>Save</button>
+    <input type="file" id="fileInput" accept=".html,.css,.js" style="display:none" onchange="loadCodeFile(event)">
+    <button onclick="document.getElementById('fileInput').click()"><span class="material-icons">folder_open</span>Load</button>
   </div>
 
   <iframe id="output" class="hidden"></iframe>
 
   <script>
-    let editors = {
+    const editors = {
       html: CodeMirror.fromTextArea(document.getElementById("htmlEditor"), {
-        lineNumbers: true,
         mode: "htmlmixed",
         theme: "dracula",
+        lineNumbers: true,
         lineWrapping: true
       }),
       css: CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
-        lineNumbers: true,
         mode: "css",
         theme: "dracula",
+        lineNumbers: true,
         lineWrapping: true
       }),
       js: CodeMirror.fromTextArea(document.getElementById("jsEditor"), {
-        lineNumbers: true,
         mode: "javascript",
         theme: "dracula",
+        lineNumbers: true,
         lineWrapping: true
       })
     };
 
     let currentMode = "html";
-    let inPreview = false;
-
     function switchEditor(mode) {
       currentMode = mode;
-      for (let key in editors) {
-        const wrapper = editors[key].getWrapperElement();
-        wrapper.style.display = (key === mode) ? "block" : "none";
+      for (const key in editors) {
+        editors[key].getWrapperElement().style.display = key === mode ? "block" : "none";
+        editors[key].refresh();
       }
-      editors[mode].refresh();
-      document.querySelectorAll('.tab-bar button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(`${mode}Tab`).classList.add('active');
+      document.querySelectorAll(".tab-bar button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(`${mode}Tab`).classList.add("active");
     }
 
     function toggleRun() {
-      const outputIframe = document.getElementById("output");
-      const editorContainer = document.querySelector('.editor-container');
-      const editorTabBar = document.getElementById("editorTabBar");
-      const runButton = document.getElementById("runBtn");
-
-      if (!inPreview) {
-        const html = editors.html.getValue();
-        const css = editors.css.getValue();
-        const js = editors.js.getValue();
-
-        const outputCode = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>${css}</style>
-</head>
-<body>
-  ${html}
-  <script>${js}<\/script>
-</body>
-</html>`;
-
-        const doc = outputIframe.contentDocument || outputIframe.contentWindow.document;
-        outputIframe.classList.remove("hidden");
+      const iframe = document.getElementById("output");
+      const html = editors.html.getValue();
+      const css = editors.css.getValue();
+      const js = editors.js.getValue();
+      if (iframe.classList.contains("hidden")) {
+        iframe.classList.remove("hidden");
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
         doc.open();
-        doc.write(outputCode);
+        doc.write(`<!DOCTYPE html><html><head><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`);
         doc.close();
-
-        editorContainer.classList.add("hidden");
-        editorTabBar.classList.add("hidden");
-        runButton.innerHTML = `<span class="material-icons">edit</span><span>Back to Editor</span>`;
-        inPreview = true;
       } else {
-        outputIframe.classList.add("hidden");
-        editorContainer.classList.remove("hidden");
-        editorTabBar.classList.remove("hidden");
-        runButton.innerHTML = `<span class="material-icons">play_arrow</span><span>Run Code</span>`;
-        inPreview = false;
-        editors[currentMode].refresh();
+        iframe.classList.add("hidden");
       }
     }
 
-    function saveToFile() {
-      const data = {
-        html: editors.html.getValue(),
-        css: editors.css.getValue(),
-        js: editors.js.getValue()
-      };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
+    function saveCodeFile() {
+      const type = prompt("Save as: html / css / js", "html");
+      const filename = prompt("Filename (without extension):", "myfile");
+      if (!["html", "css", "js"].includes(type)) {
+        alert("Invalid file type.");
+        return;
+      }
+
+      let content = "", mime = "";
+      if (type === "html") {
+        content = editors.html.getValue();
+        mime = "text/html";
+      } else if (type === "css") {
+        content = editors.css.getValue();
+        mime = "text/css";
+      } else if (type === "js") {
+        content = editors.js.getValue();
+        mime = "application/javascript";
+      }
+
+      const blob = new Blob([content], { type: mime });
       const a = document.createElement("a");
-      a.href = url;
-      a.download = "code-export.json";
+      a.href = URL.createObjectURL(blob);
+      a.download = filename + "." + type;
       document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(a.href);
       a.remove();
     }
 
-    function loadFromFile(event) {
+    function loadCodeFile(event) {
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function (e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          editors.html.setValue(data.html || "");
-          editors.css.setValue(data.css || "");
-          editors.js.setValue(data.js || "");
-          editors.html.refresh();
-          editors.css.refresh();
-          editors.js.refresh();
-          alert("Code loaded from file!");
-        } catch (err) {
-          alert("Invalid file format.");
+        const code = e.target.result;
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === "html") {
+          editors.html.setValue(code);
+          switchEditor("html");
+        } else if (ext === "css") {
+          editors.css.setValue(code);
+          switchEditor("css");
+        } else if (ext === "js") {
+          editors.js.setValue(code);
+          switchEditor("js");
+        } else {
+          alert("Unsupported file type.");
         }
       };
       reader.readAsText(file);
@@ -273,5 +209,6 @@
 
     window.onload = () => switchEditor("html");
   </script>
+
 </body>
 </html>
