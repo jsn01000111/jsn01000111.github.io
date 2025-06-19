@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mobile Code Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css" />
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Roboto', sans-serif; /* A common, clean font */
+      background: #1e1e1e;
+      color: white;
+      overflow: hidden; /* Prevent body scrolling beyond what's managed */
+    }
+
+    /* Select Element */
+    select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #282c34; /* Darker background */
+      color: white;
+      border: none;
+      appearance: none; /* Remove default select arrow */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      border-bottom: 1px solid #3a3f4b;
+    }
+
+    /* Editor Container */
+    .editor-container {
+      height: calc(100vh - 100px); /* Account for select and button bar */
+      display: flex; /* Use flex to manage inner editor display */
+      flex-direction: column;
+    }
+
+    /* CodeMirror Editor Specifics */
+    .CodeMirror {
+      height: 100% !important; /* Ensure CodeMirror takes full height */
+      font-size: 14px;
+      line-height: 1.5; /* Improve readability */
+      flex-grow: 1; /* Allow editor to grow within container */
+    }
+    .CodeMirror-gutters {
+      background-color: #282c34 !important; /* Match select background */
+      border-right: 1px solid #3a3f4b !important;
+    }
+    .CodeMirror-linenumber {
+      color: #888 !important;
+    }
+
+    /* Button Bar */
+    .button-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      background: #282c34; /* Match select and gutter background */
+      border-top: 1px solid #3a3f4b;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.3); /* Subtle shadow */
+    }
+
+    .button-bar button {
+      flex: 1;
+      padding: 12px 0; /* Adjust padding */
+      font-size: 16px;
+      background: transparent; /* No background, use bar's background */
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex; /* For icon and text alignment */
+      align-items: center;
+      justify-content: center;
+      gap: 8px; /* Space between icon and text */
+      transition: background-color 0.2s ease;
+    }
+
+    .button-bar button:hover,
+    .button-bar button:active {
+      background-color: #3a3f4b; /* Subtle hover/active effect */
+    }
+
+    .button-bar button .material-icons {
+      font-size: 20px;
+    }
+
+    /* Iframe Output */
+    iframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+      z-index: 998;
+      transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
+    }
+
+    /* Utility Classes */
+    .hidden {
+      display: none !important;
+      opacity: 0; /* For transition effect */
+      pointer-events: none; /* Prevent interaction when hidden */
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 10px;
+      color: #888;
+      padding: 4px;
+      position: absolute; /* Keep it at the bottom of the editor area */
+      width: 100%;
+      bottom: 50px; /* Above the button bar */
+      z-index: 10; /* Make sure it's above other elements if not hidden */
+    }
+    .watermark.hidden-by-preview {
+        display: none; /* Hide watermark when in preview mode */
+    }
+  </style>
+</head>
+<body>
+
+  <select id="modeSelect" onchange="switchEditor(this.value)">
+    <option value="html">HTML</option>
+    <option value="css">CSS</option>
+    <option value="js">JavaScript</option>
+  </select>
+
+  <div class="editor-container">
+    <textarea id="htmlEditor"></textarea>
+    <textarea id="cssEditor" class="hidden"></textarea>
+    <textarea id="jsEditor" class="hidden"></textarea>
+    <div class="watermark" id="appWatermark">© 2025 JSN01000111 – Educational Use</div>
+  </div>
+
+
+  <div class="button-bar">
+    <button id="runBtn" onclick="toggleRun()">
+      <span class="material-icons">play_arrow</span>
+      <span>Run Code</span>
+    </button>
+    <button id="saveBtn" onclick="saveCode()">
+      <span class="material-icons">save</span>
+      <span>Save</span>
+    </button>
+    <button id="loadBtn" onclick="loadCode()">
+      <span class="material-icons">folder_open</span>
+      <span>Load</span>
+    </button>
+  </div>
+
+  <iframe id="output" class="hidden"></iframe>
+
+
+  <script>
+    // Initialize CodeMirror editors
+    let editors = {
+      html: CodeMirror.fromTextArea(document.getElementById("htmlEditor"), {
+        lineNumbers: true,
+        mode: "htmlmixed",
+        theme: "dracula",
+        lineWrapping: true // Enable line wrapping
+      }),
+      css: CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
+        lineNumbers: true,
+        mode: "css",
+        theme: "dracula",
+        lineWrapping: true
+      }),
+      js: CodeMirror.fromTextArea(document.getElementById("jsEditor"), {
+        lineNumbers: true,
+        mode: "javascript",
+        theme: "dracula",
+        lineWrapping: true
+      })
+    };
+
+    let currentMode = "html";
+    let inPreview = false;
+
+    /**
+     * Switches the currently active editor (HTML, CSS, JS).
+     * @param {string} mode - The mode to switch to ('html', 'css', 'js').
+     */
+    function switchEditor(mode) {
+      currentMode = mode;
+      for (let key in editors) {
+        const wrapper = editors[key].getWrapperElement();
+        wrapper.style.display = (key === mode) ? "block" : "none";
+      }
+      // Refresh the active editor to ensure proper rendering after display change
+      editors[mode].refresh();
+    }
+
+    /**
+     * Toggles between the code editor view and the live output preview.
+     */
+    function toggleRun() {
+      const outputIframe = document.getElementById("output");
+      const editorContainer = document.querySelector('.editor-container');
+      const modeSelect = document.getElementById("modeSelect");
+      const runButton = document.getElementById("runBtn");
+      const watermark = document.getElementById("appWatermark");
+      const saveButton = document.getElementById("saveBtn");
+      const loadButton = document.getElementById("loadBtn");
+
+
+      if (!inPreview) {
+        // Switch to Preview Mode
+        const html = editors.html.getValue();
+        const css = editors.css.getValue();
+        const js = editors.js.getValue();
+
+        const outputCode = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <style>${css}</style>
+</head>
+<body>
+  ${html}
+  <script>${js}<\/script>
+</body>
+</html>`;
+
+        const doc = outputIframe.contentDocument || outputIframe.contentWindow.document;
+        outputIframe.classList.remove("hidden");
+        doc.open();
+        doc.write(outputCode);
+        doc.close();
+
+        editorContainer.classList.add("hidden");
+        modeSelect.classList.add("hidden");
+        watermark.classList.add("hidden-by-preview");
+        runButton.innerHTML = `<span class="material-icons">edit</span><span>Back to Editor</span>`;
+        saveButton.classList.add("hidden"); // Hide save/load in preview
+        loadButton.classList.add("hidden");
+        inPreview = true;
+      } else {
+        // Switch back to Editor Mode
+        outputIframe.classList.add("hidden");
+        editorContainer.classList.remove("hidden");
+        modeSelect.classList.remove("hidden");
+        watermark.classList.remove("hidden-by-preview");
+        runButton.innerHTML = `<span class="material-icons">play_arrow</span><span>Run Code</span>`;
+        saveButton.classList.remove("hidden");
+        loadButton.classList.remove("hidden");
+        inPreview = false;
+        // Refresh the current editor to ensure it's properly rendered when revealed
+        editors[currentMode].refresh();
+      }
+    }
+
+    /**
+     * Saves the current HTML, CSS, and JS code to localStorage.
+     */
+    function saveCode() {
+      try {
+        localStorage.setItem('mobile_editor_html', editors.html.getValue());
+        localStorage.setItem('mobile_editor_css', editors.css.getValue());
+        localStorage.setItem('mobile_editor_js', editors.js.getValue());
+        alert('Code saved successfully!'); // Consider a native toast notification
+      } catch (e) {
+        console.error("Error saving code:", e);
+        alert('Could not save code. Storage might be full or permissions denied.');
+      }
+    }
+
+    /**
+     * Loads previously saved HTML, CSS, and JS code from localStorage.
+     */
+    function loadCode() {
+      try {
+        const html = localStorage.getItem('mobile_editor_html');
+        const css = localStorage.getItem('mobile_editor_css');
+        const js = localStorage.getItem('mobile_editor_js');
+
+        if (html !== null) {
+          editors.html.setValue(html);
+        } else {
+          editors.html.setValue(""); // Clear if no saved content
+        }
+        if (css !== null) {
+          editors.css.setValue(css);
+        } else {
+          editors.css.setValue("");
+        }
+        if (js !== null) {
+          editors.js.setValue(js);
+        } else {
+          editors.js.setValue("");
+        }
+
+        alert('Code loaded!'); // Consider a native toast notification
+      } catch (e) {
+        console.error("Error loading code:", e);
+        alert('Could not load code. No saved data or permissions denied.');
+      }
+    }
+
+    // Initial setup when the page loads
+    window.onload = function() {
+      switchEditor("html"); // Ensure HTML editor is visible by default
+      // Optionally, load code on startup. Uncomment if you want this behavior.
+      // loadCode();
+    };
+  </script>
+
+</body>
+</html>
