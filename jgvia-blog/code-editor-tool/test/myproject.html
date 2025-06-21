@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>My Code Project</title>
+    <style>
+/* --- Start Custom CSS --- */
+/* Welcome! Start your CSS here */
+/* This will be included in the <style> tags when you save the project */
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background-color: #333;
+  color: #eee;
+}
+
+h1 {
+  color: #00bcd4; /* Cyan */
+}
+
+#my-box {
+  background-color: #444;
+  border: 1px solid #555;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* --- End Custom CSS --- */
+    </style>
+</head>
+<body>
+<!-- Welcome! Start your HTML here (inside the <body>) -->
+<!-- The app automatically adds <html>, <head>, <body> tags when you save -->
+
+<h1>Hello Mobile Coder!</h1>
+<p>Welcome to Project Coding - <strong>HTML CSS JS Editor</strong></p>
+<div id="my-box">
+  <p>Edit CSS and JS in their tabs.</p>
+</div>
+<button onclick="showAlert()">Click Me!</button>
+
+<script>
+/* --- Start Custom JavaScript --- */
+/* Welcome! Start your JavaScript here */
+/* This will be included in <script> tags when you save the project */
+
+function showAlert() {
+  alert("Button clicked from JavaScript!");
+}
+
+// You can add more JS here, e.g., for interactivity
+document.addEventListener('DOMContentLoaded', () => {
+  const myBox = document.getElementById('my-box');
+  if (myBox) {
+    myBox.addEventListener('click', () => {
+      console.log('Box clicked!');
+      myBox.style.backgroundColor = '#666';
+    });
+  }
+});
+
+/* --- End Custom JavaScript --- */
+    </script>
+</body>
+</html>
