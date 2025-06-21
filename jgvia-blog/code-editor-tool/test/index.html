@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Preview Page</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background-color: #f0f0f0; color: #333; }
+    h1 { color: #007bff; }
+    .resizable-box {
+        border: 2px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        min-width: 50px;
+        min-height: 50px;
+        position: relative;
+        display: block;
+        width: 300px;
+        height: 150px;
+    }
+    .another-box {
+        background-color: #e0f7fa;
+        border: 1px dashed #00bcd4;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    button {
+        padding: 8px 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+  </style>
+</head>
+
+<body style="cursor: default;">
+  <h1>Welcome to Live Editor Preview!</h1>
+  <p>You can now <strong>edit text directly</strong> when 'Content Edit' is enabled.</p>
+  <div class="resizable-box" style="background-color: lightyellow;">
+    <p>This box can be resized when 'Layout Edit' is enabled.</p>
+    <p>Try dragging the corners/edges.</p>
+    <button onclick="alert('Button clicked!')">Click Me</button>
+  </div>
+  <div class="another-box">
+    <p>Another content area.</p>
+    <span id="testSpan" data-custom="value">This is a span.</span>
+  </div>
+  <p>Changes made here will auto-save back to the editor.</p>
+
+
+</body>
+
+</html>
