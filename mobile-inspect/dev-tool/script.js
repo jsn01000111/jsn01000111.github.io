@@ -1,1 +1,1678 @@
-function _0x2340(_0x4fa172,_0x1f74cd){const _0x4a32e0=_0x4a32();return _0x2340=function(_0x234035,_0x1e5e72){_0x234035=_0x234035-0xc9;let _0x562465=_0x4a32e0[_0x234035];return _0x562465;},_0x2340(_0x4fa172,_0x1f74cd);}(function(_0x2778f3,_0xbd9bc6){const _0x12adb5=_0x2340,_0x4d6cf5=_0x2778f3();while(!![]){try{const _0x4c657c=parseInt(_0x12adb5(0x1ec))/0x1+parseInt(_0x12adb5(0xcf))/0x2*(parseInt(_0x12adb5(0x1a1))/0x3)+parseInt(_0x12adb5(0x188))/0x4+-parseInt(_0x12adb5(0x1ef))/0x5+-parseInt(_0x12adb5(0x21a))/0x6+-parseInt(_0x12adb5(0x193))/0x7*(parseInt(_0x12adb5(0x185))/0x8)+-parseInt(_0x12adb5(0x213))/0x9*(-parseInt(_0x12adb5(0x171))/0xa);if(_0x4c657c===_0xbd9bc6)break;else _0x4d6cf5['push'](_0x4d6cf5['shift']());}catch(_0x1ee124){_0x4d6cf5['push'](_0x4d6cf5['shift']());}}}(_0x4a32,0x5ea1a),(function(){const _0x555066=_0x2340;if(window[_0x555066(0x1b2)])return;window[_0x555066(0x1b2)]=!![];const _0x31dcce=document[_0x555066(0x14e)]('style');_0x31dcce[_0x555066(0x1e2)]=_0x555066(0x134),document[_0x555066(0x149)][_0x555066(0x21d)](_0x31dcce);const _0x11f150=document['createElement'](_0x555066(0x181));_0x11f150['id']=_0x555066(0x164),_0x11f150[_0x555066(0x1b6)]='\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolHeader\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20<span>Dev\x20Tool</span>\x0a\x0a\x20\x20\x20\x20\x20\x20<div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22devToolMinimize\x22>−</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22devToolClose\x22>×</button>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolTabs\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22consolePanel\x22\x20class=\x22active\x22>Console</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22stylesPanel\x22>Styles</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22elementsPanel\x22>Elements</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22storageViewerPanel\x22>Storage</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22networkPanel\x22>Network</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22performancePanel\x22>Performance</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22touchPanel\x22>Touch</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22accessibilityPanel\x22>Accessibility</button>\x0a\x0a\x20\x20\x20\x20\x20\x20<button\x20data-panel=\x22settingsPanel\x22>Settings</button>\x0a\x0a\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20<div\x20id=\x22devToolContentArea\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22consolePanel\x22\x20class=\x22devToolTabPanel\x20active\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22consoleLog\x22>Console:</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22jsCommandInputContainer\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<textarea\x20id=\x22jsCodeInput\x22\x20placeholder=\x22//\x20Type\x20JavaScript\x20here\x22></textarea>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22runJsBtn\x22>▶\x20Run</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22stylesPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<textarea\x20id=\x22cssCodeInput\x22\x20placeholder=\x22/*\x20Type\x20CSS\x20here\x20*/\x0abody\x20{\x20background-color:\x20#f0f8ff;\x20}\x22></textarea>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22injectCssButtonContainer\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22injectCssBtn\x22>Inject\x20CSS</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22elementsPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22devToolPath\x22>Path:\x20(none)</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22selectedElementPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>Selected\x20Element:</strong>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20id=\x22selectedElementTag\x22></span>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20id=\x22selectedElementId\x22></span>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20id=\x22selectedElementClasses\x22></span>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22margin-top:\x208px;\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>ID:</label>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22editElementId\x22\x20placeholder=\x22Element\x20ID\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Class:</label>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22editElementClass\x22\x20placeholder=\x22Element\x20Class(es)\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Outer\x20HTML/Text:</label>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<textarea\x20id=\x22editElementContent\x22\x20placeholder=\x22Edit\x20element\x27s\x20outerHTML\x20or\x20text\x20content\x22></textarea>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22panel-actions\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22applyElementChangesBtn\x22>Apply\x20Changes</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22removeElementBtn\x22>Remove</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22duplicateElementBtn\x22>Duplicate</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22selectParentBtn\x22>Parent</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22selectFirstChildBtn\x22>Child</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22selectNextSiblingBtn\x22>Sibling</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22devToolFooter\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22inspectElementBtn\x22>Inspect</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22editPageBtn\x22>Edit\x20Page</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22clearToolBtn\x22>Clear</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22storageViewerPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h4>Local\x20Storage</h4>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<pre\x20id=\x22localStorageContent\x22></pre>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h4>Session\x20Storage</h4>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<pre\x20id=\x22sessionStorageContent\x22></pre>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22refreshStorageBtn\x22\x20style=\x22width:\x20100%;\x20padding:\x208px;\x20margin-top:\x2010px;\x20background:\x20#28a745;\x20color:\x20white;\x20border:\x20none;\x20border-radius:\x204px;\x22>Refresh\x20Storage</button>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22networkPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22flex:\x201;\x20overflow-y:\x20auto;\x20padding:\x208px;\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<table>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<thead><tr><th>Method</th><th>URL</th><th>Status</th><th>Time</th></tr></thead>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<tbody\x20id=\x22networkLogBody\x22></tbody>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</table>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22networkDetails\x22></div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22clearNetworkBtn\x22\x20style=\x22width:\x20100%;\x20padding:\x208px;\x20margin-top:\x2010px;\x22>Clear\x20Network\x20Log</button>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22performancePanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22padding:\x208px;\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>FPS:\x20<span\x20id=\x22fpsCounter\x22>0</span></p>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Memory:\x20<span\x20id=\x22memoryCounter\x22>N/A</span></p>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<canvas\x20id=\x22performanceGraph\x22></canvas>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22togglePerformance\x22\x20style=\x22width:\x20100%;\x20padding:\x208px;\x20margin-top:\x2010px;\x22>Start\x20Monitoring</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22touchPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22touchLog\x22\x20style=\x22flex:\x201;\x20overflow-y:\x20auto;\x20padding:\x208px;\x22></div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22toggleTouchLog\x22\x20style=\x22width:\x20100%;\x20padding:\x208px;\x20margin-top:\x2010px;\x22>Start\x20Touch\x20Logging</button>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22accessibilityPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22a11yIssues\x22\x20style=\x22flex:\x201;\x20overflow-y:\x20auto;\x20padding:\x208px;\x22></div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22scanA11yBtn\x22\x20style=\x22width:\x20100%;\x20padding:\x208px;\x20margin-top:\x2010px;\x22>Scan\x20Accessibility</button>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22settingsPanel\x22\x20class=\x22devToolTabPanel\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<p>This\x20is\x20the\x20settings\x20panel.</p>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<label\x20style=\x22margin-top:\x2010px;\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22darkModeToggle\x22>\x20Dark\x20Mode\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</label>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22margin-top:\x2010px;\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Device\x20Emulation:</label>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<select\x20id=\x22devicePreset\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<option\x20value=\x22\x22>Select\x20Device</option>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<option\x20value=\x22iPhone14\x22>iPhone\x2014\x20(390x844)</option>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<option\x20value=\x22GalaxyS23\x22>Galaxy\x20S23\x20(412x915)</option>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<option\x20value=\x22custom\x22>Custom</option>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</select>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22customDeviceInputs\x22\x20style=\x22display:\x20none;\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Width:</label><input\x20type=\x22number\x22\x20id=\x22customWidth\x22\x20placeholder=\x22Width\x20(px)\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Height:</label><input\x20type=\x22number\x22\x20id=\x22customHeight\x22\x20placeholder=\x22Height\x20(px)\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>User\x20Agent:</label><input\x20type=\x22text\x22\x20id=\x22customUserAgent\x22\x20placeholder=\x22User\x20Agent\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22applyDeviceEmulation\x22\x20style=\x22padding:\x208px;\x20margin-top:\x205px;\x22>Apply</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22saveStateBtn\x22\x20style=\x22padding:\x208px;\x20margin:\x205px;\x20background:\x20#28a745;\x20color:\x20white;\x22>Save\x20State</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22loadStateBtn\x22\x20style=\x22padding:\x208px;\x20margin:\x205px;\x22>Load\x20State</button>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22resetToolSettings\x22\x20style=\x22padding:\x208px;\x20margin-top:\x205px;\x20background:\x20#dc3545;\x20color:\x20white;\x22>Reset\x20Tool</button>\x0a\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20</div>\x0a\x0a\x20\x20',document[_0x555066(0x19a)]['appendChild'](_0x11f150);const _0x3ce362=_0x11f150[_0x555066(0x126)](_0x555066(0x139)),_0x257050=_0x11f150['querySelector']('#devToolTabs'),_0x285ada=_0x11f150[_0x555066(0x194)]('.devToolTabPanel'),_0x1b6f7e=_0x11f150[_0x555066(0x126)](_0x555066(0x12d)),_0x4fbce8=_0x11f150[_0x555066(0x126)](_0x555066(0x17e)),_0xbaea74=_0x11f150[_0x555066(0x126)]('#runJsBtn'),_0xfe44e3=_0x11f150[_0x555066(0x126)](_0x555066(0x190)),_0x22fae0=_0x11f150[_0x555066(0x126)](_0x555066(0x112)),_0x64bb9=_0x11f150['querySelector'](_0x555066(0x1d6)),_0x361266=_0x11f150[_0x555066(0x126)]('#devToolPath'),_0x1e9ccc=_0x11f150['querySelector']('#selectedElementPanel'),_0x29f6ee=_0x11f150['querySelector'](_0x555066(0x100)),_0x3c8e43=_0x11f150[_0x555066(0x126)](_0x555066(0x11f)),_0x23a1e2=_0x11f150[_0x555066(0x126)]('#selectedElementClasses'),_0x33dfb2=_0x11f150[_0x555066(0x126)](_0x555066(0x13e)),_0x196ab1=_0x11f150[_0x555066(0x126)](_0x555066(0x1ba)),_0x388b43=_0x11f150[_0x555066(0x126)](_0x555066(0xef)),_0x202aeb=_0x11f150[_0x555066(0x126)](_0x555066(0x1cf)),_0x2003e3=_0x11f150[_0x555066(0x126)](_0x555066(0x1be)),_0x1d9581=_0x11f150[_0x555066(0x126)](_0x555066(0x15d)),_0x555db9=_0x11f150['querySelector'](_0x555066(0x1c5)),_0x408fee=_0x11f150[_0x555066(0x126)](_0x555066(0x1da)),_0x64dae4=_0x11f150['querySelector']('#selectNextSiblingBtn'),_0x5d9a8b=_0x11f150[_0x555066(0x126)](_0x555066(0xf6)),_0x98e8ac=_0x11f150['querySelector'](_0x555066(0x1dd)),_0x323962=_0x11f150['querySelector']('#clearToolBtn'),_0x27771f=_0x11f150['querySelector'](_0x555066(0x166)),_0x306ac7=_0x11f150[_0x555066(0x126)](_0x555066(0x1ca)),_0x8e842c=_0x11f150[_0x555066(0x126)](_0x555066(0x1c1)),_0x18bcd9=_0x11f150['querySelector'](_0x555066(0x1f5)),_0x32b6b3=_0x11f150[_0x555066(0x126)]('#networkDetails'),_0x52b6d3=_0x11f150[_0x555066(0x126)](_0x555066(0x1f1)),_0x4cbf40=_0x11f150[_0x555066(0x126)](_0x555066(0xf2)),_0x383883=_0x11f150['querySelector']('#memoryCounter'),_0x109e67=_0x11f150[_0x555066(0x126)](_0x555066(0x1e7)),_0x5bf053=_0x11f150['querySelector'](_0x555066(0x152)),_0x3107dc=_0x11f150['querySelector'](_0x555066(0x1d0)),_0x819f99=_0x11f150[_0x555066(0x126)](_0x555066(0x203)),_0x4f44a1=_0x11f150[_0x555066(0x126)](_0x555066(0xfc)),_0x4e60fe=_0x11f150[_0x555066(0x126)](_0x555066(0x1f3)),_0x1d3241=_0x11f150[_0x555066(0x126)](_0x555066(0x13b)),_0xcf5802=_0x11f150['querySelector'](_0x555066(0x1ee)),_0x1b468e=_0x11f150[_0x555066(0x126)](_0x555066(0x202)),_0x1f8547=_0x11f150[_0x555066(0x126)](_0x555066(0xdc)),_0x12c285=_0x11f150[_0x555066(0x126)](_0x555066(0x1d8)),_0x5587eb=_0x11f150[_0x555066(0x126)](_0x555066(0x1ac)),_0x2b19ed=_0x11f150[_0x555066(0x126)](_0x555066(0x21b)),_0x3b8cf7=_0x11f150[_0x555066(0x126)](_0x555066(0xcc)),_0x5a0c00=_0x11f150[_0x555066(0x126)](_0x555066(0x11a)),_0x107b83=_0x11f150[_0x555066(0x126)](_0x555066(0x12f)),_0x5c0310=_0x11f150[_0x555066(0x126)](_0x555066(0x125)),_0x57cfea=_0x11f150[_0x555066(0x126)](_0x555066(0xce));let _0x5ea0dc=null,_0x576744=![],_0x11842e=![],_0x273be4=![];_0x257050[_0x555066(0xe2)](_0x555066(0x17a),_0x12172d=>{const _0x5c3803=_0x555066,_0x17d435=_0x12172d['target']['closest'](_0x5c3803(0xe8));if(!_0x17d435)return;const _0x30a82=_0x17d435[_0x5c3803(0x1b3)]['panel'];_0x257050[_0x5c3803(0x194)](_0x5c3803(0xe8))[_0x5c3803(0x1b1)](_0x293eeb=>_0x293eeb[_0x5c3803(0xe7)][_0x5c3803(0x212)](_0x5c3803(0x10c))),_0x285ada['forEach'](_0x2f9d14=>_0x2f9d14[_0x5c3803(0xe7)][_0x5c3803(0x212)](_0x5c3803(0x10c))),_0x17d435['classList'][_0x5c3803(0x15f)](_0x5c3803(0x10c)),_0x11f150['querySelector']('#'+_0x30a82)[_0x5c3803(0xe7)][_0x5c3803(0x15f)](_0x5c3803(0x10c));_0x30a82===_0x5c3803(0x1cc)?(_0x1e9ccc[_0x5c3803(0xd4)][_0x5c3803(0x157)]=_0x5ea0dc?_0x5c3803(0x130):_0x5c3803(0x1e6),_0x5ea0dc&&_0x5ea0dc[_0x5c3803(0xe7)][_0x5c3803(0x15f)](_0x5c3803(0x1bf))):(_0x1e9ccc[_0x5c3803(0xd4)]['display']=_0x5c3803(0x1e6),document['querySelectorAll'](_0x5c3803(0x116))[_0x5c3803(0x1b1)](_0x15fbdc=>_0x15fbdc[_0x5c3803(0xe7)][_0x5c3803(0x212)](_0x5c3803(0x1bf))));if(_0x30a82===_0x5c3803(0x123))_0x33473e();else{if(_0x30a82===_0x5c3803(0x15a))_0x32b6b3[_0x5c3803(0xd4)][_0x5c3803(0x157)]=_0x5c3803(0x1e6);else{if(_0x30a82===_0x5c3803(0x180)){if(_0x3966fd)_0x5bf053[_0x5c3803(0x17a)]();}else{if(_0x30a82===_0x5c3803(0x1e3)){if(!_0x4baafa)_0x819f99[_0x5c3803(0x17a)]();}}}}});let _0x3e2df3=0x0,_0x2cfe38=0x0,_0x3fa193=![];const _0x51498e=_0x4506af=>{const _0x3acd5f=_0x555066;if(window[_0x3acd5f(0x17c)]<=0x300)return;_0x3fa193=!![];const _0xd2fe9f=_0x4506af['touches']?_0x4506af[_0x3acd5f(0xf8)][0x0]:_0x4506af;_0x3e2df3=_0xd2fe9f[_0x3acd5f(0x1fd)]-_0x11f150['offsetLeft'],_0x2cfe38=_0xd2fe9f[_0x3acd5f(0x18d)]-_0x11f150[_0x3acd5f(0x10d)],_0x4506af[_0x3acd5f(0xf3)](),_0x11f150['style']['transition']=_0x3acd5f(0x1e6);},_0x56e95f=_0x278ace=>{const _0x27c14e=_0x555066;if(!_0x3fa193)return;const _0x2059d2=_0x278ace[_0x27c14e(0xf8)]?_0x278ace[_0x27c14e(0xf8)][0x0]:_0x278ace;let _0x13b2cf=_0x2059d2[_0x27c14e(0x1fd)]-_0x3e2df3,_0x168b47=_0x2059d2[_0x27c14e(0x18d)]-_0x2cfe38;const _0x28d8bb=window[_0x27c14e(0x17c)]-_0x11f150['offsetWidth'],_0x2873e0=window[_0x27c14e(0x1de)]-_0x11f150[_0x27c14e(0x1fa)];_0x13b2cf=Math[_0x27c14e(0x1d5)](0x0,Math[_0x27c14e(0x10e)](_0x13b2cf,_0x28d8bb)),_0x168b47=Math[_0x27c14e(0x1d5)](0x0,Math['min'](_0x168b47,_0x2873e0)),_0x11f150[_0x27c14e(0xd4)][_0x27c14e(0x1fc)]=_0x13b2cf+'px',_0x11f150[_0x27c14e(0xd4)][_0x27c14e(0x1b4)]=_0x168b47+'px',_0x11f150['style']['bottom']=_0x27c14e(0x1a0),_0x11f150[_0x27c14e(0xd4)][_0x27c14e(0x1f4)]='auto';},_0xe8e4b5=()=>{const _0x4fa3a8=_0x555066;_0x3fa193=![],_0x11f150[_0x4fa3a8(0xd4)][_0x4fa3a8(0x129)]='all\x200.2s\x20ease-in-out';};_0x3ce362[_0x555066(0xe2)](_0x555066(0x138),_0x51498e),_0x3ce362['addEventListener'](_0x555066(0x151),_0x51498e,{'passive':![]}),document[_0x555066(0xe2)](_0x555066(0x1b5),_0x56e95f),document[_0x555066(0xe2)](_0x555066(0x1d9),_0x56e95f,{'passive':![]}),document[_0x555066(0xe2)](_0x555066(0x141),_0xe8e4b5),document[_0x555066(0xe2)](_0x555066(0x167),_0xe8e4b5);const _0x594a0d={'log':window[_0x555066(0x1e1)]['log'],'error':window[_0x555066(0x1e1)]['error'],'warn':window[_0x555066(0x1e1)]['warn'],'info':window[_0x555066(0x1e1)][_0x555066(0xda)],'debug':window[_0x555066(0x1e1)][_0x555066(0x13c)],'clear':window[_0x555066(0x1e1)][_0x555066(0x198)],'dir':window[_0x555066(0x1e1)]['dir'],'table':window[_0x555066(0x1e1)][_0x555066(0xd0)]};function _0x2711e4(_0x16c277){const _0x379bae=_0x555066;if(typeof _0x16c277===_0x379bae(0x155)&&_0x16c277!==null)try{const _0x9c9de3=new Set(),_0x104854=JSON[_0x379bae(0x10a)](_0x16c277,(_0x1d630d,_0x4ae44f)=>{const _0x12c696=_0x379bae;if(typeof _0x4ae44f===_0x12c696(0x155)&&_0x4ae44f!==null){if(_0x9c9de3[_0x12c696(0x1bb)](_0x4ae44f))return'[Circular]';_0x9c9de3[_0x12c696(0x15f)](_0x4ae44f);}return _0x4ae44f;},0x2);return _0x104854['substring'](0x0,0x3e8)+(_0x104854[_0x379bae(0x1bd)]>0x3e8?'...':'');}catch(_0x3bd063){return _0x379bae(0x105)+String(_0x16c277)[_0x379bae(0xc9)](0x0,0x12c)+_0x379bae(0x1b8);}return String(_0x16c277)[_0x379bae(0xc9)](0x0,0x3e8);}function _0x5688ad(_0x3dc257,_0x3e0af0){const _0x44de96=_0x555066;let _0x35722f='',_0xaee41e='';const _0x3fc6f1=_0x3e0af0[_0x44de96(0x163)](_0x2711e4)['join']('\x20');switch(_0x3dc257){case'log':_0x35722f=_0x44de96(0x161),_0xaee41e=_0x44de96(0x11b);break;case _0x44de96(0x101):_0x35722f='❌\x20',_0xaee41e=_0x44de96(0x1ea);break;case _0x44de96(0xd8):_0x35722f='⚠️\x20',_0xaee41e=_0x44de96(0x107);break;case'info':_0x35722f='🔵\x20',_0xaee41e=_0x44de96(0xe6);break;case _0x44de96(0x13c):_0x35722f=_0x44de96(0x15c),_0xaee41e=_0x44de96(0x136);break;case _0x44de96(0x102):_0x35722f='✅\x20',_0xaee41e=_0x44de96(0x11b);break;default:_0x35722f=_0x44de96(0x13f),_0xaee41e='log-normal';}const _0x405e69=document[_0x44de96(0x14e)]('div');_0x405e69[_0x44de96(0x135)]='log-entry',_0x405e69['innerHTML']=_0x44de96(0x15e)+_0xaee41e+'\x22>'+_0x35722f+_0x3fc6f1+_0x44de96(0x124),_0x1b6f7e[_0x44de96(0x21d)](_0x405e69),_0x1b6f7e[_0x44de96(0x1a4)]=_0x1b6f7e[_0x44de96(0x219)];}window[_0x555066(0x1e1)][_0x555066(0x20c)]=(..._0x1e73f4)=>{const _0x93b94c=_0x555066;_0x5688ad(_0x93b94c(0x20c),_0x1e73f4),_0x594a0d[_0x93b94c(0x20c)](..._0x1e73f4);},window[_0x555066(0x1e1)]['error']=(..._0x42d18a)=>{const _0x1c5b06=_0x555066;_0x5688ad(_0x1c5b06(0x101),_0x42d18a),_0x594a0d[_0x1c5b06(0x101)](..._0x42d18a);},window[_0x555066(0x1e1)][_0x555066(0xd8)]=(..._0x4dc688)=>{const _0x279347=_0x555066;_0x5688ad('warn',_0x4dc688),_0x594a0d[_0x279347(0xd8)](..._0x4dc688);},window['console'][_0x555066(0xda)]=(..._0x4027ee)=>{const _0x4d05b2=_0x555066;_0x5688ad(_0x4d05b2(0xda),_0x4027ee),_0x594a0d[_0x4d05b2(0xda)](..._0x4027ee);},window[_0x555066(0x1e1)][_0x555066(0x13c)]=(..._0x271b27)=>{const _0x5a70df=_0x555066;_0x5688ad(_0x5a70df(0x13c),_0x271b27),_0x594a0d[_0x5a70df(0x13c)](..._0x271b27);},window['console'][_0x555066(0x198)]=()=>{const _0x216214=_0x555066;_0x1b6f7e[_0x216214(0x1b6)]='',_0x594a0d[_0x216214(0x198)]();},window[_0x555066(0x1e1)][_0x555066(0x131)]=(..._0x59de31)=>{const _0x1ac36e=_0x555066;_0x5688ad('info',['dir:',..._0x59de31]),_0x594a0d[_0x1ac36e(0x131)](..._0x59de31);},window[_0x555066(0x1e1)][_0x555066(0xd0)]=(..._0x3994a8)=>{const _0x52a5fd=_0x555066;_0x5688ad(_0x52a5fd(0xda),[_0x52a5fd(0xff),..._0x3994a8]),_0x594a0d[_0x52a5fd(0xd0)](..._0x3994a8);},window['addEventListener'](_0x555066(0x101),_0x5739dc=>{const _0x247417=_0x555066;_0x5688ad(_0x247417(0x101),['Uncaught\x20Error:\x20'+_0x5739dc[_0x247417(0x1d2)],_0x247417(0xd1)+_0x5739dc[_0x247417(0x159)]+':'+_0x5739dc['lineno']+':'+_0x5739dc['colno']]),_0x5739dc[_0x247417(0xf3)]();}),window[_0x555066(0xe2)](_0x555066(0x16c),_0x11dcd1=>{const _0x492358=_0x555066;_0x5688ad('error',[_0x492358(0x153)+_0x11dcd1[_0x492358(0x17b)]]),_0x11dcd1['preventDefault']();});const _0x266642=window[_0x555066(0xd6)];window[_0x555066(0xd6)]=async(..._0x2daa42)=>{const _0x18a90d=_0x555066,_0xcc103e=performance['now']();try{const _0x59e1c5=await _0x266642(..._0x2daa42),_0x104054=performance['now'](),_0x44c3e=_0x59e1c5[_0x18a90d(0x109)](),_0x13dea3={};_0x44c3e[_0x18a90d(0xfd)][_0x18a90d(0x1b1)]((_0x169b8e,_0x201134)=>{_0x13dea3[_0x201134]=_0x169b8e;});const _0x374fce=await _0x44c3e[_0x18a90d(0x137)](),_0xedb6f0={'method':_0x2daa42[0x1]?.[_0x18a90d(0x1ab)]||_0x18a90d(0x108),'url':typeof _0x2daa42[0x0]===_0x18a90d(0x204)?_0x2daa42[0x0]:_0x2daa42[0x0][_0x18a90d(0x142)],'status':_0x44c3e[_0x18a90d(0xd9)],'time':(_0x104054-_0xcc103e)[_0x18a90d(0x20b)](0x2)+'ms','headers':_0x13dea3,'body':_0x374fce};return _0x27cb16(_0xedb6f0),_0x59e1c5;}catch(_0xb4498f){_0x5688ad(_0x18a90d(0x101),['Fetch\x20Error:\x20'+_0xb4498f[_0x18a90d(0x1d2)]]);throw _0xb4498f;}};function _0x27cb16(_0x1719d7){const _0x16d5ff=_0x555066,_0xd12475=document['createElement']('tr');_0xd12475['innerHTML']=_0x16d5ff(0x1c4)+_0x1719d7['method']+'</td><td>'+_0x1719d7['url']+'</td><td>'+_0x1719d7[_0x16d5ff(0xd9)]+_0x16d5ff(0x199)+_0x1719d7['time']+_0x16d5ff(0x189),_0xd12475[_0x16d5ff(0x165)]=()=>{const _0xa693bd=_0x16d5ff;_0x32b6b3[_0xa693bd(0x1b6)]=_0xa693bd(0x1b7)+_0x1719d7[_0xa693bd(0x1ab)]+_0xa693bd(0x172)+_0x1719d7[_0xa693bd(0x142)]+_0xa693bd(0xeb)+_0x1719d7[_0xa693bd(0xd9)]+_0xa693bd(0x17f)+_0x1719d7[_0xa693bd(0x211)]+_0xa693bd(0x144)+JSON[_0xa693bd(0x10a)](_0x1719d7['headers'],null,0x2)+_0xa693bd(0xd3)+_0x1719d7[_0xa693bd(0x19a)]['substring'](0x0,0x1f4)+(_0x1719d7[_0xa693bd(0x19a)][_0xa693bd(0x1bd)]>0x1f4?_0xa693bd(0x1b8):'')+_0xa693bd(0x175),_0x32b6b3[_0xa693bd(0xd4)]['display']='block',_0x32b6b3[_0xa693bd(0x128)]({'behavior':'smooth'});},_0x18bcd9['appendChild'](_0xd12475);}_0x52b6d3[_0x555066(0x165)]=()=>{const _0x525cd4=_0x555066;_0x18bcd9[_0x525cd4(0x1b6)]='',_0x32b6b3[_0x525cd4(0xd4)][_0x525cd4(0x157)]=_0x525cd4(0x1e6),_0x5688ad(_0x525cd4(0x20c),[_0x525cd4(0x18b)]);};let _0x3966fd=![],_0x18c95b=0x0,_0x18d54d=performance[_0x555066(0x1b9)]();const _0x379f55=[],_0x4ef31d=_0x109e67?.['getContext']('2d');function _0x122ef0(){const _0x4ddf76=_0x555066;if(!_0x3966fd)return;const _0x1af4da=performance[_0x4ddf76(0x1b9)]();_0x18c95b++;if(_0x1af4da-_0x18d54d>=0x3e8){const _0x5173e3=_0x18c95b;_0x18c95b=0x0,_0x18d54d=_0x1af4da,_0x4cbf40[_0x4ddf76(0x1e2)]=_0x5173e3;_0x4ddf76(0x1f8)in performance&&(_0x383883[_0x4ddf76(0x1e2)]=(performance[_0x4ddf76(0x1f8)][_0x4ddf76(0xe5)]/0x400/0x400)[_0x4ddf76(0x20b)](0x2)+_0x4ddf76(0x1df));_0x379f55['push'](_0x5173e3);if(_0x379f55['length']>0x32)_0x379f55[_0x4ddf76(0x12c)]();_0x4ef31d&&(_0x4ef31d[_0x4ddf76(0x1db)](0x0,0x0,_0x109e67[_0x4ddf76(0x120)],_0x109e67[_0x4ddf76(0xdd)]),_0x4ef31d[_0x4ddf76(0x178)](),_0x4ef31d['moveTo'](0x0,_0x109e67[_0x4ddf76(0xdd)]),_0x379f55['forEach']((_0xda99f5,_0x3a6138)=>{const _0x2646df=_0x4ddf76;_0x4ef31d[_0x2646df(0x15b)](_0x3a6138*(_0x109e67[_0x2646df(0x120)]/0x32),_0x109e67['height']-_0xda99f5/0x3c*_0x109e67['height']);}),_0x4ef31d['strokeStyle']=_0x4ddf76(0x1d4),_0x4ef31d[_0x4ddf76(0x214)]()),requestAnimationFrame(_0x122ef0);}else requestAnimationFrame(_0x122ef0);}_0x5bf053[_0x555066(0x165)]=()=>{const _0x209c77=_0x555066;_0x3966fd=!_0x3966fd,_0x5bf053[_0x209c77(0x1e2)]=_0x3966fd?'Stop\x20Monitoring':'Start\x20Monitoring';if(_0x3966fd)requestAnimationFrame(_0x122ef0);_0x5688ad('log',[_0x209c77(0xd5)+(_0x3966fd?_0x209c77(0x156):_0x209c77(0x1c6))+'.']);};let _0x4baafa=![];function _0x365949(_0x59fac4){const _0x4f34d3=_0x555066;if(!_0x4baafa)return;const _0x23baba=_0x59fac4[_0x4f34d3(0xf8)][0x0]||_0x59fac4[_0x4f34d3(0x1ed)][0x0],_0x29b151=_0x4f34d3(0x1a6)+_0x59fac4['type']+',\x20X:\x20'+_0x23baba?.[_0x4f34d3(0x1fd)][_0x4f34d3(0x20b)](_VALIDATE)+'\x20Y:\x20'+_0x23baba?.[_0x4f34d3(0x18d)]['toFixed'](0x2)+_0x4f34d3(0x191)+_0x59fac4[_0x4f34d3(0xf8)][_0x4f34d3(0x1bd)]+',\x20Target:\x20'+_0x59fac4['target']['tagName'],_0xa3b272=document['createElement'](_0x4f34d3(0x181));_0xa3b272[_0x4f34d3(0x1e2)]=_0x29b151,_0x3107dc[_0x4f34d3(0x21d)](_0xa3b272),_0x3107dc['scrollTop']=_0x3107dc['scrollHeight'];}_0x819f99['onclick']=()=>{const _0x533b9d=_0x555066;_0x4baafa=!_0x4baafa,_0x819f99[_0x533b9d(0x1e2)]=_0x4baafa?_0x533b9d(0x1c2):_0x533b9d(0x21f);const _0x434462=['touchstart',_0x533b9d(0x1d9),_0x533b9d(0x167)];_0x434462[_0x533b9d(0x1b1)](_0x2d8d99=>{const _0x26139b=_0x533b9d;_0x4baafa?document[_0x26139b(0xe2)](_0x2d8d99,_0x365949,{'passive':!![]}):document[_0x26139b(0x143)](_0x2d8d99,_0x365949);}),_0x5688ad(_0x533b9d(0x20c),[_0x533b9d(0xf5)+(_0x4baafa?'started':_0x533b9d(0x1c6))+'.']);};function _0x4c917c(_0x192739=document['body']){const _0x16491e=_0x555066,_0x253ce6=[],_0x742d0e=_0x192739[_0x16491e(0x194)](_0x16491e(0xec));_0x742d0e['forEach'](_0x165ad2=>{const _0x40ce61=_0x16491e;(!_0x165ad2['hasAttribute'](_0x40ce61(0x1d7))||_0x165ad2[_0x40ce61(0x14f)](_0x40ce61(0x1d7))==='')&&_0x253ce6[_0x40ce61(0x19c)](_0x40ce61(0x19b)+_0x565037(_0x165ad2));});const _0x4cc3d7=_0x192739[_0x16491e(0x194)](_0x16491e(0xdf));_0x4cc3d7['forEach'](_0xa7a423=>{const _0x301f30=_0x16491e;!_0xa7a423['textContent'][_0x301f30(0x14b)]()&&!_0xa7a423[_0x301f30(0xe3)](_0x301f30(0x18f))&&_0x253ce6['push']('Interactive\x20element\x20missing\x20label:\x20'+_0x565037(_0xa7a423));}),_0x4f44a1[_0x16491e(0x1b6)]=_0x253ce6[_0x16491e(0x1bd)]?_0x253ce6[_0x16491e(0x163)](_0x3d019d=>_0x16491e(0x1f2)+_0x3d019d+_0x16491e(0x114))['join'](''):_0x16491e(0x182),_0x5688ad(_0x16491e(0x20c),[_0x16491e(0x1d1)]);}_0x4e60fe[_0x555066(0x165)]=()=>{const _0x18a460=_0x555066;_0x4c917c(_0x5ea0dc||document[_0x18a460(0x19a)]);};const _0xbb5092={'iPhone14':{'width':0x186,'height':0x34c,'userAgent':_0x555066(0x1ff)},'GalaxyS23':{'width':0x19c,'height':0x393,'userAgent':_0x555066(0x1a8)}};_0xcf5802[_0x555066(0x10b)]=_0x30499b=>{const _0x2b98aa=_0x555066;_0x1b468e['style'][_0x2b98aa(0x157)]=_0x30499b['target'][_0x2b98aa(0x1f0)]===_0x2b98aa(0x177)?_0x2b98aa(0x130):'none';},_0x2b19ed[_0x555066(0x165)]=()=>{const _0x586335=_0x555066,_0x53c530=_0xcf5802['value'];let _0x5215e1,_0x398653,_0x1f1380;if(_0x53c530===_0x586335(0x177))_0x5215e1=parseInt(_0x1f8547['value'])||window[_0x586335(0x17c)],_0x398653=parseInt(_0x12c285[_0x586335(0x1f0)])||window[_0x586335(0x1de)],_0x1f1380=_0x5587eb[_0x586335(0x1f0)]||navigator['userAgent'];else{if(_0x53c530)({width:_0x5215e1,height:_0x398653,userAgent:_0x1f1380}=_0xbb5092[_0x53c530]);else{_0x5688ad(_0x586335(0xd8),[_0x586335(0x183)]);return;}}document[_0x586335(0x1e8)][_0x586335(0xd4)][_0x586335(0x120)]=_0x5215e1+'px',document[_0x586335(0x1e8)][_0x586335(0xd4)]['height']=_0x398653+'px';let _0x25b3bb=document[_0x586335(0x126)](_0x586335(0x160));!_0x25b3bb&&(_0x25b3bb=document['createElement'](_0x586335(0x200)),_0x25b3bb[_0x586335(0x192)]=_0x586335(0x158),document[_0x586335(0x149)][_0x586335(0x21d)](_0x25b3bb)),_0x25b3bb[_0x586335(0x209)]='width='+_0x5215e1+',\x20initial-scale=1.0',Object[_0x586335(0x1e5)](navigator,_0x586335(0x154),{'value':_0x1f1380,'writable':!![]}),_0x5688ad('log',[_0x586335(0xdb)+(_0x53c530||_0x586335(0xca))+'\x20('+_0x5215e1+'x'+_0x398653+')']);},_0x3b8cf7[_0x555066(0x165)]=()=>{const _0x593820=_0x555066,_0x498530={'consoleLog':_0x1b6f7e[_0x593820(0x1b6)],'cssCode':_0xfe44e3[_0x593820(0x1f0)],'jsCode':_0x4fbce8['value'],'activeTab':_0x257050[_0x593820(0x126)](_0x593820(0x13a))?.[_0x593820(0x1b3)][_0x593820(0x1ce)],'selectedElementPath':_0x5ea0dc?_0x565037(_0x5ea0dc):null,'darkMode':_0x1d3241[_0x593820(0x18e)]};localStorage[_0x593820(0x14c)](_0x593820(0x106),JSON[_0x593820(0x10a)](_0x498530)),_0x5688ad('log',[_0x593820(0x147)]);},_0x5a0c00[_0x555066(0x165)]=()=>{const _0x22b81a=_0x555066,_0x2801ac=JSON['parse'](localStorage[_0x22b81a(0x132)](_0x22b81a(0x106))||'{}');if(_0x2801ac[_0x22b81a(0x201)])_0x1b6f7e['innerHTML']=_0x2801ac[_0x22b81a(0x201)];if(_0x2801ac['cssCode'])_0xfe44e3[_0x22b81a(0x1f0)]=_0x2801ac[_0x22b81a(0x12a)];if(_0x2801ac[_0x22b81a(0x1a3)])_0x4fbce8[_0x22b81a(0x1f0)]=_0x2801ac[_0x22b81a(0x1a3)];if(_0x2801ac[_0x22b81a(0x1c3)])_0x257050['querySelector'](_0x22b81a(0xde)+_0x2801ac[_0x22b81a(0x1c3)]+'\x22]')?.[_0x22b81a(0x17a)]();if(_0x2801ac[_0x22b81a(0xfb)]){const _0x35205c=document[_0x22b81a(0x126)](_0x2801ac[_0x22b81a(0xfb)]);if(_0x35205c)_0x227a31(_0x35205c);}_0x2801ac[_0x22b81a(0x169)]&&(_0x1d3241['checked']=!![],_0x11f150[_0x22b81a(0xe7)][_0x22b81a(0x15f)](_0x22b81a(0x148))),_0x5688ad(_0x22b81a(0x20c),[_0x22b81a(0x21e)]);},_0x1d3241[_0x555066(0x10b)]=()=>{const _0x4d8fee=_0x555066;_0x11f150['classList'][_0x4d8fee(0x20d)](_0x4d8fee(0x148),_0x1d3241['checked']),localStorage[_0x4d8fee(0x14c)](_0x4d8fee(0x113),_0x1d3241['checked']),_0x5688ad(_0x4d8fee(0x20c),[_0x4d8fee(0x1fe)+(_0x1d3241[_0x4d8fee(0x18e)]?'enabled':'disabled')+'.']);};localStorage[_0x555066(0x132)]('devToolDarkMode')===_0x555066(0xd7)&&(_0x1d3241[_0x555066(0x18e)]=!![],_0x11f150[_0x555066(0xe7)][_0x555066(0x15f)](_0x555066(0x148)));_0x22fae0['onclick']=()=>{const _0x56547e=_0x555066,_0x260821=_0xfe44e3[_0x56547e(0x1f0)][_0x56547e(0x14b)]();if(_0x260821){const _0x122205=document[_0x56547e(0x14e)]('style');_0x122205[_0x56547e(0x1e2)]=_0x260821,document['head'][_0x56547e(0x21d)](_0x122205),_0x5688ad(_0x56547e(0x20c),[_0x56547e(0x1a2)]),_0xfe44e3[_0x56547e(0x1f0)]='';}else _0x5688ad(_0x56547e(0xd8),['No\x20CSS\x20to\x20inject.']);},_0xbaea74[_0x555066(0x165)]=()=>{const _0x5c26c8=_0x555066,_0x5e20c7=_0x4fbce8[_0x5c26c8(0x1f0)];_0x5688ad(_0x5c26c8(0x20c),[_0x5c26c8(0x1fb)]);try{const _0xe02cc5=window[_0x5c26c8(0x1e4)]('(function()\x20{\x20try\x20{\x20'+_0x5e20c7+_0x5c26c8(0x1a9));_0x5688ad(_0x5c26c8(0x102),[_0x5c26c8(0x195),_0xe02cc5]);}catch(_0x2e3a88){_0x5688ad(_0x5c26c8(0x101),[_0x5c26c8(0x1d3)+_0x2e3a88[_0x5c26c8(0x1d2)]]);}finally{_0x4fbce8[_0x5c26c8(0x1f0)]='';}},_0x98e8ac['onclick']=()=>{const _0x465af5=_0x555066;_0x576744=!_0x576744,document[_0x465af5(0x19a)][_0x465af5(0xf4)]=_0x576744,document['designMode']=_0x576744?'on':'off',_0x98e8ac[_0x465af5(0x1e2)]=_0x576744?_0x465af5(0xe9):_0x465af5(0x217),_0x5688ad(_0x465af5(0x20c),[_0x465af5(0x1f6)+(_0x576744?'enabled':_0x465af5(0x196))+'.']);};function _0x33473e(){const _0x538a31=_0x555066;_0x27771f[_0x538a31(0x1e2)]='Loading\x20Local\x20Storage...',_0x306ac7[_0x538a31(0x1e2)]='Loading\x20Session\x20Storage...';let _0x384283='{\x0a';if(localStorage[_0x538a31(0x1bd)]===0x0)_0x384283+='\x20\x20//\x20Local\x20Storage\x20is\x20empty\x0a';else for(let _0x2c2d48=0x0;_0x2c2d48<localStorage[_0x538a31(0x1bd)];_0x2c2d48++){const _0x20e73e=localStorage[_0x538a31(0x18c)](_0x2c2d48),_0x24eeeb=localStorage[_0x538a31(0x132)](_0x20e73e);try{_0x384283+='\x20\x20\x22'+_0x20e73e+_0x538a31(0x207)+JSON['stringify'](JSON['parse'](_0x24eeeb),null,0x2)+',\x0a';}catch(_0x19e0d0){_0x384283+=_0x538a31(0x215)+_0x20e73e+_0x538a31(0x111)+_0x24eeeb+_0x538a31(0x17d);}}_0x384283=_0x384283[_0x538a31(0x18a)](/,\n$/,'\x0a')+'}';let _0x36c5c4='{\x0a';if(sessionStorage['length']===0x0)_0x36c5c4+='\x20\x20//\x20Session\x20Storage\x20is\x20empty\x0a';else for(let _0x50af12=0x0;_0x50af12<sessionStorage[_0x538a31(0x1bd)];_0x50af12++){const _0x4cf967=sessionStorage[_0x538a31(0x18c)](_0x50af12),_0x3d6dd9=sessionStorage['getItem'](_0x4cf967);try{_0x36c5c4+=_0x538a31(0x215)+_0x4cf967+_0x538a31(0x207)+JSON[_0x538a31(0x10a)](JSON[_0x538a31(0x11c)](_0x3d6dd9),null,0x2)+',\x0a';}catch(_0x4c3b5b){_0x36c5c4+=_0x538a31(0x215)+_0x4cf967+_0x538a31(0x111)+_0x3d6dd9+_0x538a31(0x17d);}}_0x36c5c4=_0x36c5c4[_0x538a31(0x18a)](/,\n$/,'\x0a')+'}',_0x27771f[_0x538a31(0x1e2)]=_0x384283,_0x306ac7[_0x538a31(0x1e2)]=_0x36c5c4;}_0x8e842c[_0x555066(0x165)]=_0x33473e,_0x323962[_0x555066(0x165)]=()=>{const _0x770265=_0x555066;_0x4fbce8[_0x770265(0x1f0)]='',_0xfe44e3[_0x770265(0x1f0)]='',_0x1b6f7e[_0x770265(0x1b6)]='',_0x361266['textContent']=_0x770265(0x1dc),_0x576744=![],document[_0x770265(0x19a)][_0x770265(0xf4)]=![],document[_0x770265(0x16d)]=_0x770265(0xe1),_0x98e8ac[_0x770265(0x1e2)]='Edit\x20Page',_0x11842e=![],_0x5d9a8b[_0x770265(0x1e2)]='Inspect',_0x1e9ccc[_0x770265(0xd4)][_0x770265(0x157)]='none',_0x5ea0dc=null,document[_0x770265(0x194)](_0x770265(0x116))[_0x770265(0x1b1)](_0x2c93bd=>_0x2c93bd[_0x770265(0xe7)][_0x770265(0x212)](_0x770265(0x1bf))),document[_0x770265(0x19a)]['removeEventListener']('mouseover',_0x50295d),document[_0x770265(0x19a)][_0x770265(0x143)](_0x770265(0x17a),_0x5b5375,!![]),_0x18bcd9['innerHTML']='',_0x32b6b3[_0x770265(0xd4)]['display']=_0x770265(0x1e6),_0x3107dc['innerHTML']='',_0x4f44a1['innerHTML']='';if(_0x3966fd)_0x5bf053[_0x770265(0x17a)]();if(_0x4baafa)_0x819f99[_0x770265(0x17a)]();_0x5688ad('log',[_0x770265(0x127)]);},_0x107b83[_0x555066(0x165)]=()=>{const _0x2c4c4c=_0x555066;_0x323962[_0x2c4c4c(0x17a)](),localStorage['removeItem'](_0x2c4c4c(0x106)),localStorage[_0x2c4c4c(0x16f)]('devToolDarkMode'),_0x1d3241[_0x2c4c4c(0x18e)]=![],_0x11f150['classList']['remove'](_0x2c4c4c(0x148)),_0x5688ad(_0x2c4c4c(0x20c),[_0x2c4c4c(0x1c8)]);},_0x5c0310['onclick']=()=>{const _0x433a53=_0x555066;document['body']['removeChild'](_0x11f150),delete window[_0x433a53(0x1b2)],Object['assign'](window['console'],_0x594a0d),document['querySelectorAll']('.highlight-inspect')[_0x433a53(0x1b1)](_0x2e9107=>_0x2e9107[_0x433a53(0xe7)]['remove'](_0x433a53(0x1bf))),document[_0x433a53(0x19a)]['removeEventListener'](_0x433a53(0x11d),_0x50295d),document[_0x433a53(0x19a)][_0x433a53(0x143)](_0x433a53(0x17a),_0x5b5375,!![]);const _0x758b4b=[_0x433a53(0x151),'touchmove',_0x433a53(0x167)];_0x758b4b[_0x433a53(0x1b1)](_0xdf3804=>document['removeEventListener'](_0xdf3804,_0x365949));},_0x57cfea['onclick']=()=>{const _0xceea8d=_0x555066;_0x273be4=!_0x273be4;if(_0x273be4)_0x11f150['style'][_0xceea8d(0xdd)]='40px',_0x11f150[_0xceea8d(0xd4)][_0xceea8d(0x120)]=_0xceea8d(0x14d),_0x11f150[_0xceea8d(0xd4)][_0xceea8d(0x110)]=_0xceea8d(0x12e),_0x11f150['style'][_0xceea8d(0x179)]=_0xceea8d(0x10f),_0x11f150[_0xceea8d(0xd4)][_0xceea8d(0x1af)]=_0xceea8d(0x208),_0x257050[_0xceea8d(0xd4)]['display']=_0xceea8d(0x1e6),_0x285ada[_0xceea8d(0x1b1)](_0x1f70a5=>_0x1f70a5[_0xceea8d(0xd4)][_0xceea8d(0x157)]=_0xceea8d(0x1e6)),_0x11f150[_0xceea8d(0x126)]('#devToolHeader')[_0xceea8d(0xd4)][_0xceea8d(0x1ae)]='none',_0x11f150[_0xceea8d(0x126)]('#devToolHeader\x20span')[_0xceea8d(0x1e2)]=_0xceea8d(0x20a);else{_0x11f150[_0xceea8d(0xd4)]['height']=window['innerWidth']<=0x300?_0xceea8d(0xe4):_0xceea8d(0xcd),_0x11f150['style'][_0xceea8d(0x120)]=window[_0xceea8d(0x17c)]<=0x300?'100vw':_0xceea8d(0xed),_0x11f150['style']['flexDirection']=_0xceea8d(0x1bc),_0x11f150[_0xceea8d(0xd4)][_0xceea8d(0x179)]='stretch',_0x11f150['style'][_0xceea8d(0x1af)]=_0xceea8d(0x11e),_0x257050['style'][_0xceea8d(0x157)]=_0xceea8d(0xf7),_0x11f150['querySelector'](_0xceea8d(0x139))[_0xceea8d(0xd4)][_0xceea8d(0x1ae)]='1px\x20solid\x20#ccc',_0x11f150[_0xceea8d(0x126)](_0xceea8d(0x205))[_0xceea8d(0x1e2)]=_0xceea8d(0x21c);const _0x397472=_0x257050[_0xceea8d(0x126)]('button.active');if(_0x397472){const _0x558779=_0x397472[_0xceea8d(0x1b3)][_0xceea8d(0x1ce)];_0x11f150[_0xceea8d(0x126)]('#'+_0x558779)[_0xceea8d(0xe7)][_0xceea8d(0x15f)](_0xceea8d(0x10c));if(_0x558779===_0xceea8d(0x1cc)&&_0x5ea0dc)_0x1e9ccc['style'][_0xceea8d(0x157)]=_0xceea8d(0x130);else _0x558779===_0xceea8d(0x123)&&_0x33473e();}else _0x11f150[_0xceea8d(0x126)](_0xceea8d(0x19e))[_0xceea8d(0xe7)][_0xceea8d(0x15f)]('active'),_0x257050[_0xceea8d(0x126)]('[data-panel=\x22consolePanel\x22]')[_0xceea8d(0xe7)][_0xceea8d(0x15f)](_0xceea8d(0x10c));}_0x57cfea[_0xceea8d(0x1e2)]=_0x273be4?'❐':'−';};function _0x565037(_0x37b1b4){const _0x38557c=_0x555066;if(!_0x37b1b4||_0x37b1b4===document[_0x38557c(0x1e8)])return'';const _0x4b85a3=[];while(_0x37b1b4&&_0x37b1b4[_0x38557c(0x19d)]===0x1&&_0x37b1b4!==document['documentElement']){let _0xe40804=_0x37b1b4[_0x38557c(0xd2)][_0x38557c(0x1cb)]();if(_0x37b1b4['id']){_0xe40804+='#'+_0x37b1b4['id'],_0x4b85a3[_0x38557c(0x121)](_0xe40804);break;}else{let _0x1a9a5b=_0x37b1b4,_0x34beea=0x1;while(_0x1a9a5b=_0x1a9a5b[_0x38557c(0x145)]){if(_0x1a9a5b[_0x38557c(0xd2)][_0x38557c(0x1cb)]()===_0xe40804)_0x34beea++;}_0xe40804+=_0x34beea>0x1?':nth-of-type('+_0x34beea+')':'';}_0x4b85a3[_0x38557c(0x121)](_0xe40804),_0x37b1b4=_0x37b1b4[_0x38557c(0x133)];}return _0x4b85a3['join']('\x20>\x20');}const _0x227a31=_0xbca9c5=>{const _0x5a00f1=_0x555066;if(!_0xbca9c5||_0xbca9c5[_0x5a00f1(0x19d)]!==0x1){_0x5688ad(_0x5a00f1(0xd8),[_0x5a00f1(0x140)]);return;}_0x257050[_0x5a00f1(0x126)](_0x5a00f1(0x174))[_0x5a00f1(0x17a)](),_0x5ea0dc=_0xbca9c5,document['querySelectorAll'](_0x5a00f1(0x116))[_0x5a00f1(0x1b1)](_0x294d13=>_0x294d13['classList'][_0x5a00f1(0x212)](_0x5a00f1(0x1bf))),_0xbca9c5[_0x5a00f1(0xe7)][_0x5a00f1(0x15f)](_0x5a00f1(0x1bf)),_0x1e9ccc[_0x5a00f1(0xd4)][_0x5a00f1(0x157)]='block',_0x29f6ee['textContent']=_0xbca9c5['tagName'][_0x5a00f1(0x1cb)](),_0x3c8e43[_0x5a00f1(0x1e2)]=_0xbca9c5['id']?'#'+_0xbca9c5['id']:'',_0x23a1e2[_0x5a00f1(0x1e2)]=_0xbca9c5['className']?'.'+_0xbca9c5[_0x5a00f1(0x135)][_0x5a00f1(0xf1)]('\x20')['join']('.'):'',_0x33dfb2[_0x5a00f1(0x1f0)]=_0xbca9c5['id']||'',_0x196ab1[_0x5a00f1(0x1f0)]=_0xbca9c5[_0x5a00f1(0x135)]||'',_0x388b43['value']=_0xbca9c5[_0x5a00f1(0x170)],_0x361266['textContent']=_0x5a00f1(0x1c9)+_0x565037(_0xbca9c5);const _0x2bb82e=_0x257050[_0x5a00f1(0x126)](_0x5a00f1(0x13a));if(_0x2bb82e&&_0x2bb82e[_0x5a00f1(0x1b3)][_0x5a00f1(0x1ce)]!==_0x5a00f1(0x168)){_0x257050['querySelector']('[data-panel=\x22consolePanel\x22]')[_0x5a00f1(0x17a)](),_0x5688ad('info',[_0x5a00f1(0x184)]),_0x5688ad('info',[_0x5a00f1(0x146)+_0xbca9c5['tagName'][_0x5a00f1(0x1cb)]()]);if(_0xbca9c5['id'])_0x5688ad(_0x5a00f1(0xda),['\x20\x20ID:\x20#'+_0xbca9c5['id']]);if(_0xbca9c5[_0x5a00f1(0x135)])_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x14a)+_0xbca9c5[_0x5a00f1(0x135)]['split']('\x20')[_0x5a00f1(0x186)]('.')]);const _0x425b65=window[_0x5a00f1(0x176)](_0xbca9c5);_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x103)+_0x425b65[_0x5a00f1(0x157)]+_0x5a00f1(0x115)+_0x425b65[_0x5a00f1(0x16a)]]),_0x5688ad(_0x5a00f1(0xda),['\x20\x20Size:\x20'+_0x425b65[_0x5a00f1(0x120)]+'x'+_0x425b65['height']]),_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x20e)+_0x425b65[_0x5a00f1(0xe0)]+'\x20'+_0x425b65[_0x5a00f1(0x1c0)]]),_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x218)+_0x425b65[_0x5a00f1(0x1ad)]+_0x5a00f1(0x1a5)+_0x425b65[_0x5a00f1(0x119)]]),_0x257050[_0x5a00f1(0x126)]('[data-panel=\x22elementsPanel\x22]')[_0x5a00f1(0x17a)]();}else{_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x184)]),_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x146)+_0xbca9c5[_0x5a00f1(0x197)][_0x5a00f1(0x1cb)]()]);if(_0xbca9c5['id'])_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x187)+_0xbca9c5['id']]);if(_0xbca9c5[_0x5a00f1(0x135)])_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x14a)+_0xbca9c5[_0x5a00f1(0x135)][_0x5a00f1(0xf1)]('\x20')[_0x5a00f1(0x186)]('.')]);const _0x16d4a2=window['getComputedStyle'](_0xbca9c5);_0x5688ad(_0x5a00f1(0xda),['\x20\x20Display:\x20'+_0x16d4a2[_0x5a00f1(0x157)]+_0x5a00f1(0x115)+_0x16d4a2[_0x5a00f1(0x16a)]]),_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x1aa)+_0x16d4a2[_0x5a00f1(0x120)]+'x'+_0x16d4a2[_0x5a00f1(0xdd)]]),_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x20e)+_0x16d4a2[_0x5a00f1(0xe0)]+'\x20'+_0x16d4a2[_0x5a00f1(0x1c0)]]),_0x5688ad(_0x5a00f1(0xda),[_0x5a00f1(0x218)+_0x16d4a2[_0x5a00f1(0x1ad)]+_0x5a00f1(0x1a5)+_0x16d4a2[_0x5a00f1(0x119)]]);}_0xbca9c5[_0x5a00f1(0x128)]({'behavior':_0x5a00f1(0x1cd),'block':_0x5a00f1(0x10f)});};_0x5d9a8b['onclick']=()=>{const _0x4c63e9=_0x555066;_0x11842e=!_0x11842e,_0x5d9a8b['textContent']=_0x11842e?_0x4c63e9(0x1e0):_0x4c63e9(0xee),_0x11842e?(document[_0x4c63e9(0x19a)][_0x4c63e9(0xe2)](_0x4c63e9(0x11d),_0x50295d),document[_0x4c63e9(0x19a)][_0x4c63e9(0xe2)]('click',_0x5b5375,!![]),_0x5688ad(_0x4c63e9(0x20c),['Inspect\x20mode\x20active.\x20Click\x20an\x20element\x20to\x20select.']),document[_0x4c63e9(0x194)](_0x4c63e9(0x116))[_0x4c63e9(0x1b1)](_0x15d164=>_0x15d164['classList']['remove'](_0x4c63e9(0x1bf)))):(document[_0x4c63e9(0x19a)][_0x4c63e9(0x143)](_0x4c63e9(0x11d),_0x50295d),document[_0x4c63e9(0x19a)][_0x4c63e9(0x143)](_0x4c63e9(0x17a),_0x5b5375,!![]),!_0x5ea0dc&&document[_0x4c63e9(0x194)]('.highlight-inspect')['forEach'](_0x3f50cb=>_0x3f50cb[_0x4c63e9(0xe7)]['remove'](_0x4c63e9(0x1bf))),_0x5688ad('log',[_0x4c63e9(0x1e9)]));};const _0x50295d=_0x47af0c=>{const _0x30699b=_0x555066;if(_0x11f150[_0x30699b(0xea)](_0x47af0c['target'])){document[_0x30699b(0x194)](_0x30699b(0x116))[_0x30699b(0x1b1)](_0x1644e6=>_0x1644e6[_0x30699b(0xe7)]['remove']('highlight-inspect'));return;}document[_0x30699b(0x194)](_0x30699b(0x116))[_0x30699b(0x1b1)](_0x44d9be=>{const _0x412706=_0x30699b;if(_0x44d9be!==_0x5ea0dc)_0x44d9be['classList'][_0x412706(0x212)](_0x412706(0x1bf));}),_0x47af0c[_0x30699b(0x20f)]&&_0x47af0c[_0x30699b(0x20f)]!==_0x5ea0dc&&_0x47af0c[_0x30699b(0x20f)][_0x30699b(0xe7)][_0x30699b(0x15f)](_0x30699b(0x1bf));},_0x5b5375=_0x50e21d=>{const _0x2fed47=_0x555066;if(_0x11f150['contains'](_0x50e21d[_0x2fed47(0x20f)])&&_0x50e21d[_0x2fed47(0x20f)]!==_0x5d9a8b)return;_0x50e21d[_0x2fed47(0xf3)](),_0x50e21d[_0x2fed47(0x1a7)]();const _0x222f45=_0x50e21d['target'];_0x227a31(_0x222f45),_0x11842e=![],_0x5d9a8b[_0x2fed47(0x1e2)]=_0x2fed47(0xee),document[_0x2fed47(0x19a)][_0x2fed47(0x143)](_0x2fed47(0x11d),_0x50295d),document['body'][_0x2fed47(0x143)](_0x2fed47(0x17a),_0x5b5375,!![]);};_0x202aeb[_0x555066(0x165)]=()=>{const _0x588737=_0x555066;if(!_0x5ea0dc){_0x5688ad('warn',['No\x20element\x20selected\x20to\x20apply\x20changes\x20to.']);return;}const _0x87a492=_0x33dfb2[_0x588737(0x1f0)],_0xd6e024=_0x196ab1[_0x588737(0x1f0)],_0x3f13da=_0x388b43['value'];try{let _0x413f25=![];_0x5ea0dc['id']!==_0x87a492&&(_0x5ea0dc['id']=_0x87a492,_0x5688ad(_0x588737(0x20c),[_0x588737(0x210)+_0x87a492+'\x22']),_0x413f25=!![]);_0x5ea0dc[_0x588737(0x135)]!==_0xd6e024&&(_0x5ea0dc[_0x588737(0x135)]=_0xd6e024,_0x5688ad(_0x588737(0x20c),[_0x588737(0x122)+_0xd6e024+'\x22']),_0x413f25=!![]);if(_0x5ea0dc[_0x588737(0x170)]!==_0x3f13da){const _0xe714ff=document[_0x588737(0x14e)](_0x588737(0x181));_0xe714ff['innerHTML']=_0x3f13da;if(_0xe714ff[_0x588737(0xf9)]===0x1){const _0x476eb4=_0xe714ff[_0x588737(0x16b)];_0x5ea0dc[_0x588737(0x220)]?(_0x5ea0dc[_0x588737(0x220)][_0x588737(0x1c7)](_0x476eb4,_0x5ea0dc),_0x5ea0dc=_0x476eb4,_0x5688ad('log',[_0x588737(0x162)]),_0x413f25=!![]):_0x5688ad('error',[_0x588737(0xfe)]);}else _0xe714ff['childElementCount']===0x0&&_0x5ea0dc['outerHTML']!==_0x3f13da?(_0x5ea0dc[_0x588737(0x1b6)]='',_0x5688ad('log',[_0x588737(0x1f7)]),_0x413f25=!![]):(_0x5ea0dc[_0x588737(0x1b6)]=_0x3f13da,_0x5688ad(_0x588737(0x20c),[_0x588737(0x173)]),_0x413f25=!![]);}_0x413f25?(_0x227a31(_0x5ea0dc),_0x5688ad('log',[_0x588737(0x1f9)])):_0x5688ad(_0x588737(0xda),[_0x588737(0x1b0)]);}catch(_0x686f62){_0x5688ad(_0x588737(0x101),[_0x588737(0x12b)+_0x686f62['message']]);}},_0x2003e3[_0x555066(0x165)]=()=>{const _0x4e51d4=_0x555066;if(!_0x5ea0dc){_0x5688ad(_0x4e51d4(0xd8),[_0x4e51d4(0x104)]);return;}if(_0x5ea0dc['parentNode']){const _0x3eb0ff=_0x5ea0dc[_0x4e51d4(0x197)]['toLowerCase']();_0x5ea0dc[_0x4e51d4(0x220)]['removeChild'](_0x5ea0dc),_0x5688ad(_0x4e51d4(0x20c),[_0x4e51d4(0xf0)+_0x3eb0ff+'>']),_0x1e9ccc['style']['display']='none',_0x5ea0dc=null,_0x361266['textContent']=_0x4e51d4(0x1dc),document[_0x4e51d4(0x194)](_0x4e51d4(0x116))[_0x4e51d4(0x1b1)](_0x539ab4=>_0x539ab4[_0x4e51d4(0xe7)]['remove'](_0x4e51d4(0x1bf)));}else _0x5688ad('error',[_0x4e51d4(0x1eb)]);},_0x1d9581['onclick']=()=>{const _0x10953b=_0x555066;if(!_0x5ea0dc){_0x5688ad(_0x10953b(0xd8),[_0x10953b(0xcb)]);return;}if(_0x5ea0dc['parentNode']){const _0x3569cd=_0x5ea0dc[_0x10953b(0x19f)](!![]);_0x5ea0dc[_0x10953b(0x220)]['insertBefore'](_0x3569cd,_0x5ea0dc[_0x10953b(0x216)]),_0x5688ad(_0x10953b(0x20c),[_0x10953b(0xfa)+_0x5ea0dc[_0x10953b(0x197)][_0x10953b(0x1cb)]()+'>']),_0x227a31(_0x3569cd);}else _0x5688ad(_0x10953b(0x101),[_0x10953b(0x117)]);},_0x555db9[_0x555066(0x165)]=()=>{const _0x1e9d1e=_0x555066;_0x5ea0dc&&_0x5ea0dc[_0x1e9d1e(0x133)]?_0x227a31(_0x5ea0dc[_0x1e9d1e(0x133)]):_0x5688ad(_0x1e9d1e(0xda),[_0x1e9d1e(0x13d)]);},_0x408fee[_0x555066(0x165)]=()=>{const _0x50cdde=_0x555066;_0x5ea0dc&&_0x5ea0dc[_0x50cdde(0x16b)]?_0x227a31(_0x5ea0dc['firstElementChild']):_0x5688ad(_0x50cdde(0xda),[_0x50cdde(0x118)]);},_0x64dae4[_0x555066(0x165)]=()=>{const _0x2990ca=_0x555066;_0x5ea0dc&&_0x5ea0dc[_0x2990ca(0x150)]?_0x227a31(_0x5ea0dc[_0x2990ca(0x150)]):_0x5688ad(_0x2990ca(0xda),[_0x2990ca(0x206)]);},_0x11f150['querySelector'](_0x555066(0x16e))[_0x555066(0x17a)]();}()));function _0x4a32(){const _0x2138d1=['started','display','viewport','filename','networkPanel','lineTo','🐞\x20','#duplicateElementBtn','<span\x20class=\x22','add','meta[name=\x22viewport\x22]','🟢\x20','Updated\x20element\x27s\x20outerHTML.','map','devTool','onclick','#localStorageContent','touchend','consolePanel','darkMode','position','firstElementChild','unhandledrejection','designMode','[data-panel=\x22consolePanel\x22]','removeItem','outerHTML','325230DwyfIj','<br>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20URL:\x20','Updated\x20element\x27s\x20innerHTML.','[data-panel=\x22elementsPanel\x22]','</pre>\x0a\x0a\x20\x20\x20\x20\x20\x20','getComputedStyle','custom','beginPath','alignItems','click','reason','innerWidth','\x22,\x0a','#jsCodeInput','<br>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20Time:\x20','performancePanel','div','No\x20accessibility\x20issues\x20found.','Select\x20a\x20device\x20or\x20enter\x20custom\x20values.','---\x20Element\x20Info\x20---','88dRMKUV','join','\x20\x20ID:\x20#','2839144tQwASW','</td>','replace','Network\x20log\x20cleared.','key','clientY','checked','aria-label','#cssCodeInput',',\x20Touches:\x20','name','384251jBbatx','querySelectorAll','Result:','disabled','tagName','clear','</td><td>','body','Image\x20missing\x20alt\x20attribute:\x20','push','nodeType','#consolePanel','cloneNode','auto','314709aetLCE','CSS\x20Injected','jsCode','scrollTop',',\x20Background:\x20','Type:\x20','stopPropagation','Mozilla/5.0\x20(Linux;\x20Android\x2013;\x20SM-G998B)\x20AppleWebKit/537.36\x20(KHTML,\x20like\x20Gecko)','\x20}\x20catch\x20(e)\x20{\x20return\x20\x27Error:\x20\x27\x20+\x20e.message;\x20}\x20})();','\x20\x20Size:\x20','method','#customUserAgent','color','borderBottom','justifyContent','No\x20changes\x20detected\x20to\x20apply.','forEach','__devToolLoaded','dataset','top','mousemove','innerHTML','\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<strong>Details:</strong><br>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20Method:\x20','...','now','#editElementClass','has','column','length','#removeElementBtn','highlight-inspect','fontFamily','#refreshStorageBtn','Stop\x20Touch\x20Logging','activeTab','<td>','#selectParentBtn','stopped','replaceChild','Tool\x20settings\x20reset.','Path:\x20','#sessionStorageContent','toLowerCase','elementsPanel','smooth','panel','#applyElementChangesBtn','#touchLog','Accessibility\x20scan\x20completed.','message','Execution\x20Error:\x20','#007bff','max','#elementsPanel','alt','#customHeight','touchmove','#selectFirstChildBtn','clearRect','Path:\x20(none)','#editPageBtn','innerHeight','\x20MB','Stop\x20Inspect','console','textContent','touchPanel','eval','defineProperty','none','#performanceGraph','documentElement','Inspect\x20mode\x20deactivated.','log-error','Cannot\x20remove\x20element:\x20No\x20parent\x20found.','428776mlmlYs','changedTouches','#devicePreset','2128360kNXHTm','value','#clearNetworkBtn','<div>','#scanA11yBtn','right','#networkLogBody','Page\x20editing\x20','Cleared\x20element\x27s\x20innerHTML.','memory','Element\x20changes\x20applied\x20successfully.','offsetHeight','---\x20Executing\x20Code\x20---','left','clientX','Dark\x20mode\x20','Mozilla/5.0\x20(iPhone;\x20CPU\x20iPhone\x20OS\x2016_0\x20like\x20Mac\x20OS\x20X)\x20AppleWebKit/605.1.15\x20(KHTML,\x20like\x20Gecko)','meta','consoleLog','#customDeviceInputs','#toggleTouchLog','string','#devToolHeader\x20span','No\x20next\x20sibling\x20element.','\x22:\x20','space-between','content','Dev\x20Tool\x20(Minimized)','toFixed','log','toggle','\x20\x20Font:\x20','target','Updated\x20ID\x20to:\x20\x22','time','remove','99aRPPnE','stroke','\x20\x20\x22','nextSibling','Edit\x20Page','\x20\x20Color:\x20','scrollHeight','3622350IQsAzG','#applyDeviceEmulation','Dev\x20Tool','appendChild','Tool\x20state\x20loaded.','Start\x20Touch\x20Logging','parentNode','substring','Custom','No\x20element\x20selected\x20to\x20duplicate.','#saveStateBtn','350px','#devToolMinimize','10cTooNF','table','at\x20','nodeName','</pre>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<strong>Response:</strong><pre>','style','Performance\x20monitoring\x20','fetch','true','warn','status','info','Emulated\x20device:\x20','#customWidth','height','[data-panel=\x22','button,\x20input,\x20a','fontSize','off','addEventListener','hasAttribute','70vh','usedJSHeapSize','log-info','classList','button','Stop\x20Edit','contains','<br>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20Status:\x20','img','380px','Inspect','#editElementContent','Removed\x20element:\x20<','split','#fpsCounter','preventDefault','contentEditable','Touch\x20logging\x20','#inspectElementBtn','flex','touches','childElementCount','Duplicated\x20element:\x20<','selectedElementPath','#a11yIssues','headers','Cannot\x20update\x20outerHTML:\x20Element\x20has\x20no\x20parent.','table:','#selectedElementTag','error','result','\x20\x20Display:\x20','No\x20element\x20selected\x20to\x20remove.','[Object]\x20','devToolState','log-warn','GET','clone','stringify','onchange','active','offsetTop','min','center','flexDirection','\x22:\x20\x22','#injectCssBtn','devToolDarkMode','</div>',',\x20Position:\x20','.highlight-inspect','Cannot\x20duplicate\x20element:\x20No\x20parent\x20found.','No\x20child\x20elements.','backgroundColor','#loadStateBtn','log-normal','parse','mouseover','flex-start','#selectedElementId','width','unshift','Updated\x20Class\x20to:\x20\x22','storageViewerPanel','</span>','#devToolClose','querySelector','Dev\x20Tool\x20cleared\x20and\x20reset.','scrollIntoView','transition','cssCode','Failed\x20to\x20apply\x20changes:\x20','shift','#consoleLog','row','#resetToolSettings','block','dir','getItem','parentElement','\x0a\x0a\x20\x20\x20\x20#devTool\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x0a\x20\x20\x20\x20\x20\x20bottom:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20right:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20width:\x20380px;\x0a\x0a\x20\x20\x20\x20\x20\x20max-width:\x2095vw;\x0a\x0a\x20\x20\x20\x20\x20\x20height:\x20350px;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x2080vh;\x0a\x0a\x20\x20\x20\x20\x20\x20z-index:\x2099999;\x0a\x0a\x20\x20\x20\x20\x20\x20font-family:\x20-apple-system,\x20BlinkMacSystemFont,\x20\x22Segoe\x20UI\x22,\x20Roboto,\x20Helvetica,\x20Arial,\x20sans-serif,\x20\x22Apple\x20Color\x20Emoji\x22,\x20\x22Segoe\x20UI\x20Emoji\x22,\x20\x22Segoe\x20UI\x20Symbol\x22;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fff;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#111;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-direction:\x20column;\x0a\x0a\x20\x20\x20\x20\x20\x20box-shadow:\x200\x204px\x2012px\x20rgba(0,0,0,0.25);\x0a\x0a\x20\x20\x20\x20\x20\x20overflow:\x20hidden;\x0a\x0a\x20\x20\x20\x20\x20\x20transition:\x20all\x200.2s\x20ease-in-out;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolHeader\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f0f0f0;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20grab;\x0a\x0a\x20\x20\x20\x20\x20\x20user-select:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20justify-content:\x20space-between;\x0a\x0a\x20\x20\x20\x20\x20\x20align-items:\x20center;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolHeader\x20div\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20align-items:\x20center;\x0a\x0a\x20\x20\x20\x20\x20\x20gap:\x205px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolContentArea\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-direction:\x20column;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow:\x20hidden;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x200;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolTabs\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom:\x201px\x20solid\x20#ddd;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f9f9f9;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-wrap:\x20wrap;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolTabs\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20transparent;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2013px;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#555;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom:\x203px\x20solid\x20transparent;\x0a\x0a\x20\x20\x20\x20\x20\x20transition:\x20all\x200.15s\x20ease;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20nowrap;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolTabs\x20button:hover:not(.active)\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#eee;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolTabs\x20button.active\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#007bff;\x0a\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom:\x203px\x20solid\x20#007bff;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#e9f5ff;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20.devToolTabPanel\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20box-sizing:\x20border-box;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-direction:\x20column;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20.devToolTabPanel.active\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#consolePanel\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x200;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#consoleLog\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fafafa;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-grow:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20min-height:\x2050px;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20pre-wrap;\x0a\x0a\x20\x20\x20\x20\x20\x20word-break:\x20break-word;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#jsCommandInputContainer,\x20#cssCommandInputContainer\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20border-top:\x201px\x20solid\x20#eee;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#jsCodeInput,\x20#cssCodeInput\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2013px;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20outline:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20resize:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20min-height:\x2040px;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x20120px;\x0a\x0a\x20\x20\x20\x20\x20\x20box-sizing:\x20border-box;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20line-height:\x201.5;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#runJsBtn,\x20#injectCssBtn,\x20#clearNetworkBtn,\x20#refreshStorageBtn,\x20#togglePerformance,\x20#toggleTouchLog,\x20#scanA11yBtn,\x20#saveStateBtn,\x20#loadStateBtn\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#007bff;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2013px;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20transition:\x20background\x200.2s\x20ease;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#runJsBtn:hover,\x20#injectCssBtn:hover,\x20#clearNetworkBtn:hover,\x20#refreshStorageBtn:hover,\x20#togglePerformance:hover,\x20#toggleTouchLog:hover,\x20#scanA11yBtn:hover,\x20#saveStateBtn:hover,\x20#loadStateBtn:hover\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#0056b3;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolFooter\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20gap:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f9f9f9;\x0a\x0a\x20\x20\x20\x20\x20\x20border-top:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-wrap:\x20wrap;\x0a\x0a\x20\x20\x20\x20\x20\x20box-sizing:\x20border-box;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20justify-content:\x20center;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolFooter\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20min-width:\x2075px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#eee;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#bbb;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20nowrap;\x0a\x0a\x20\x20\x20\x20\x20\x20transition:\x20background\x200.15s\x20ease;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolFooter\x20button:hover\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#ddd;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolPath\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2011px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x204px\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom:\x201px\x20solid\x20#ddd;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fafafa;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-x:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20nowrap;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#consoleLog\x20span.log-error\x20{\x20color:\x20#dc3545;\x20font-weight:\x20bold;\x20}\x0a\x0a\x20\x20\x20\x20#consoleLog\x20span.log-warn\x20{\x20color:\x20#ffc107;\x20}\x0a\x0a\x20\x20\x20\x20#consoleLog\x20span.log-info\x20{\x20color:\x20#17a2b8;\x20}\x0a\x0a\x20\x20\x20\x20#consoleLog\x20span.log-debug\x20{\x20color:\x20#28a745;\x20}\x0a\x0a\x20\x20\x20\x20#consoleLog\x20span.log-normal\x20{\x20color:\x20#343a40;\x20}\x0a\x0a\x20\x20\x20\x20.highlight-inspect\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20outline:\x202px\x20dashed\x20#007bff;\x0a\x0a\x20\x20\x20\x20\x20\x20outline-offset:\x20-2px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolClose,\x20#devToolMinimize\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20transparent;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#666;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2018px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20\x20\x20line-height:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20transition:\x20color\x200.15s\x20ease;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devToolClose:hover\x20{\x20color:\x20#dc3545;\x20}\x0a\x0a\x20\x20\x20\x20#devToolMinimize:hover\x20{\x20color:\x20#007bff;\x20}\x0a\x0a\x20\x20\x20\x20#devToolMinimize\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2024px;\x0a\x0a\x20\x20\x20\x20\x20\x20line-height:\x200.7;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x2060vh;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f9f9f9;\x0a\x0a\x20\x20\x20\x20\x20\x20border-top:\x201px\x20solid\x20#eee;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20strong\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20block;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-bottom:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#007bff;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20span\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-right:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#555;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20label\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2011px;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#666;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-top:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20block;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20input[type=\x22text\x22],\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20textarea\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20width:\x20100%;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-bottom:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20box-sizing:\x20border-box;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20textarea\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20min-height:\x2060px;\x0a\x0a\x20\x20\x20\x20\x20\x20resize:\x20vertical;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20.panel-actions\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20gap:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-wrap:\x20wrap;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-top:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20justify-content:\x20flex-start;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20.panel-actions\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20flex:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20min-width:\x2080px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x207px\x205px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2011px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#e9ecef;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#343a40;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#cce5ff;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20\x20\x20transition:\x20all\x200.15s\x20ease;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#selectedElementPanel\x20.panel-actions\x20button:hover\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#dee2e6;\x0a\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#a7d8ff;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#storageViewerPanel\x20pre\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f0f0f0;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20pre-wrap;\x0a\x0a\x20\x20\x20\x20\x20\x20word-break:\x20break-all;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-bottom:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x20180px;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#e0e0e0;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#storageViewerPanel\x20h4\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20margin-top:\x2015px;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-bottom:\x205px;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#495057;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2014px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#cssCodeInput\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20min-height:\x20120px;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x20100%;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#injectCssButtonContainer\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x0a\x20\x20\x20\x20\x20\x20border-top:\x201px\x20solid\x20#eee;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-shrink:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20justify-content:\x20flex-end;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20/*\x20New\x20Styles\x20for\x20Network\x20Panel\x20*/\x0a\x0a\x20\x20\x20\x20#networkPanel\x20table\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20width:\x20100%;\x0a\x0a\x20\x20\x20\x20\x20\x20border-collapse:\x20collapse;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#networkPanel\x20th,\x20#networkPanel\x20td\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x206px;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ddd;\x0a\x0a\x20\x20\x20\x20\x20\x20text-align:\x20left;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20nowrap;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow:\x20hidden;\x0a\x0a\x20\x20\x20\x20\x20\x20text-overflow:\x20ellipsis;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#networkPanel\x20th\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#e9f5ff;\x0a\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#networkPanel\x20tr:hover\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f5f5f5;\x0a\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#networkDetails\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20margin-top:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#f0f0f0;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ddd;\x0a\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20display:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20max-height:\x20150px;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20/*\x20New\x20Styles\x20for\x20Performance\x20Panel\x20*/\x0a\x0a\x20\x20\x20\x20#performancePanel\x20canvas\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20width:\x20100%;\x0a\x0a\x20\x20\x20\x20\x20\x20height:\x20100px;\x0a\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ccc;\x0a\x0a\x20\x20\x20\x20\x20\x20margin-top:\x2010px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#performancePanel\x20p\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20margin:\x205px\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20/*\x20New\x20Styles\x20for\x20Touch\x20Panel\x20*/\x0a\x0a\x20\x20\x20\x20#touchLog\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fafafa;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-grow:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20min-height:\x2050px;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20pre-wrap;\x0a\x0a\x20\x20\x20\x20\x20\x20word-break:\x20break-word;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20/*\x20New\x20Styles\x20for\x20Accessibility\x20Panel\x20*/\x0a\x0a\x20\x20\x20\x20#a11yIssues\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#fafafa;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20flex-grow:\x201;\x0a\x0a\x20\x20\x20\x20\x20\x20overflow-y:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20min-height:\x2050px;\x0a\x0a\x20\x20\x20\x20\x20\x20white-space:\x20pre-wrap;\x0a\x0a\x20\x20\x20\x20\x20\x20word-break:\x20break-word;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20/*\x20Dark\x20Mode\x20Styles\x20*/\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#222;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#eee;\x0a\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#444;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#devToolHeader\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#333;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom-color:\x20#555;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#devToolTabs\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#2a2a2a;\x0a\x0a\x20\x20\x20\x20\x20\x20border-bottom-color:\x20#444;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#devToolTabs\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#bbb;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#devToolTabs\x20button.active\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#3a3a3a;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#66b3ff;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#consoleLog,\x20#devTool.dark-mode\x20#touchLog,\x20#devTool.dark-mode\x20#a11yIssues\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#1a1a1a;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#ddd;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#devToolFooter,\x20#devTool.dark-mode\x20#selectedElementPanel,\x20#devTool.dark-mode\x20#networkDetails\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#2a2a2a;\x0a\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#444;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#storageViewerPanel\x20pre\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#2a2a2a;\x0a\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#444;\x0a\x0a\x20\x20\x20\x20\x20\x20color:\x20#ddd;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#networkPanel\x20th\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#3a3a3a;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20#devTool.dark-mode\x20#networkPanel\x20tr:hover\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20background:\x20#333;\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20/*\x20Mobile\x20Responsive\x20Styles\x20*/\x0a\x0a\x20\x20\x20\x20@media\x20(max-width:\x20768px)\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20#devTool\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20width:\x20100vw;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20height:\x2070vh;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20bottom:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20left:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20right:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20top:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x20unset;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20max-height:\x20unset;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x200;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x20-2px\x2010px\x20rgba(0,0,0,0.25);\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#devToolHeader\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20cursor:\x20auto;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20border-top:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#devToolFooter\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20border-bottom:\x20none;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#devToolFooter\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20min-width:\x2060px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20padding:\x206px\x204px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#devToolMinimize,\x20#devToolClose\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2026px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#devToolMinimize\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2030px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#devToolTabs\x20button\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20padding:\x208px\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#jsCodeInput,\x20#cssCodeInput\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20min-height:\x2030px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20max-height:\x20100px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#runJsBtn,\x20#injectCssBtn,\x20#clearNetworkBtn,\x20#refreshStorageBtn,\x20#togglePerformance,\x20#toggleTouchLog,\x20#scanA11yBtn,\x20#saveStateBtn,\x20#loadStateBtn\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20padding:\x208px;\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#networkPanel\x20table,\x20#networkDetails,\x20#performancePanel\x20p,\x20#touchLog,\x20#a11yIssues\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2010px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20#performancePanel\x20canvas\x20{\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20height:\x2080px;\x0a\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20}\x0a\x0a\x20\x20','className','log-debug','text','mousedown','#devToolHeader','button.active','#darkModeToggle','debug','No\x20parent\x20element.','#editElementId','💬\x20','Cannot\x20select\x20non-element\x20node.','mouseup','url','removeEventListener','<br>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20<strong>Headers:</strong><pre>','previousElementSibling','\x20\x20Tag:\x20','Tool\x20state\x20saved.','dark-mode','head','\x20\x20Class:\x20.','trim','setItem','200px','createElement','getAttribute','nextElementSibling','touchstart','#togglePerformance','Unhandled\x20Promise\x20Rejection:\x20','userAgent','object'];_0x4a32=function(){return _0x2138d1;};return _0x4a32();}
+(function() {
+  // Prevent the dev tool from loading multiple times
+  if (window.__devToolLoaded) {
+    return;
+  }
+  window.__devToolLoaded = true;
+
+  // --- Styles ---
+  const style = document.createElement("style");
+  style.textContent = `
+    #devTool {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 380px;
+      max-width: 95vw;
+      height: 350px;
+      max-height: 80vh;
+      z-index: 99999;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      background: #fff;
+      color: #111;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      overflow: hidden;
+      transition: all 0.2s ease-in-out;
+    }
+
+    #devToolHeader {
+      background: #f0f0f0;
+      padding: 8px 12px;
+      cursor: grab;
+      user-select: none;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    #devToolHeader div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #devToolContentArea {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    #devToolTabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      background: #f9f9f9;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    #devToolTabs button {
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+      color: #555;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    #devToolTabs button:hover:not(.active) {
+      background: #eee;
+    }
+    #devToolTabs button.active {
+      color: #007bff;
+      font-weight: bold;
+      border-bottom: 3px solid #007bff;
+      background: #e9f5ff;
+    }
+
+    .devToolTabPanel {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      box-sizing: border-box;
+      flex-direction: column;
+    }
+    .devToolTabPanel.active {
+      display: flex;
+    }
+
+    #consolePanel {
+      padding: 0;
+    }
+    #consoleLog {
+      font-size: 12px;
+      padding: 8px;
+      background: #fafafa;
+      color: #333;
+      flex-grow: 1;
+      overflow-y: auto;
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #jsCommandInputContainer, #cssCommandInputContainer {
+      display: flex;
+      border-top: 1px solid #eee;
+      flex-shrink: 0;
+    }
+    #jsCodeInput {
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+      border: none;
+      outline: none;
+      resize: none;
+      min-height: 40px;
+      max-height: 120px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+    #runJsBtn, #applyCssChangesBtn, #clearNetworkBtn, #refreshStorageBtn, #togglePerformance, #toggleTouchLog, #scanA11yBtn, #saveStateBtn, #loadStateBtn, #copySourceBtn, #loadStylesheetBtn {
+      padding: 8px 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+    }
+    #runJsBtn:hover, #applyCssChangesBtn:hover, #clearNetworkBtn:hover, #refreshStorageBtn:hover, #togglePerformance:hover, #toggleTouchLog:hover, #scanA11yBtn:hover, #saveStateBtn:hover, #loadStateBtn:hover, #copySourceBtn:hover, #loadStylesheetBtn:hover {
+      background: #0056b3;
+    }
+
+    #devToolFooter {
+      display: flex;
+      gap: 6px;
+      padding: 8px 10px;
+      background: #f9f9f9;
+      border-top: 1px solid #ccc;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      justify-content: center;
+    }
+
+    #devToolFooter button {
+      flex: 1;
+      min-width: 75px;
+      padding: 8px 6px;
+      font-size: 12px;
+      background: #eee;
+      color: #333;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+    }
+
+    #devToolFooter button:hover {
+      background: #ddd;
+    }
+
+    #devToolPath {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-bottom: 1px solid #ddd;
+      background: #fafafa;
+      color: #333;
+      overflow-x: auto;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #consoleLog span.log-error { color: #dc3545; font-weight: bold; }
+    #consoleLog span.log-warn { color: #ffc107; }
+    #consoleLog span.log-info { color: #17a2b8; }
+    #consoleLog span.log-debug { color: #28a745; }
+    #consoleLog span.log-normal { color: #343a40; }
+
+    .highlight-inspect {
+      outline: 2px dashed #007bff;
+      outline-offset: -2px;
+    }
+
+    #devToolClose, #devToolMinimize {
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.15s ease;
+    }
+    #devToolClose:hover { color: #dc3545; }
+    #devToolMinimize:hover { color: #007bff; }
+    #devToolMinimize {
+      font-size: 24px;
+      line-height: 0.7;
+    }
+
+    #selectedElementPanel {
+      padding: 8px;
+      flex-shrink: 0;
+      max-height: 60vh;
+      overflow-y: auto;
+      background: #f9f9f9;
+      border-top: 1px solid #eee;
+    }
+    #selectedElementPanel strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #007bff;
+    }
+    #selectedElementPanel span {
+      font-size: 12px;
+      margin-right: 8px;
+      color: #555;
+    }
+    #selectedElementPanel label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 6px;
+      display: block;
+    }
+    #selectedElementPanel input[type="text"],
+    #selectedElementPanel textarea {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+    #selectedElementPanel textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+    #selectedElementPanel .panel-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      justify-content: flex-start;
+    }
+    #selectedElementPanel .panel-actions button {
+      flex: 1;
+      min-width: 80px;
+      padding: 7px 5px;
+      font-size: 11px;
+      background: #e9ecef;
+      color: #343a40;
+      border: 1px solid #cce5ff;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    #selectedElementPanel .panel-actions button:hover {
+      background: #dee2e6;
+      border-color: #a7d8ff;
+    }
+
+    #storageViewerPanel pre, #sourceCodeViewer pre {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-bottom: 10px;
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+    }
+    #storageViewerPanel h4 {
+      margin-top: 15px;
+      margin-bottom: 5px;
+      color: #495057;
+      font-size: 14px;
+    }
+
+    #cssCodeInput {
+      min-height: 120px;
+      max-height: 100%;
+    }
+    #injectCssButtonContainer {
+      display: flex;
+      border-top: 1px solid #eee;
+      flex-shrink: 0;
+      padding: 8px;
+      justify-content: flex-end;
+    }
+
+    /* New Styles for Network Panel */
+    #networkPanel table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    #networkPanel th, #networkPanel td {
+      padding: 6px;
+      border: 1px solid #ddd;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #networkPanel th {
+      background: #e9f5ff;
+      font-weight: bold;
+    }
+    #networkPanel tr:hover {
+      background: #f5f5f5;
+      cursor: pointer;
+    }
+    #networkDetails {
+      margin-top: 10px;
+      padding: 8px;
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: none;
+      font-size: 12px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    /* New Styles for Performance Panel */
+    #performancePanel canvas {
+      width: 100%;
+      height: 100px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    #performancePanel p {
+      margin: 5px 0;
+      font-size: 12px;
+    }
+
+    /* New Styles for Touch Panel */
+    #touchLog {
+      font-size: 12px;
+      padding: 8px;
+      background: #fafafa;
+      color: #333;
+      flex-grow: 1;
+      overflow-y: auto;
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* New Styles for Accessibility Panel */
+    #a11yIssues {
+      font-size: 12px;
+      padding: 8px;
+      background: #fafafa;
+      color: #333;
+      flex-grow: 1;
+      overflow-y: auto;
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* New Styles for Source Code Panel */
+    #sourceCodePanel code {
+      display: block;
+      padding: 0;
+      background: none;
+      color: inherit;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    #sourceCodeViewer {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    /* Styles Panel additions */
+    #stylesheetSelectorContainer {
+      display: flex;
+      gap: 5px;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    #stylesheetSelector {
+      flex-grow: 1;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: white;
+      font-size: 12px;
+    }
+    #loadStylesheetBtn {
+        padding: 6px 10px;
+    }
+
+
+    /* Dark Mode Styles */
+    #devTool.dark-mode {
+      background: #222;
+      color: #eee;
+      border-color: #444;
+    }
+    #devTool.dark-mode #devToolHeader {
+      background: #333;
+      border-bottom-color: #555;
+    }
+    #devTool.dark-mode #devToolTabs {
+      background: #2a2a2a;
+      border-bottom-color: #444;
+    }
+    #devTool.dark-mode #devToolTabs button {
+      color: #bbb;
+    }
+    #devTool.dark-mode #devToolTabs button.active {
+      background: #3a3a3a;
+      color: #66b3ff;
+    }
+    #devTool.dark-mode #consoleLog, #devTool.dark-mode #touchLog, #devTool.dark-mode #a11yIssues {
+      background: #1a1a1a;
+      color: #ddd;
+    }
+    #devTool.dark-mode #devToolFooter, #devTool.dark-mode #selectedElementPanel, #devTool.dark-mode #networkDetails {
+      background: #2a2a2a;
+      border-color: #444;
+    }
+    #devTool.dark-mode #storageViewerPanel pre, #devTool.dark-mode #sourceCodeViewer pre {
+      background: #2a2a2a;
+      border-color: #444;
+      color: #ddd;
+    }
+    #devTool.dark-mode #networkPanel th {
+      background: #3a3a3a;
+    }
+    #devTool.dark-mode #networkPanel tr:hover {
+      background: #333;
+    }
+    #devTool.dark-mode #stylesheetSelector {
+        background-color: #333;
+        color: #eee;
+        border-color: #555;
+    }
+
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      #devTool {
+        width: 100vw;
+        height: 70vh;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        max-width: unset;
+        max-height: unset;
+        border-radius: 0;
+        border: none;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.25);
+      }
+      #devToolHeader {
+        cursor: auto;
+        border-top: none;
+      }
+      #devToolFooter {
+        border-bottom: none;
+        padding: 8px;
+      }
+      #devToolFooter button {
+        min-width: 60px;
+        padding: 6px 4px;
+        font-size: 10px;
+      }
+      #devToolMinimize, #devToolClose {
+        font-size: 26px;
+      }
+      #devToolMinimize {
+        font-size: 30px;
+      }
+      #devToolTabs button {
+        padding: 8px 8px;
+        font-size: 12px;
+      }
+      #jsCodeInput, #cssCodeInput {
+        min-height: 30px;
+        max-height: 100px;
+        font-size: 12px;
+      }
+      #runJsBtn, #applyCssChangesBtn, #clearNetworkBtn, #refreshStorageBtn, #togglePerformance, #toggleTouchLog, #scanA11yBtn, #saveStateBtn, #loadStateBtn, #copySourceBtn, #loadStylesheetBtn {
+        padding: 8px;
+        font-size: 12px;
+      }
+      #networkPanel table, #networkDetails, #performancePanel p, #touchLog, #a11yIssues {
+        font-size: 10px;
+      }
+      #performancePanel canvas {
+        height: 80px;
+      }
+      #stylesheetSelectorContainer {
+          flex-direction: column;
+          align-items: stretch;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // --- Create UI Elements ---
+  const devToolBox = document.createElement("div");
+  devToolBox.id = "devTool";
+  devToolBox.innerHTML = `
+    <div id="devToolHeader">
+      <span>Dev Tool</span>
+      <div>
+        <button id="devToolMinimize">−</button>
+        <button id="devToolClose">×</button>
+      </div>
+    </div>
+
+    <div id="devToolTabs">
+      <button data-panel="consolePanel" class="active">Console</button>
+      <button data-panel="stylesPanel">Styles</button>
+      <button data-panel="elementsPanel">Elements</button>
+      <button data-panel="sourceCodePanel">Source</button>
+      <button data-panel="storageViewerPanel">Storage</button>
+      <button data-panel="networkPanel">Network</button>
+      <button data-panel="performancePanel">Performance</button>
+      <button data-panel="touchPanel">Touch</button>
+      <button data-panel="accessibilityPanel">Accessibility</button>
+      <button data-panel="settingsPanel">Settings</button>
+    </div>
+
+    <div id="devToolContentArea">
+      <div id="consolePanel" class="devToolTabPanel active">
+        <div id="consoleLog">Console:</div>
+        <div id="jsCommandInputContainer">
+          <textarea id="jsCodeInput" placeholder="// Type JavaScript here"></textarea>
+          <button id="runJsBtn">▶ Run</button>
+        </div>
+      </div>
+
+      <div id="stylesPanel" class="devToolTabPanel">
+        <div id="stylesheetSelectorContainer">
+            <select id="stylesheetSelector">
+                <option value="">-- Select Stylesheet --</option>
+                <option value="INJECT_NEW_CSS">Inject New CSS</option>
+            </select>
+            <button id="loadStylesheetBtn">Load</button>
+        </div>
+        <textarea id="cssCodeInput" placeholder="/* CSS content will load here or type new CSS */"></textarea>
+        <div id="injectCssButtonContainer">
+          <button id="applyCssChangesBtn">Apply CSS Changes</button>
+        </div>
+      </div>
+
+      <div id="elementsPanel" class="devToolTabPanel">
+        <div id="devToolPath">Path: (none)</div>
+        <div id="selectedElementPanel">
+          <strong>Selected Element:</strong>
+          <span id="selectedElementTag"></span>
+          <span id="selectedElementId"></span>
+          <span id="selectedElementClasses"></span>
+          <div style="margin-top: 8px;">
+            <label>ID:</label>
+            <input type="text" id="editElementId" placeholder="Element ID">
+            <label>Class:</label>
+            <input type="text" id="editElementClass" placeholder="Element Class(es)">
+          </div>
+          <div>
+            <label>Outer HTML/Text:</label>
+            <textarea id="editElementContent" placeholder="Edit element's outerHTML or text content"></textarea>
+          </div>
+          <div class="panel-actions">
+            <button id="applyElementChangesBtn">Apply Changes</button>
+            <button id="removeElementBtn">Remove</button>
+            <button id="duplicateElementBtn">Duplicate</button>
+            <button id="selectParentBtn">Parent</button>
+            <button id="selectFirstChildBtn">Child</button>
+            <button id="selectNextSiblingBtn">Sibling</button>
+          </div>
+        </div>
+        <div id="devToolFooter">
+          <button id="inspectElementBtn">Inspect</button>
+          <button id="editPageBtn">Edit Page</button>
+          <button id="clearToolBtn">Clear</button>
+        </div>
+      </div>
+
+      <div id="sourceCodePanel" class="devToolTabPanel">
+        <div id="sourceCodeViewer" style="flex: 1; overflow-y: auto;">
+          <pre><code id="pageSourceCode"></code></pre>
+        </div>
+        <button id="copySourceBtn" style="width: 100%; padding: 8px; margin-top: 10px;">Copy Source</button>
+      </div>
+
+      <div id="storageViewerPanel" class="devToolTabPanel">
+        <h4>Local Storage</h4>
+        <pre id="localStorageContent"></pre>
+        <h4>Session Storage</h4>
+        <pre id="sessionStorageContent"></pre>
+        <button id="refreshStorageBtn" style="width: 100%; padding: 8px; margin-top: 10px; background: #28a745; color: white; border: none; border-radius: 4px;">Refresh Storage</button>
+      </div>
+
+      <div id="networkPanel" class="devToolTabPanel">
+        <div style="flex: 1; overflow-y: auto; padding: 8px;">
+          <table>
+            <thead><tr><th>Method</th><th>URL</th><th>Status</th><th>Time</th></tr></thead>
+            <tbody id="networkLogBody"></tbody>
+          </table>
+          <div id="networkDetails"></div>
+        </div>
+        <button id="clearNetworkBtn" style="width: 100%; padding: 8px; margin-top: 10px;">Clear Network Log</button>
+      </div>
+
+      <div id="performancePanel" class="devToolTabPanel">
+        <div style="padding: 8px;">
+          <p>FPS: <span id="fpsCounter">0</span></p>
+          <p>Memory: <span id="memoryCounter">N/A</span></p>
+          <canvas id="performanceGraph"></canvas>
+          <button id="togglePerformance" style="width: 100%; padding: 8px; margin-top: 10px;">Start Monitoring</button>
+        </div>
+      </div>
+
+      <div id="touchPanel" class="devToolTabPanel">
+        <div id="touchLog" style="flex: 1; overflow-y: auto; padding: 8px;"></div>
+        <button id="toggleTouchLog" style="width: 100%; padding: 8px; margin-top: 10px;">Start Touch Logging</button>
+      </div>
+
+      <div id="accessibilityPanel" class="devToolTabPanel">
+        <div id="a11yIssues" style="flex: 1; overflow-y: auto; padding: 8px;"></div>
+        <button id="scanA11yBtn" style="width: 100%; padding: 8px; margin-top: 10px;">Scan Accessibility</button>
+      </div>
+
+      <div id="settingsPanel" class="devToolTabPanel">
+        <p>This is the settings panel.</p>
+        <label style="margin-top: 10px;">
+          <input type="checkbox" id="darkModeToggle"> Dark Mode
+        </label>
+        <div style="margin-top: 10px;">
+          <label>Device Emulation:</label>
+          <select id="devicePreset">
+            <option value="">Select Device</option>
+            <option value="iPhone14">iPhone 14 (390x844)</option>
+            <option value="GalaxyS23">Galaxy S23 (412x915)</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div id="customDeviceInputs" style="display: none;">
+            <label>Width:</label><input type="number" id="customWidth" placeholder="Width (px)">
+            <label>Height:</label><input type="number" id="customHeight" placeholder="Height (px)">
+            <label>User Agent:</label><input type="text" id="customUserAgent" placeholder="User Agent">
+          </div>
+          <button id="applyDeviceEmulation" style="padding: 8px; margin-top: 5px;">Apply</button>
+        </div>
+        <button id="saveStateBtn" style="padding: 8px; margin: 5px; background: #28a745; color: white;">Save State</button>
+        <button id="loadStateBtn" style="padding: 8px; margin: 5px;">Load State</button>
+        <button id="resetToolSettings" style="padding: 8px; margin-top: 5px; background: #dc3545; color: white;">Reset Tool</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(devToolBox);
+
+  // --- Get UI Element References ---
+  const header = devToolBox.querySelector("#devToolHeader");
+  const devToolTabs = devToolBox.querySelector("#devToolTabs");
+  const tabPanels = devToolBox.querySelectorAll(".devToolTabPanel");
+
+  // Console Panel
+  const consoleLog = devToolBox.querySelector("#consoleLog");
+  const jsCodeInput = devToolBox.querySelector("#jsCodeInput");
+  const runJsBtn = devToolBox.querySelector("#runJsBtn");
+
+  // Styles Panel
+  const stylesheetSelector = devToolBox.querySelector("#stylesheetSelector");
+  const loadStylesheetBtn = devToolBox.querySelector("#loadStylesheetBtn");
+  const cssCodeInput = devToolBox.querySelector("#cssCodeInput");
+  const applyCssChangesBtn = devToolBox.querySelector("#applyCssChangesBtn");
+
+  // Elements Panel
+  const elementsPanel = devToolBox.querySelector("#elementsPanel");
+  const pathDisplay = devToolBox.querySelector("#devToolPath");
+  const selectedElementPanel = devToolBox.querySelector("#selectedElementPanel");
+  const selectedElementTag = devToolBox.querySelector("#selectedElementTag");
+  const selectedElementId = devToolBox.querySelector("#selectedElementId");
+  const selectedElementClasses = devToolBox.querySelector("#selectedElementClasses");
+  const editElementId = devToolBox.querySelector("#editElementId");
+  const editElementClass = devToolBox.querySelector("#editElementClass");
+  const editElementContent = devToolBox.querySelector("#editElementContent");
+  const applyElementChangesBtn = devToolBox.querySelector("#applyElementChangesBtn");
+  const removeElementBtn = devToolBox.querySelector("#removeElementBtn");
+  const duplicateElementBtn = devToolBox.querySelector("#duplicateElementBtn");
+  const selectParentBtn = devToolBox.querySelector("#selectParentBtn");
+  const selectFirstChildBtn = devToolBox.querySelector("#selectFirstChildBtn");
+  const selectNextSiblingBtn = devToolBox.querySelector("#selectNextSiblingBtn");
+  const inspectElementBtn = devToolBox.querySelector("#inspectElementBtn");
+  const editPageBtn = devToolBox.querySelector("#editPageBtn");
+  const clearToolBtn = devToolBox.querySelector("#clearToolBtn");
+
+  // Source Code Panel
+  const pageSourceCode = devToolBox.querySelector("#pageSourceCode");
+  const copySourceBtn = devToolBox.querySelector("#copySourceBtn");
+
+  // Storage Viewer Panel
+  const localStorageContent = devToolBox.querySelector("#localStorageContent");
+  const sessionStorageContent = devToolBox.querySelector("#sessionStorageContent");
+  const refreshStorageBtn = devToolBox.querySelector("#refreshStorageBtn");
+
+  // Network Panel
+  const networkLogBody = devToolBox.querySelector("#networkLogBody");
+  const networkDetails = devToolBox.querySelector("#networkDetails");
+  const clearNetworkBtn = devToolBox.querySelector("#clearNetworkBtn");
+
+  // Performance Panel
+  const fpsCounter = devToolBox.querySelector("#fpsCounter");
+  const memoryCounter = devToolBox.querySelector("#memoryCounter");
+  const performanceGraph = devToolBox.querySelector("#performanceGraph");
+  const togglePerformance = devToolBox.querySelector("#togglePerformance");
+
+  // Touch Panel
+  const touchLog = devToolBox.querySelector("#touchLog");
+  const toggleTouchLog = devToolBox.querySelector("#toggleTouchLog");
+
+  // Accessibility Panel
+  const a11yIssues = devToolBox.querySelector("#a11yIssues");
+  const scanA11yBtn = devToolBox.querySelector("#scanA11yBtn");
+
+  // Settings Panel
+  const darkModeToggle = devToolBox.querySelector("#darkModeToggle");
+  const devicePreset = devToolBox.querySelector("#devicePreset");
+  const customDeviceInputs = devToolBox.querySelector("#customDeviceInputs");
+  const customWidth = devToolBox.querySelector("#customWidth");
+  const customHeight = devToolBox.querySelector("#customHeight");
+  const customUserAgent = devToolBox.querySelector("#customUserAgent");
+  const applyDeviceEmulation = devToolBox.querySelector("#applyDeviceEmulation");
+  const saveStateBtn = devToolBox.querySelector("#saveStateBtn");
+  const loadStateBtn = devToolBox.querySelector("#loadStateBtn");
+  const resetToolSettings = devToolBox.querySelector("#resetToolSettings");
+
+  // Global actions
+  const closeBtn = devToolBox.querySelector("#devToolClose");
+  const minimizeBtn = devToolBox.querySelector("#devToolMinimize");
+
+  let currentInspectedElement = null;
+  let isEditable = false;
+  let isInspectMode = false;
+  let isMinimized = false;
+  let stylesheets = []; // To store references to style elements/URLs
+
+  // --- Tab Functionality ---
+  devToolTabs.addEventListener("click", (event) => {
+    const clickedButton = event.target.closest("button");
+    if (!clickedButton) return;
+
+    const targetPanelId = clickedButton.dataset.panel;
+
+    devToolTabs.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+    tabPanels.forEach(panel => panel.classList.remove("active"));
+
+    clickedButton.classList.add("active");
+    devToolBox.querySelector(`#${targetPanelId}`).classList.add("active");
+
+    if (targetPanelId === 'elementsPanel') {
+      selectedElementPanel.style.display = currentInspectedElement ? 'block' : 'none';
+      if (currentInspectedElement) {
+        currentInspectedElement.classList.add("highlight-inspect");
+      }
+    } else {
+      selectedElementPanel.style.display = 'none';
+      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    }
+
+    if (targetPanelId === 'stylesPanel') { // New: Populate stylesheets when Styles tab is active
+        detectAndListStylesheets();
+    } else if (targetPanelId === 'storageViewerPanel') {
+      updateStorageViewer();
+    } else if (targetPanelId === 'networkPanel') {
+      networkDetails.style.display = 'none';
+    } else if (targetPanelId === 'performancePanel') {
+      if (isMonitoring) togglePerformance.click();
+    } else if (targetPanelId === 'touchPanel') {
+      if (!isTouchLogging) toggleTouchLog.click();
+    } else if (targetPanelId === 'sourceCodePanel') {
+        updateSourceCodeViewer();
+    }
+  });
+
+  // --- Dragging Functionality ---
+  let offsetX = 0, offsetY = 0, isDragging = false;
+
+  const dragStart = (event) => {
+    if (window.innerWidth <= 768) return;
+    isDragging = true;
+    const touch = event.touches ? event.touches[0] : event;
+    offsetX = touch.clientX - devToolBox.offsetLeft;
+    offsetY = touch.clientY - devToolBox.offsetTop;
+    event.preventDefault();
+    devToolBox.style.transition = 'none';
+  };
+
+  const dragMove = (event) => {
+    if (!isDragging) return;
+    const touch = event.touches ? event.touches[0] : event;
+    let newX = touch.clientX - offsetX;
+    let newY = touch.clientY - offsetY;
+
+    const maxX = window.innerWidth - devToolBox.offsetWidth;
+    const maxY = window.innerHeight - devToolBox.offsetHeight;
+
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+
+    devToolBox.style.left = newX + "px";
+    devToolBox.style.top = newY + "px";
+    devToolBox.style.bottom = "auto";
+    devToolBox.style.right = "auto";
+  };
+
+  const dragEnd = () => {
+    isDragging = false;
+    devToolBox.style.transition = 'all 0.2s ease-in-out';
+  };
+
+  header.addEventListener("mousedown", dragStart);
+  header.addEventListener("touchstart", dragStart, { passive: false });
+  document.addEventListener("mousemove", dragMove);
+  document.addEventListener("touchmove", dragMove, { passive: false });
+  document.addEventListener("mouseup", dragEnd);
+  document.addEventListener("touchend", dragEnd);
+
+  // --- Console Override and Global Error Handling ---
+  const originalConsole = {
+    log: window.console.log,
+    error: window.console.error,
+    warn: window.console.warn,
+    info: window.console.info,
+    debug: window.console.debug,
+    clear: window.console.clear,
+    dir: window.console.dir,
+    table: window.console.table
+  };
+
+  function formatConsoleArg(arg) {
+    if (typeof arg === 'object' && arg !== null) {
+      try {
+        const seen = new Set();
+        const json = JSON.stringify(arg, (key, value) => {
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) return '[Circular]';
+            seen.add(value);
+          }
+          return value;
+        }, 2);
+        return json.substring(0, 1000) + (json.length > 1000 ? '...' : '');
+      } catch (e) {
+        return `[Object] ${String(arg).substring(0, 300)}...`;
+      }
+    }
+    return String(arg).substring(0, 1000);
+  }
+
+  function updateConsoleLogUI(type, args) {
+    let prefix = '';
+    let className = '';
+
+    const formattedArgs = args.map(formatConsoleArg).join(' ');
+
+    switch (type) {
+      case 'log': prefix = '🟢 '; className = 'log-normal'; break;
+      case 'error': prefix = '❌ '; className = 'log-error'; break;
+      case 'warn': prefix = '⚠️ '; className = 'log-warn'; break;
+      case 'info': prefix = '🔵 '; className = 'log-info'; break;
+      case 'debug': prefix = '🐞 '; className = 'log-debug'; break;
+      case 'result': prefix = '✅ '; className = 'log-normal'; break;
+      default: prefix = '💬 '; className = 'log-normal';
+    }
+
+    const logEntry = document.createElement('div');
+    logEntry.className = `log-entry`;
+    logEntry.innerHTML = `<span class="${className}">${prefix}${formattedArgs}</span>`;
+    consoleLog.appendChild(logEntry);
+    consoleLog.scrollTop = consoleLog.scrollHeight;
+  }
+
+  window.console.log = (...args) => { updateConsoleLogUI('log', args); originalConsole.log(...args); };
+  window.console.error = (...args) => { updateConsoleLogUI('error', args); originalConsole.error(...args); };
+  window.console.warn = (...args) => { updateConsoleLogUI('warn', args); originalConsole.warn(...args); };
+  window.console.info = (...args) => { updateConsoleLogUI('info', args); originalConsole.info(...args); };
+  window.console.debug = (...args) => { updateConsoleLogUI('debug', args); originalConsole.debug(...args); };
+  window.console.clear = () => { consoleLog.innerHTML = ""; originalConsole.clear(); };
+  window.console.dir = (...args) => { updateConsoleLogUI('info', ['dir:', ...args]); originalConsole.dir(...args); };
+  window.console.table = (...args) => { updateConsoleLogUI('info', ['table:', ...args]); originalConsole.table(...args); };
+
+  window.addEventListener('error', (event) => {
+    updateConsoleLogUI('error', [`Uncaught Error: ${event.message}`, `at ${event.filename}:${event.lineno}:${event.colno}`]);
+    event.preventDefault();
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    updateConsoleLogUI('error', [`Unhandled Promise Rejection: ${event.reason}`]);
+    event.preventDefault();
+  });
+
+  // --- Network Request Inspector ---
+  const originalFetch = window.fetch;
+  window.fetch = async (...args) => {
+    const startTime = performance.now();
+    try {
+      const response = await originalFetch(...args);
+      const endTime = performance.now();
+      const clone = response.clone();
+      const headers = {};
+      clone.headers.forEach((value, key) => { headers[key] = value; });
+      const body = await clone.text();
+      const logEntry = {
+        method: args[1]?.method || 'GET',
+        url: typeof args[0] === 'string' ? args[0] : args[0].url,
+        status: clone.status,
+        time: (endTime - startTime).toFixed(2) + 'ms',
+        headers,
+        body
+      };
+      updateNetworkLog(logEntry);
+      return response;
+    } catch (error) {
+      updateConsoleLogUI('error', [`Fetch Error: ${error.message}`]);
+      throw error;
+    }
+  };
+
+  function updateNetworkLog(entry) {
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${entry.method}</td><td>${entry.url}</td><td>${entry.status}</td><td>${entry.time}</td>`;
+    row.onclick = () => {
+      networkDetails.innerHTML = `
+        <strong>Details:</strong><br>
+        Method: ${entry.method}<br>
+        URL: ${entry.url}<br>
+        Status: ${entry.status}<br>
+        Time: ${entry.time}<br>
+        <strong>Headers:</strong><pre>${JSON.stringify(entry.headers, null, 2)}</pre>
+        <strong>Response:</strong><pre>${entry.body.substring(0, 500)}${entry.body.length > 500 ? '...' : ''}</pre>
+      `;
+      networkDetails.style.display = 'block';
+      networkDetails.scrollIntoView({ behavior: 'smooth' });
+    };
+    networkLogBody.appendChild(row);
+  }
+
+  clearNetworkBtn.onclick = () => {
+    networkLogBody.innerHTML = '';
+    networkDetails.style.display = 'none';
+    updateConsoleLogUI('log', ['Network log cleared.']);
+  };
+
+  // --- Performance Monitor ---
+  let isMonitoring = false;
+  let frameCount = 0;
+  let lastTime = performance.now();
+  const fpsHistory = [];
+  const ctx = performanceGraph?.getContext('2d');
+
+  function updatePerformance() {
+    if (!isMonitoring) return;
+    const now = performance.now();
+    frameCount++;
+    if (now - lastTime >= 1000) {
+      const fps = frameCount;
+      frameCount = 0;
+      lastTime = now;
+      fpsCounter.textContent = fps;
+      if ('memory' in performance) {
+        memoryCounter.textContent = `${(performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB`;
+      }
+      fpsHistory.push(fps);
+      if (fpsHistory.length > 50) fpsHistory.shift();
+      if (ctx) {
+        ctx.clearRect(0, 0, performanceGraph.width, performanceGraph.height);
+        ctx.beginPath();
+        ctx.moveTo(0, performanceGraph.height);
+        fpsHistory.forEach((val, i) => {
+          ctx.lineTo(i * (performanceGraph.width / 50), performanceGraph.height - (val / 60 * performanceGraph.height));
+        });
+        ctx.strokeStyle = '#007bff';
+        ctx.stroke();
+      }
+      requestAnimationFrame(updatePerformance);
+    } else {
+      requestAnimationFrame(updatePerformance);
+    }
+  }
+
+  togglePerformance.onclick = () => {
+    isMonitoring = !isMonitoring;
+    togglePerformance.textContent = isMonitoring ? 'Stop Monitoring' : 'Start Monitoring';
+    if (isMonitoring) requestAnimationFrame(updatePerformance);
+    updateConsoleLogUI('log', [`Performance monitoring ${isMonitoring ? 'started' : 'stopped'}.`]);
+  };
+
+  // --- Touch Event Debugger ---
+  let isTouchLogging = false;
+
+  function logTouchEvent(event) {
+    if (!isTouchLogging) return;
+    const touch = event.touches[0] || event.changedTouches[0];
+    const logEntry = `Type: ${event.type}, X: ${touch?.clientX.toFixed(2)} Y: ${touch?.clientY.toFixed(2)}, Touches: ${event.touches.length}, Target: ${event.target.tagName}`;
+    const div = document.createElement('div');
+    div.textContent = logEntry;
+    touchLog.appendChild(div);
+    touchLog.scrollTop = touchLog.scrollHeight;
+  }
+
+  toggleTouchLog.onclick = () => {
+    isTouchLogging = !isTouchLogging;
+    toggleTouchLog.textContent = isTouchLogging ? 'Stop Touch Logging' : 'Start Touch Logging';
+    const events = ['touchstart', 'touchmove', 'touchend'];
+    events.forEach(event => {
+      if (isTouchLogging) {
+        document.addEventListener(event, logTouchEvent, { passive: true });
+      } else {
+        document.removeEventListener(event, logTouchEvent);
+      }
+    });
+    updateConsoleLogUI('log', [`Touch logging ${isTouchLogging ? 'started' : 'stopped'}.`]);
+  };
+
+  // --- Accessibility Checker ---
+  function checkAccessibility(element = document.body) {
+    const issues = [];
+    const images = element.querySelectorAll('img');
+    images.forEach(img => {
+      if (!img.hasAttribute('alt') || img.getAttribute('alt') === '') {
+        issues.push(`Image missing alt attribute: ${getElementPath(img)}`);
+      }
+    });
+    const interactive = element.querySelectorAll('button, input, a');
+    interactive.forEach(el => {
+      if (!el.textContent.trim() && !el.hasAttribute('aria-label')) {
+        issues.push(`Interactive element missing label: ${getElementPath(el)}`);
+      }
+    });
+    a11yIssues.innerHTML = issues.length ? issues.map(issue => `<div>${issue}</div>`).join('') : 'No accessibility issues found.';
+    updateConsoleLogUI('log', ['Accessibility scan completed.']);
+  }
+
+  scanA11yBtn.onclick = () => {
+    checkAccessibility(currentInspectedElement || document.body);
+  };
+
+  // --- Device Emulation ---
+  const devicePresets = {
+    iPhone14: { width: 390, height: 844, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)' },
+    GalaxyS23: { width: 412, height: 915, userAgent: 'Mozilla/5.0 (Linux; Android 13; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko)' }
+  };
+
+  devicePreset.onchange = (e) => {
+    customDeviceInputs.style.display = e.target.value === 'custom' ? 'block' : 'none';
+  };
+
+  applyDeviceEmulation.onclick = () => {
+    const preset = devicePreset.value;
+    let width, height, userAgent;
+    if (preset === 'custom') {
+      width = parseInt(customWidth.value) || window.innerWidth;
+      height = parseInt(customHeight.value) || window.innerHeight;
+      userAgent = customUserAgent.value || navigator.userAgent;
+    } else if (preset) {
+      ({ width, height, userAgent } = devicePresets[preset]);
+    } else {
+      updateConsoleLogUI('warn', ['Select a device or enter custom values.']);
+      return;
+    }
+    document.documentElement.style.width = `${width}px`;
+    document.documentElement.style.height = `${height}px`;
+    let meta = document.querySelector('meta[name="viewport"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'viewport';
+      document.head.appendChild(meta);
+    }
+    meta.content = `width=${width}, initial-scale=1.0`;
+    Object.defineProperty(navigator, 'userAgent', { value: userAgent, writable: true });
+    updateConsoleLogUI('log', [`Emulated device: ${preset || 'Custom'} (${width}x${height})`]);
+  };
+
+  // --- Save/Load State ---
+  saveStateBtn.onclick = () => {
+    const state = {
+      consoleLog: consoleLog.innerHTML,
+      cssCode: cssCodeInput.value,
+      jsCode: jsCodeInput.value,
+      activeTab: devToolTabs.querySelector('button.active')?.dataset.panel,
+      selectedElementPath: currentInspectedElement ? getElementPath(currentInspectedElement) : null,
+      darkMode: darkModeToggle.checked
+    };
+    localStorage.setItem('devToolState', JSON.stringify(state));
+    updateConsoleLogUI('log', ['Tool state saved.']);
+  };
+
+  loadStateBtn.onclick = () => {
+    const state = JSON.parse(localStorage.getItem('devToolState') || '{}');
+    if (state.consoleLog) consoleLog.innerHTML = state.consoleLog;
+    if (state.cssCode) cssCodeInput.value = state.cssCode;
+    if (state.jsCode) jsCodeInput.value = state.jsCode;
+    if (state.activeTab) devToolTabs.querySelector(`[data-panel="${state.activeTab}"]`)?.click();
+    if (state.selectedElementPath) {
+      const element = document.querySelector(state.selectedElementPath);
+      if (element) selectAndDisplayElement(element);
+    }
+    if (state.darkMode) {
+      darkModeToggle.checked = true;
+      devToolBox.classList.add('dark-mode');
+    }
+    updateConsoleLogUI('log', ['Tool state loaded.']);
+  };
+
+  // --- Dark Mode ---
+  darkModeToggle.onchange = () => {
+    devToolBox.classList.toggle('dark-mode', darkModeToggle.checked);
+    localStorage.setItem('devToolDarkMode', darkModeToggle.checked);
+    updateConsoleLogUI('log', [`Dark mode ${darkModeToggle.checked ? 'enabled' : 'disabled'}.`]);
+  };
+  if (localStorage.getItem('devToolDarkMode') === 'true') {
+    darkModeToggle.checked = true;
+    devToolBox.classList.add('dark-mode');
+  }
+
+  // --- Stylesheet Editing Features ---
+  let currentStylesheetTarget = null; // Stores the actual <style> element or a URL for <link>
+
+  function detectAndListStylesheets() {
+      stylesheetSelector.innerHTML = '<option value="">-- Select Stylesheet --</option>';
+      stylesheetSelector.innerHTML += '<option value="INJECT_NEW_CSS">Inject New CSS</option>';
+      stylesheets = []; // Clear previous list
+
+      // Get all <style> tags
+      document.querySelectorAll('style').forEach((styleEl, index) => {
+          // Generate a unique ID if not present
+          const id = styleEl.id || `_devtool_inline_style_${index + 1}`;
+          // Use a snippet of the content or the ID for better identification
+          const contentSnippet = styleEl.textContent.trim().substring(0, 50).replace(/\n/g, ' ') + (styleEl.textContent.trim().length > 50 ? '...' : '');
+          const label = `Edit CSS Style: ${styleEl.id ? '#' + styleEl.id : (contentSnippet || `Unnamed ${index + 1}`)}`;
+          stylesheetSelector.innerHTML += `<option value="${id}">${label}</option>`;
+          stylesheets.push({ id: id, type: 'inline', element: styleEl });
+      });
+
+      // Get all <link rel="stylesheet"> tags
+      document.querySelectorAll('link[rel="stylesheet"]').forEach((linkEl, index) => {
+          const href = linkEl.href;
+          const isSameOrigin = new URL(href, window.location.href).origin === window.location.origin;
+          const fileName = href.split('/').pop() || `External Style ${index + 1}`;
+          const label = `Edit Stylesheet: ${linkEl.id ? '#' + linkEl.id + ' - ' : ''}${fileName} ${isSameOrigin ? '' : ' (CORS Blocked)'}`; // Corrected label
+          const value = href; // Use href as value for external stylesheets
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = label;
+          if (!isSameOrigin) {
+              option.disabled = true; // Disable if CORS-blocked
+              option.title = "Cannot edit cross-origin stylesheets directly from a bookmarklet due to CORS policy.";
+          }
+          stylesheetSelector.appendChild(option);
+          if (isSameOrigin) {
+            stylesheets.push({ id: value, type: 'external', element: linkEl, href: href });
+          } else {
+            // Store a disabled entry for display purposes
+            stylesheets.push({ id: value, type: 'external-cors', element: linkEl, href: href });
+          }
+      });
+
+      cssCodeInput.value = '/* Select a stylesheet from the dropdown to edit, or choose "Inject New CSS" to inject new CSS. */';
+      currentStylesheetTarget = null; // Reset current target
+      stylesheetSelector.value = ""; // Reset dropdown
+  }
+
+  loadStylesheetBtn.onclick = async () => {
+      const selectedValue = stylesheetSelector.value;
+      if (!selectedValue) {
+          updateConsoleLogUI('warn', ['Please select a stylesheet to load.']);
+          cssCodeInput.value = '/* Select a stylesheet from the dropdown to edit, or choose "Inject New CSS" to inject new CSS. */';
+          currentStylesheetTarget = null;
+          return;
+      }
+
+      if (selectedValue === "INJECT_NEW_CSS") {
+          cssCodeInput.value = '/* Type your new CSS here. It will be injected as a new <style> tag. */\n\n';
+          currentStylesheetTarget = 'INJECT_NEW_CSS';
+          updateConsoleLogUI('log', ['Ready to inject new CSS.']);
+          return;
+      }
+
+      const selectedStylesheet = stylesheets.find(s => s.id === selectedValue);
+
+      if (selectedStylesheet) {
+          if (selectedStylesheet.type === 'inline') {
+              cssCodeInput.value = selectedStylesheet.element.textContent;
+              currentStylesheetTarget = selectedStylesheet.element;
+              updateConsoleLogUI('log', [`Loaded inline CSS for editing: ${selectedStylesheet.id}`]);
+          } else if (selectedStylesheet.type === 'external') {
+              try {
+                  const response = await fetch(selectedStylesheet.href);
+                  if (response.ok) {
+                      const cssContent = await response.text();
+                      cssCodeInput.value = cssContent;
+                      currentStylesheetTarget = selectedStylesheet.element; // Store the <link> element
+                      updateConsoleLogUI('log', [`Loaded external stylesheet for editing: ${selectedStylesheet.href}`]);
+                  } else {
+                      updateConsoleLogUI('error', [`Failed to load stylesheet from ${selectedStylesheet.href}: Status ${response.status}`]);
+                  }
+              } catch (error) {
+                  updateConsoleLogUI('error', [`Error fetching stylesheet from ${selectedStylesheet.href}:`, error.message]);
+              }
+          }
+      } else {
+          updateConsoleLogUI('error', ['Selected stylesheet not found.']);
+      }
+  };
+
+
+  applyCssChangesBtn.onclick = () => {
+    const css = cssCodeInput.value.trim();
+    if (!css) {
+        updateConsoleLogUI('warn', ["No CSS content to apply."]);
+        return;
+    }
+
+    if (currentStylesheetTarget === 'INJECT_NEW_CSS') {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = css;
+        document.head.appendChild(styleEl);
+        updateConsoleLogUI('log', ["New CSS injected as an inline style."]);
+        detectAndListStylesheets(); // Refresh the list to show the new style
+        cssCodeInput.value = "";
+    } else if (currentStylesheetTarget && currentStylesheetTarget.tagName) {
+        // It's an existing <style> or <link> element
+        if (currentStylesheetTarget.tagName.toLowerCase() === 'style') {
+            currentStylesheetTarget.textContent = css;
+            updateConsoleLogUI('log', [`Updated inline CSS: ${currentStylesheetTarget.id || currentStylesheetTarget.outerHTML.substring(0, 50)}...`]);
+        } else if (currentStylesheetTarget.tagName.toLowerCase() === 'link' && currentStylesheetTarget.rel === 'stylesheet') {
+            // For external stylesheets, we can't directly change the content loaded from href due to security.
+            // The best we can do for live editing is to inject a new <style> tag that overrides it.
+            updateConsoleLogUI('warn', ['Cannot directly modify external stylesheet source. Applying as an overriding inline style.']);
+
+            const newOverrideStyle = document.createElement('style');
+            newOverrideStyle.setAttribute('data-devtool-override-for', currentStylesheetTarget.href || 'unknown');
+            newOverrideStyle.textContent = css;
+            document.head.appendChild(newOverrideStyle);
+            updateConsoleLogUI('log', ['Injected new inline style to override external stylesheet.']);
+            detectAndListStylesheets(); // Refresh to show the new override style
+        }
+    } else {
+        // Fallback if no specific target is selected but apply is clicked
+        const styleEl = document.createElement("style");
+        styleEl.textContent = css;
+        document.head.appendChild(styleEl);
+        updateConsoleLogUI('log', ["CSS Injected as a new inline style (no stylesheet selected)."]);
+        detectAndListStylesheets(); // Refresh the list
+    }
+  };
+
+  // --- Button Event Listeners ---
+  runJsBtn.onclick = () => {
+    const code = jsCodeInput.value;
+    updateConsoleLogUI('log', ["--- Executing Code ---"]);
+    try {
+      const result = window.eval(`(function() { try { ${code} } catch (e) { return 'Error: ' + e.message; } })();`);
+      updateConsoleLogUI('result', [`Result:`, result]);
+    } catch (err) {
+      updateConsoleLogUI('error', [`Execution Error: ${err.message}`]);
+    } finally {
+      jsCodeInput.value = "";
+    }
+  };
+
+  editPageBtn.onclick = () => {
+    isEditable = !isEditable;
+    document.body.contentEditable = isEditable;
+    document.designMode = isEditable ? "on" : "off";
+    editPageBtn.textContent = isEditable ? "Stop Edit" : "Edit Page";
+    updateConsoleLogUI('log', [`Page editing ${isEditable ? 'enabled' : 'disabled'}.`]);
+  };
+
+  function updateStorageViewer() {
+    localStorageContent.textContent = "Loading Local Storage...";
+    sessionStorageContent.textContent = "Loading Session Storage...";
+
+    let localContent = "{\n";
+    if (localStorage.length === 0) {
+      localContent += "  // Local Storage is empty\n";
+    } else {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        try {
+          localContent += `  "${key}": ${JSON.stringify(JSON.parse(value), null, 2)},\n`;
+        } catch (e) {
+          localContent += `  "${key}": "${value}",\n`;
+        }
+      }
+    }
+    localContent = localContent.replace(/,\n$/, '\n') + "}";
+
+    let sessionContent = "{\n";
+    if (sessionStorage.length === 0) {
+      sessionContent += "  // Session Storage is empty\n";
+    } else {
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        const value = sessionStorage.getItem(key);
+        try {
+          sessionContent += `  "${key}": ${JSON.stringify(JSON.parse(value), null, 2)},\n`;
+        } catch (e) {
+          sessionContent += `  "${key}": "${value}",\n`;
+        }
+      }
+    }
+    sessionContent = sessionContent.replace(/,\n$/, '\n') + "}";
+    localStorageContent.textContent = localContent;
+    sessionStorageContent.textContent = sessionContent;
+  }
+  refreshStorageBtn.onclick = updateStorageViewer;
+
+  // --- Source Code Viewer Functions ---
+  function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  function updateSourceCodeViewer() {
+    const rawHTML = document.documentElement.outerHTML;
+    pageSourceCode.textContent = escapeHTML(rawHTML);
+    updateConsoleLogUI('log', ['Page source code loaded.']);
+  }
+
+  copySourceBtn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(document.documentElement.outerHTML);
+      updateConsoleLogUI('log', ['Page source code copied to clipboard!']);
+    } catch (err) {
+      updateConsoleLogUI('error', ['Failed to copy source code:', err]);
+    }
+  };
+  // End of Source Code Viewer Functions
+
+  clearToolBtn.onclick = () => {
+    jsCodeInput.value = "";
+    cssCodeInput.value = "";
+    cssCodeInput.value = '/* CSS content will load here or type new CSS */'; // Reset styles input
+    stylesheetSelector.innerHTML = '<option value="">-- Select or Inject CSS --</option><option value="INJECT_NEW_CSS">Inject New CSS</option>'; // Reset stylesheet selector
+    currentStylesheetTarget = null; // Clear selected stylesheet
+    consoleLog.innerHTML = "";
+    pathDisplay.textContent = "Path: (none)";
+    isEditable = false;
+    document.body.contentEditable = false;
+    document.designMode = "off";
+    editPageBtn.textContent = "Edit Page";
+    isInspectMode = false;
+    inspectElementBtn.textContent = "Inspect";
+    selectedElementPanel.style.display = 'none';
+    currentInspectedElement = null;
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    document.body.removeEventListener("mouseover", highlightElement);
+    document.body.removeEventListener("click", captureElement, true);
+    networkLogBody.innerHTML = '';
+    networkDetails.style.display = 'none';
+    touchLog.innerHTML = '';
+    a11yIssues.innerHTML = '';
+    pageSourceCode.textContent = ''; // Clear source code viewer
+    if (isMonitoring) togglePerformance.click();
+    if (isTouchLogging) toggleTouchLog.click();
+    updateConsoleLogUI('log', ["Dev Tool cleared and reset."]);
+  };
+
+  resetToolSettings.onclick = () => {
+    clearToolBtn.click();
+    localStorage.removeItem('devToolState');
+    localStorage.removeItem('devToolDarkMode');
+    darkModeToggle.checked = false;
+    devToolBox.classList.remove('dark-mode');
+    updateConsoleLogUI('log', ['Tool settings reset.']);
+  };
+
+  closeBtn.onclick = () => {
+    document.body.removeChild(devToolBox);
+    delete window.__devToolLoaded;
+    Object.assign(window.console, originalConsole);
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    document.body.removeEventListener("mouseover", highlightElement);
+    document.body.removeEventListener("click", captureElement, true);
+    const events = ['touchstart', 'touchmove', 'touchend'];
+    events.forEach(event => document.removeEventListener(event, logTouchEvent));
+  };
+
+  minimizeBtn.onclick = () => {
+    isMinimized = !isMinimized;
+    if (isMinimized) {
+      devToolBox.style.height = '40px';
+      devToolBox.style.width = '200px';
+      devToolBox.style.flexDirection = 'row';
+      devToolBox.style.alignItems = 'center';
+      devToolBox.style.justifyContent = 'space-between';
+      devToolTabs.style.display = 'none';
+      tabPanels.forEach(panel => panel.style.display = 'none');
+      devToolBox.querySelector("#devToolHeader").style.borderBottom = 'none';
+      devToolBox.querySelector("#devToolHeader span").textContent = 'Dev Tool (Minimized)';
+    } else {
+      devToolBox.style.height = window.innerWidth <= 768 ? '70vh' : '350px';
+      devToolBox.style.width = window.innerWidth <= 768 ? '100vw' : '380px';
+      devToolBox.style.flexDirection = 'column';
+      devToolBox.style.alignItems = 'stretch';
+      devToolBox.style.justifyContent = 'flex-start';
+      devToolTabs.style.display = 'flex';
+      devToolBox.querySelector("#devToolHeader").style.borderBottom = '1px solid #ccc';
+      devToolBox.querySelector("#devToolHeader span").textContent = 'Dev Tool';
+      const activeTabButton = devToolTabs.querySelector('button.active');
+      if (activeTabButton) {
+        const targetPanelId = activeTabButton.dataset.panel;
+        devToolBox.querySelector(`#${targetPanelId}`).classList.add("active");
+        if (targetPanelId === 'elementsPanel' && currentInspectedElement) {
+          selectedElementPanel.style.display = 'block';
+        } else if (targetPanelId === 'storageViewerPanel') {
+          updateStorageViewer();
+        } else if (targetPanelId === 'sourceCodePanel') {
+          updateSourceCodeViewer();
+        } else if (targetPanelId === 'stylesPanel') { // New: Ensure stylesheet list updates on minimize/restore
+          detectAndListStylesheets();
+        }
+      } else {
+        devToolBox.querySelector("#consolePanel").classList.add("active");
+        devToolTabs.querySelector('[data-panel="consolePanel"]').classList.add("active");
+      }
+    }
+    minimizeBtn.textContent = isMinimized ? '❐' : '−';
+  };
+
+  // --- Element Inspection ---
+  function getElementPath(element) {
+    if (!element || element === document.documentElement) return "";
+    const path = [];
+    while (element && element.nodeType === 1 && element !== document.documentElement) {
+      let name = element.nodeName.toLowerCase();
+      if (element.id) {
+        name += `#${element.id}`;
+        path.unshift(name);
+        break;
+      } else {
+        let sibling = element, count = 1;
+        while (sibling = sibling.previousElementSibling) {
+          if (sibling.nodeName.toLowerCase() === name) count++;
+        }
+        name += (count > 1) ? `:nth-of-type(${count})` : '';
+      }
+      path.unshift(name);
+      element = element.parentElement;
+    }
+    return path.join(" > ");
+  }
+
+  const selectAndDisplayElement = (element) => {
+    if (!element || element.nodeType !== 1) {
+      updateConsoleLogUI('warn', ["Cannot select non-element node."]);
+      return;
+    }
+
+    devToolTabs.querySelector('[data-panel="elementsPanel"]').click();
+    currentInspectedElement = element;
+
+    document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    element.classList.add("highlight-inspect");
+
+    selectedElementPanel.style.display = 'block';
+    selectedElementTag.textContent = element.tagName.toLowerCase();
+    selectedElementId.textContent = element.id ? `#${element.id}` : '';
+    selectedElementClasses.textContent = element.className ? `.${element.className.split(' ').join('.')}` : '';
+    editElementId.value = element.id || '';
+    editElementClass.value = element.className || '';
+    editElementContent.value = element.outerHTML;
+    pathDisplay.textContent = "Path: " + getElementPath(element);
+
+    const activeTabButton = devToolTabs.querySelector('button.active');
+    if (activeTabButton && activeTabButton.dataset.panel !== 'consolePanel') {
+      devToolTabs.querySelector('[data-panel="consolePanel"]').click();
+      updateConsoleLogUI('info', [`--- Element Info ---`]);
+      updateConsoleLogUI('info', [`  Tag: ${element.tagName.toLowerCase()}`]);
+      if (element.id) updateConsoleLogUI('info', [`  ID: #${element.id}`]);
+      if (element.className) updateConsoleLogUI('info', [`  Class: .${element.className.split(' ').join('.')}`]);
+      const computedStyles = window.getComputedStyle(element);
+      updateConsoleLogUI('info', [`  Display: ${computedStyles.display}, Position: ${computedStyles.position}`]);
+      updateConsoleLogUI('info', [`  Size: ${computedStyles.width}x${computedStyles.height}`]);
+      updateConsoleLogUI('info', [`  Font: ${computedStyles.fontSize} ${computedStyles.fontFamily}`]);
+      updateConsoleLogUI('info', [`  Color: ${computedStyles.color}, Background: ${computedStyles.backgroundColor}`]);
+      devToolTabs.querySelector('[data-panel="elementsPanel"]').click();
+    } else {
+      updateConsoleLogUI('info', [`--- Element Info ---`]);
+      updateConsoleLogUI('info', [`  Tag: ${element.tagName.toLowerCase()}`]);
+      if (element.id) updateConsoleLogUI('info', [`  ID: #${element.id}`]);
+      if (element.className) updateConsoleLogUI('info', [`  Class: .${element.className.split(' ').join('.')}`]);
+      const computedStyles = window.getComputedStyle(element);
+      updateConsoleLogUI('info', [`  Display: ${computedStyles.display}, Position: ${computedStyles.position}`]);
+      updateConsoleLogUI('info', [`  Size: ${computedStyles.width}x${computedStyles.height}`]);
+      updateConsoleLogUI('info', [`  Font: ${computedStyles.fontSize} ${computedStyles.fontFamily}`]);
+      updateConsoleLogUI('info', [`  Color: ${computedStyles.color}, Background: ${computedStyles.backgroundColor}`]);
+    }
+
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  inspectElementBtn.onclick = () => {
+    isInspectMode = !isInspectMode;
+    inspectElementBtn.textContent = isInspectMode ? "Stop Inspect" : "Inspect";
+    if (isInspectMode) {
+      document.body.addEventListener("mouseover", highlightElement);
+      document.body.addEventListener("click", captureElement, true);
+      updateConsoleLogUI('log', ["Inspect mode active. Click an element to select."]);
+      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    } else {
+      document.body.removeEventListener("mouseover", highlightElement);
+      document.body.removeEventListener("click", captureElement, true);
+      if (!currentInspectedElement) {
+        document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+      }
+      updateConsoleLogUI('log', ["Inspect mode deactivated."]);
+    }
+  };
+
+  const highlightElement = (event) => {
+    if (devToolBox.contains(event.target)) {
+      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+      return;
+    }
+    document.querySelectorAll(".highlight-inspect").forEach(el => {
+      if (el !== currentInspectedElement) el.classList.remove("highlight-inspect");
+    });
+    if (event.target && event.target !== currentInspectedElement) {
+      event.target.classList.add("highlight-inspect");
+    }
+  };
+
+  const captureElement = (event) => {
+    if (devToolBox.contains(event.target) && event.target !== inspectElementBtn) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const targetElement = event.target;
+    selectAndDisplayElement(targetElement);
+    isInspectMode = false;
+    inspectElementBtn.textContent = "Inspect";
+    document.body.removeEventListener("mouseover", highlightElement);
+    document.body.removeEventListener("click", captureElement, true);
+  };
+
+  applyElementChangesBtn.onclick = () => {
+    if (!currentInspectedElement) {
+      updateConsoleLogUI('warn', ["No element selected to apply changes to."]);
+      return;
+    }
+    const newId = editElementId.value;
+    const newClass = editElementClass.value;
+    const newContent = editElementContent.value;
+    try {
+      let changesMade = false;
+      if (currentInspectedElement.id !== newId) {
+        currentInspectedElement.id = newId;
+        updateConsoleLogUI('log', [`Updated ID to: "${newId}"`]);
+        changesMade = true;
+      }
+      if (currentInspectedElement.className !== newClass) {
+        currentInspectedElement.className = newClass;
+        updateConsoleLogUI('log', [`Updated Class to: "${newClass}"`]);
+        changesMade = true;
+      }
+      if (currentInspectedElement.outerHTML !== newContent) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = newContent;
+        if (tempDiv.childElementCount === 1) {
+          const newElement = tempDiv.firstElementChild;
+          if (currentInspectedElement.parentNode) {
+            currentInspectedElement.parentNode.replaceChild(newElement, currentInspectedElement);
+            currentInspectedElement = newElement;
+            updateConsoleLogUI('log', [`Updated element's outerHTML.`]);
+            changesMade = true;
+          } else {
+            updateConsoleLogUI('error', ["Cannot update outerHTML: Element has no parent."]);
+          }
+        } else if (tempDiv.childElementCount === 0 && currentInspectedElement.outerHTML !== newContent) {
+          currentInspectedElement.innerHTML = '';
+          updateConsoleLogUI('log', [`Cleared element's innerHTML.`]);
+          changesMade = true;
+        } else {
+          currentInspectedElement.innerHTML = newContent;
+          updateConsoleLogUI('log', [`Updated element's innerHTML.`]);
+          changesMade = true;
+        }
+    }
+      if (changesMade) {
+        selectAndDisplayElement(currentInspectedElement);
+        updateConsoleLogUI('log', ["Element changes applied successfully."]);
+      } else {
+        updateConsoleLogUI('info', ["No changes detected to apply."]);
+      }
+    } catch (e) {
+      updateConsoleLogUI('error', [`Failed to apply changes: ${e.message}`]);
+    }
+  };
+
+  removeElementBtn.onclick = () => {
+    if (!currentInspectedElement) {
+      updateConsoleLogUI('warn', ["No element selected to remove."]);
+      return;
+    }
+    if (currentInspectedElement.parentNode) {
+      const removedTag = currentInspectedElement.tagName.toLowerCase();
+      currentInspectedElement.parentNode.removeChild(currentInspectedElement);
+      updateConsoleLogUI('log', [`Removed element: <${removedTag}>`]);
+      selectedElementPanel.style.display = 'none';
+      currentInspectedElement = null;
+      pathDisplay.textContent = "Path: (none)";
+      document.querySelectorAll(".highlight-inspect").forEach(el => el.classList.remove("highlight-inspect"));
+    } else {
+      updateConsoleLogUI('error', ["Cannot remove element: No parent found."]);
+    }
+  };
+
+  duplicateElementBtn.onclick = () => {
+    if (!currentInspectedElement) {
+      updateConsoleLogUI('warn', ["No element selected to duplicate."]);
+      return;
+    }
+    if (currentInspectedElement.parentNode) {
+      const clonedElement = currentInspectedElement.cloneNode(true);
+      currentInspectedElement.parentNode.insertBefore(clonedElement, currentInspectedElement.nextSibling);
+      updateConsoleLogUI('log', [`Duplicated element: <${currentInspectedElement.tagName.toLowerCase()}>`]);
+      selectAndDisplayElement(clonedElement);
+    } else {
+      updateConsoleLogUI('error', ["Cannot duplicate element: No parent found."]);
+    }
+  };
+
+  selectParentBtn.onclick = () => {
+    if (currentInspectedElement && currentInspectedElement.parentElement) {
+      selectAndDisplayElement(currentInspectedElement.parentElement);
+    } else {
+      updateConsoleLogUI('info', ["No parent element."]);
+    }
+  };
+
+  selectFirstChildBtn.onclick = () => {
+    if (currentInspectedElement && currentInspectedElement.firstElementChild) {
+      selectAndDisplayElement(currentInspectedElement.firstElementChild);
+    } else {
+      updateConsoleLogUI('info', ["No child elements."]);
+    }
+  };
+
+  selectNextSiblingBtn.onclick = () => {
+    if (currentInspectedElement && currentInspectedElement.nextElementSibling) {
+      selectAndDisplayElement(currentInspectedElement.nextElementSibling);
+    } else {
+      updateConsoleLogUI('info', ["No next sibling element."]);
+    }
+  };
+
+  devToolBox.querySelector('[data-panel="consolePanel"]').click();
+})();
