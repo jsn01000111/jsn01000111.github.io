@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enhanced Mobile Code Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/lint.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/show-hint.css" />
+
+
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/lint.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/css-lint.js"></script> <script src="https://cdn.jsdelivr.net/npm/csslint@1.0.5/dist/csslint.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/closetag.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/matchbrackets.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/closebrackets.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/show-hint.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/javascript-hint.js"></script> <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background: #1e1e1e;
+      color: white;
+      display: flex;
+      flex-direction: column; /* Organize content vertically */
+    }
+
+    select, button {
+      padding: 10px;
+      font-size: 14px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 5px; /* Spacing between buttons/select */
+    }
+    select:hover, button:hover {
+      background: #444;
+    }
+
+    .top-bar {
+        padding: 8px;
+        background: #282a36;
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #444;
+    }
+
+    .editor-container {
+      flex: 1; /* Allows editor to take available height */
+      display: flex; /* Make it a flex container for the textareas */
+      overflow: hidden; /* Hide overflow from CodeMirror */
+    }
+
+    .CodeMirror {
+      height: 100%;
+      width: 100%; /* Ensure CodeMirror takes full width of its parent */
+      font-size: 14px;
+    }
+
+    .editor-textarea-wrapper { /* Wrapper for each textarea to control visibility */
+        height: 100%;
+        width: 100%;
+        display: none; /* Hidden by default */
+    }
+
+    .editor-textarea-wrapper.active {
+        display: block; /* Show active editor */
+    }
+
+    iframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+      z-index: 998;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 10px;
+      color: #888;
+      padding: 4px;
+      background: #282a36;
+      border-top: 1px solid #444;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div>
+      <select id="modeSelect">
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="js">JavaScript</option>
+      </select>
+      <button id="runBtn">Run Code</button>
+    </div>
+    <div>
+        <button id="saveBtn">Save Code</button>
+        <button id="loadBtn">Load Code</button>
+        <button id="clearBtn">Clear All</button>
+        <button id="downloadBtn">Download All</button>
+    </div>
+  </div>
+
+  <div class="editor-container">
+    <div id="htmlEditorWrapper" class="editor-textarea-wrapper active">
+        <textarea id="htmlEditor"></textarea>
+    </div>
+    <div id="cssEditorWrapper" class="editor-textarea-wrapper">
+        <textarea id="cssEditor"></textarea>
+    </div>
+    <div id="jsEditorWrapper" class="editor-textarea-wrapper">
+        <textarea id="jsEditor"></textarea>
+    </div>
+  </div>
+
+  <iframe id="output" class="hidden"></iframe>
+  <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
+
+  <script>
+    // Initial values for editors
+    const defaultHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Live Preview</title>
+</head>
+<body>
+  <h1>Hello from the Editor!</h1>
+  <p>Edit HTML, CSS, and JS here to see live changes.</p>
+  <button onclick="showAlert()">Click Me</button>
+</body>
+</html>`;
+
+    const defaultCss = `body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #282a36;
+  color: #f8f8f2;
+  margin: 20px;
+}
+h1 {
+  color: #50fa7b;
+}
+button {
+  background-color: #bd93f9;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}`;
+
+    const defaultJs = `function showAlert() {
+  alert("Button clicked! Code running in the browser.");
+  console.log("Check the console for this message!");
+}`;
+
+    // Initialize CodeMirror Editors
+    let editors = {
+      html: CodeMirror.fromTextArea(document.getElementById("htmlEditor"), {
+        lineNumbers: true,
+        mode: "htmlmixed",
+        theme: "dracula",
+        autoCloseTags: true, // HTML Autoclose Tags
+        matchBrackets: true, // Bracket matching
+        autoCloseBrackets: true, // Auto-close brackets
+        value: defaultHtml // Set default content
+      }),
+      css: CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
+        lineNumbers: true,
+        mode: "css",
+        theme: "dracula",
+        gutters: ["CodeMirror-lint-markers"], // Enable gutters for linting markers
+        lint: true, // Enable CSS Linting
+        value: defaultCss // Set default content
+      }),
+      js: CodeMirror.fromTextArea(document.getElementById("jsEditor"), {
+        lineNumbers: true,
+        mode: "javascript",
+        theme: "dracula",
+        matchBrackets: true, // Bracket matching
+        autoCloseBrackets: true, // Auto-close brackets
+        extraKeys: {"Ctrl-Space": "autocomplete"}, // Ctrl+Space for autocompletion
+        value: defaultJs // Set default content
+      })
+    };
+
+    let currentMode = "html";
+    let inPreview = false;
+
+    // DOM Elements
+    const modeSelect = document.getElementById("modeSelect");
+    const runBtn = document.getElementById("runBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const loadBtn = document.getElementById("loadBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const outputIframe = document.getElementById("output");
+    const editorContainer = document.querySelector('.editor-container');
+
+    // --- Core Editor Switching Logic ---
+    function switchEditor(mode) {
+      currentMode = mode;
+      // Hide all editor wrappers
+      for (let key in editors) {
+        document.getElementById(`${key}EditorWrapper`).classList.remove("active");
+      }
+      // Show the selected editor wrapper
+      document.getElementById(`${mode}EditorWrapper`).classList.add("active");
+      editors[mode].refresh(); // Ensures CodeMirror renders correctly after showing/hiding
+    }
+
+    // --- Run Code Logic ---
+    function toggleRun() {
+      if (!inPreview) {
+        const html = editors.html.getValue();
+        const css = editors.css.getValue();
+        const js = editors.js.getValue();
+
+        const outputCode = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>${css}</style>
+</head>
+<body>
+  ${html}
+  <script>
+    // Redirect console logs from iframe to parent window's console for debugging
+    var oldConsoleLog = console.log;
+    var oldConsoleWarn = console.warn;
+    var oldConsoleError = console.error;
+
+    console.log = function() {
+        if (window.parent && window.parent.console) {
+            window.parent.console.log.apply(window.parent.console, arguments);
+        }
+        oldConsoleLog.apply(this, arguments);
+    };
+    console.warn = function() {
+        if (window.parent && window.parent.console) {
+            window.parent.console.warn.apply(window.parent.console, arguments);
+        }
+        oldConsoleWarn.apply(this, arguments);
+    };
+    console.error = function() {
+        if (window.parent && window.parent.console) {
+            window.parent.console.error.apply(window.parent.console, arguments);
+        }
+        oldConsoleError.apply(this, arguments);
+    };
+
+    ${js}
+  <\/script>
+</body>
+</html>`;
+        const doc = outputIframe.contentDocument || outputIframe.contentWindow.document;
+        outputIframe.classList.remove("hidden");
+        doc.open();
+        doc.write(outputCode);
+        doc.close();
+        editorContainer.classList.add("hidden");
+        modeSelect.classList.add("hidden");
+        runBtn.textContent = "Back to Editor";
+        inPreview = true;
+      } else {
+        outputIframe.classList.add("hidden");
+        editorContainer.classList.remove("hidden");
+        modeSelect.classList.remove("hidden");
+        runBtn.textContent = "Run Code";
+        inPreview = false;
+      }
+    }
+
+    // --- Local Storage Persistence ---
+    const localStorageKey = 'codeEditorContent';
+
+    function saveCode() {
+        const content = {
+            html: editors.html.getValue(),
+            css: editors.css.getValue(),
+            js: editors.js.getValue()
+        };
+        localStorage.setItem(localStorageKey, JSON.stringify(content));
+        alert('Code saved to browser local storage!');
+    }
+
+    function loadCode() {
+        const storedContent = localStorage.getItem(localStorageKey);
+        if (storedContent) {
+            const content = JSON.parse(storedContent);
+            editors.html.setValue(content.html || defaultHtml);
+            editors.css.setValue(content.css || defaultCss);
+            editors.js.setValue(content.js || defaultJs);
+            alert('Code loaded from browser local storage!');
+        } else {
+            alert('No saved code found in browser local storage.');
+        }
+    }
+
+    function clearAllCode() {
+        if (confirm('Are you sure you want to clear all code? This cannot be undone!')) {
+            editors.html.setValue(defaultHtml);
+            editors.css.setValue(defaultCss);
+            editors.js.setValue(defaultJs);
+            localStorage.removeItem(localStorageKey); // Also clear from local storage
+            alert('All code cleared and local storage emptied.');
+        }
+    }
+
+    // --- Download Code ---
+    function downloadCode() {
+        const html = editors.html.getValue();
+        const css = editors.css.getValue();
+        const js = editors.js.getValue();
+
+        const combinedContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Downloadable Code</title>
+  <style>
+${css}
+  </style>
+</head>
+<body>
+${html}
+  <script>
+${js}
+  <\/script>
+</body>
+</html>`;
+
+        const blob = new Blob([combinedContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'my_web_project.html'; // Suggested filename
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // Clean up the URL object
+    }
+
+    // --- Event Listeners ---
+    modeSelect.addEventListener('change', (e) => switchEditor(e.target.value));
+    runBtn.addEventListener('click', toggleRun);
+    saveBtn.addEventListener('click', saveCode);
+    loadBtn.addEventListener('click', loadCode);
+    clearBtn.addEventListener('click', clearAllCode);
+    downloadBtn.addEventListener('click', downloadCode);
+
+    // Initial load/setup
+    loadCode(); // Attempt to load saved code on startup
+    switchEditor("html"); // Ensure HTML editor is active initially
+  </script>
+
+</body>
+</html>
