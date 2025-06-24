@@ -21,7 +21,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/lint.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/lint/css-lint.js"></script> <script src="https://cdn.jsdelivr.net/npm/csslint@1.0.5/dist/csslint.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/closetag.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/matchbrackets.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/closebrackets.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/show-hint.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/javascript-hint.js"></script> <style>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/javascript-hint.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/html-hint.js"></script> <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/hint/css-hint.js"></script> <style>
     * {
       box-sizing: border-box;
     }
@@ -82,19 +82,36 @@
         display: block; /* Show active editor */
     }
 
-    iframe {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: white;
-      z-index: 998;
+    .preview-area {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex; /* Use flexbox to position iframe and button */
+        flex-direction: column; /* Stack iframe and button vertically */
+        z-index: 998;
+        background: white; /* Ensure background is white */
     }
 
-    .hidden {
-      display: none !important;
+    .preview-area.hidden {
+        display: none !important;
+    }
+
+    iframe {
+      flex: 1; /* Make iframe take up remaining space */
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    .preview-button-bar {
+        width: 100%;
+        padding: 8px;
+        background: #282a36;
+        display: flex;
+        justify-content: center; /* Center the button */
+        border-top: 1px solid #444;
     }
 
     .watermark {
@@ -138,7 +155,13 @@
     </div>
   </div>
 
-  <iframe id="output" class="hidden"></iframe>
+  <div id="previewArea" class="preview-area hidden">
+      <iframe id="output"></iframe>
+      <div class="preview-button-bar">
+          <button id="backToEditorBtn">Back to Editor</button>
+      </div>
+  </div>
+
   <div class="watermark">© 2025 JSN01000111 – Educational Use</div>
 
   <script>
@@ -154,7 +177,7 @@
   <h1>Hello from the Editor!</h1>
   <p>Edit HTML, CSS, and JS here to see live changes.</p>
   <button onclick="showAlert()">Click Me</button>
-</body>
+  </body>
 </html>`;
 
     const defaultCss = `body {
@@ -173,11 +196,18 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+/* Try typing 'col' then Ctrl+Space for CSS hints */
+.my-class {
+    color: blue;
+    font-size: 16px;
 }`;
 
     const defaultJs = `function showAlert() {
   alert("Button clicked! Code running in the browser.");
   console.log("Check the console for this message!");
+  // Try typing 'doc' then Ctrl+Space for JS hints
+  document.getElementById('output');
 }`;
 
     // Initialize CodeMirror Editors
@@ -189,7 +219,10 @@ button {
         autoCloseTags: true, // HTML Autoclose Tags
         matchBrackets: true, // Bracket matching
         autoCloseBrackets: true, // Auto-close brackets
-        value: defaultHtml // Set default content
+        value: defaultHtml, // Set default content
+        extraKeys: {
+            "Ctrl-Space": "autocomplete" // Explicitly enable for HTML hinting
+        }
       }),
       css: CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
         lineNumbers: true,
@@ -197,7 +230,10 @@ button {
         theme: "dracula",
         gutters: ["CodeMirror-lint-markers"], // Enable gutters for linting markers
         lint: true, // Enable CSS Linting
-        value: defaultCss // Set default content
+        value: defaultCss, // Set default content
+        extraKeys: {
+            "Ctrl-Space": "autocomplete" // Explicitly enable for CSS hinting
+        }
       }),
       js: CodeMirror.fromTextArea(document.getElementById("jsEditor"), {
         lineNumbers: true,
@@ -211,7 +247,8 @@ button {
     };
 
     let currentMode = "html";
-    let inPreview = false;
+    // `inPreview` state is now managed by the visibility of #previewArea
+    // let inPreview = false; // No longer strictly needed as a separate variable
 
     // DOM Elements
     const modeSelect = document.getElementById("modeSelect");
@@ -220,8 +257,10 @@ button {
     const loadBtn = document.getElementById("loadBtn");
     const clearBtn = document.getElementById("clearBtn");
     const downloadBtn = document.getElementById("downloadBtn");
+    const previewArea = document.getElementById("previewArea"); // New: reference to the preview container
     const outputIframe = document.getElementById("output");
     const editorContainer = document.querySelector('.editor-container');
+    const backToEditorBtn = document.getElementById("backToEditorBtn"); // New: back to editor button
 
     // --- Core Editor Switching Logic ---
     function switchEditor(mode) {
@@ -236,8 +275,7 @@ button {
     }
 
     // --- Run Code Logic ---
-    function toggleRun() {
-      if (!inPreview) {
+    function showPreview() {
         const html = editors.html.getValue();
         const css = editors.css.getValue();
         const js = editors.js.getValue();
@@ -282,22 +320,25 @@ button {
 </body>
 </html>`;
         const doc = outputIframe.contentDocument || outputIframe.contentWindow.document;
-        outputIframe.classList.remove("hidden");
         doc.open();
         doc.write(outputCode);
         doc.close();
+
+        // Show preview, hide editor controls
+        previewArea.classList.remove("hidden");
         editorContainer.classList.add("hidden");
         modeSelect.classList.add("hidden");
-        runBtn.textContent = "Back to Editor";
-        inPreview = true;
-      } else {
-        outputIframe.classList.add("hidden");
+        runBtn.classList.add("hidden"); // Also hide the run button on the top bar
+    }
+
+    function hidePreview() {
+        // Hide preview, show editor controls
+        previewArea.classList.add("hidden");
         editorContainer.classList.remove("hidden");
         modeSelect.classList.remove("hidden");
-        runBtn.textContent = "Run Code";
-        inPreview = false;
-      }
+        runBtn.classList.remove("hidden"); // Show the run button again
     }
+
 
     // --- Local Storage Persistence ---
     const localStorageKey = 'codeEditorContent';
@@ -309,7 +350,11 @@ button {
             js: editors.js.getValue()
         };
         localStorage.setItem(localStorageKey, JSON.stringify(content));
-        alert('Code saved to browser local storage!');
+        // Simple visual feedback instead of alert for better UX
+        runBtn.textContent = "Saved!";
+        setTimeout(() => {
+            runBtn.textContent = "Run Code";
+        }, 1500);
     }
 
     function loadCode() {
@@ -319,9 +364,16 @@ button {
             editors.html.setValue(content.html || defaultHtml);
             editors.css.setValue(content.css || defaultCss);
             editors.js.setValue(content.js || defaultJs);
-            alert('Code loaded from browser local storage!');
+            // Simple visual feedback
+            loadBtn.textContent = "Loaded!";
+            setTimeout(() => {
+                loadBtn.textContent = "Load Code";
+            }, 1500);
         } else {
-            alert('No saved code found in browser local storage.');
+            // No alert, just set defaults if nothing found
+            editors.html.setValue(defaultHtml);
+            editors.css.setValue(defaultCss);
+            editors.js.setValue(defaultJs);
         }
     }
 
@@ -331,7 +383,10 @@ button {
             editors.css.setValue(defaultCss);
             editors.js.setValue(defaultJs);
             localStorage.removeItem(localStorageKey); // Also clear from local storage
-            alert('All code cleared and local storage emptied.');
+            clearBtn.textContent = "Cleared!";
+            setTimeout(() => {
+                clearBtn.textContent = "Clear All";
+            }, 1500);
         }
     }
 
@@ -368,11 +423,17 @@ ${js}
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url); // Clean up the URL object
+
+        downloadBtn.textContent = "Downloaded!";
+        setTimeout(() => {
+            downloadBtn.textContent = "Download All";
+        }, 1500);
     }
 
     // --- Event Listeners ---
     modeSelect.addEventListener('change', (e) => switchEditor(e.target.value));
-    runBtn.addEventListener('click', toggleRun);
+    runBtn.addEventListener('click', showPreview); // 'Run Code' button now just shows preview
+    backToEditorBtn.addEventListener('click', hidePreview); // New: back to editor button handler
     saveBtn.addEventListener('click', saveCode);
     loadBtn.addEventListener('click', loadCode);
     clearBtn.addEventListener('click', clearAllCode);
