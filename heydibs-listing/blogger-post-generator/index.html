@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hey Dibs Listing</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 15px; max-width: 800px; margin: auto; }
+    textarea, input, select { width: 100%; margin-bottom: 10px; padding: 8px; }
+    button { padding: 10px 20px; cursor: pointer; margin-right: 5px; }
+    pre { background: #f5f5f5; padding: 10px; white-space: pre-wrap; word-wrap: break-word; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    .hidden { display: none; }
+    .section-box { padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Blogger Post Generator (Hey Dibs Listing)</h2>
+  <label>First, create a post in Blogger add "<b>+NEW POST</b>", then upload your item image. Select all, cut the image HTML, and paste it here:</label>
+  <textarea id="images" rows="10" placeholder="<div class='separator'>..."></textarea>
+
+  <label>Choose Item Condition:</label>
+  <select id="condition">
+    <option selected>Used-Like New Condition</option>
+    <option>Used-Good Condition</option>
+    <option>Used-Fair Condition</option>
+    <option value="custom">Other (type below)</option>
+  </select>
+  <input id="conditionCustom" type="text" placeholder="Enter custom condition (if Other selected)">
+
+  <label>Item Intro Text:</label>
+  <textarea id="intro" rows="3" placeholder="Short paragraph introducing the item"></textarea>
+
+  <!-- For Bidding Checkbox -->
+  <div class="section-box">
+    <label><input type="checkbox" id="forBidding" onchange="toggleBidding()"> For Bidding (Optional)</label>
+    <div id="biddingFields" class="hidden">
+      <label>Item ID:</label>
+      <input id="itemId" type="text" placeholder="e.g. 2823401562177479567">
+
+      <label>Duration Hours:</label>
+      <input id="durationHours" type="number" value="168">
+
+      <label>Minimum Increment:</label>
+      <input id="minIncrement" type="number" value="1">
+
+      <label>Starting Bid (₱):</label>
+      <input id="startingBid" type="number" value="1000">
+    </div>
+  </div>
+
+  <label>Section Title:</label>
+  <select id="sectionTitle">
+    <option selected>Specifications</option>
+    <option>Product Highlights</option>
+    <option>Set Includes</option>
+    <option>Bundle Includes</option>
+  </select>
+
+  <label>Details (one per line):</label>
+  <textarea id="bundle" rows="6" placeholder="Figures: Sonic and Tails (2.5-inch scale)&#10;Accessories: Checkpoint post, spring, spike trap, item box (shield)&#10;..."></textarea>
+
+  <label>Closing Notes:</label>
+  <textarea id="closing" rows="3" placeholder="Final remarks about item condition or usage"></textarea>
+
+  <!-- Contact Info -->
+  <div class="section-box">
+    <h4>Contact Info</h4>
+    <label for="messengerUser">Messenger Username:</label>
+    <input type="text" id="messengerUser" placeholder="e.g., j4son.g">
+
+    <label for="whatsappNumber">WhatsApp Number (with country code):</label>
+    <input type="text" id="whatsappNumber" placeholder="e.g., 639939495592">
+  </div>
+
+  <button onclick="generate()">Generate HTML</button>
+  <button onclick="copyCode()">Copy to Clipboard</button>
+
+  <h3>Generated HTML:</h3>
+  <label>Copy the generated HTML code using "<b>Copy to Clipboard</b>", then paste it into your Blogger post. In the title, include the item's name and price. For example: "<b>Sonic the Hedgehog 2.5-Inch Action Figure Diorama Set ₱1,200</b>". <span style="color: red;">Lastly, set the post as a draft and wait for the admin to publish the listing.</span>
+</label>
+  <pre id="output"></pre>
+
+  <script>
+    function toggleBidding() {
+      const box = document.getElementById("biddingFields");
+      box.classList.toggle("hidden", !document.getElementById("forBidding").checked);
+    }
+
+    function generate() {
+      let images = document.getElementById("images").value.trim();
+
+      // Remove Blogger's <div class="separator"> wrappers, keep only <a>...</a>
+      images = images.replace(/<div class="separator"[^>]*>([\s\S]*?)<\/div>/gi, "$1");
+
+      let condition = document.getElementById("condition").value;
+      const conditionCustom = document.getElementById("conditionCustom").value.trim();
+      if (condition === "custom" && conditionCustom) {
+        condition = conditionCustom;
+      }
+
+      const intro = document.getElementById("intro").value.trim();
+      const sectionTitle = document.getElementById("sectionTitle").value;
+      const bundle = document.getElementById("bundle").value.trim().split("\n");
+      const closing = document.getElementById("closing").value.trim();
+
+      let bundleHTML = `<h3>${sectionTitle}:</h3>\n<ul>\n`;
+      bundle.forEach(item => {
+        if (item.trim()) {
+          const parts = item.split(":");
+          if (parts.length > 1) {
+            bundleHTML += `  <li><strong>${parts[0]}:</strong> ${parts.slice(1).join(":").trim()}</li>\n`;
+          } else {
+            bundleHTML += `  <li>${item.trim()}</li>\n`;
+          }
+        }
+      });
+      bundleHTML += "</ul>";
+
+      let biddingHTML = "";
+      if (document.getElementById("forBidding").checked) {
+        const itemId = document.getElementById("itemId").value.trim();
+        const duration = document.getElementById("durationHours").value.trim();
+        const increment = document.getElementById("minIncrement").value.trim();
+        const starting = document.getElementById("startingBid").value.trim();
+
+        biddingHTML = `
+<hr>
+  <div class="bidding-widget"
+     data-item-id="${itemId}"
+     data-duration-hours="${duration}"
+     data-min-increment="${increment}">
+
+    <div class="starting-bid" data-amount="${starting}"></div>
+
+    <div class="bidding-details">
+      <h3 style="display: none;">Current Bid: <span id="current-bid">₱0.00</span></h3>
+      <p>Highest Bidder: <span id="highest-bidder-name">...</span></p>
+      <p>Time Remaining: <span id="time-remaining">...</span></p>
+    </div>
+
+    <div id="bid-input-container">
+      <label for="bidder-name">Your Name</label>
+      <input type="text" id="bidder-name" placeholder="Enter your name">
+
+      <label for="bidder-url">Facebook Profile URL</label>
+      <input type="url" id="bidder-url" placeholder="https://facebook.com/your.profile">
+
+      <label for="bid-amount">Your Bid</label>
+      <input type="number" id="bid-amount" step="0.01" min="0" placeholder="Enter your bid">
+
+      <button id="place-bid-btn">Place Bid</button>
+    </div>
+
+    <div id="auction-ended-msg" style="display:none;">
+      <p>This auction has ended!</p>
+      <p id="winner-info"></p>
+    </div>
+  </div>
+<hr>`;
+      }
+
+      const messenger = document.getElementById("messengerUser").value.trim();
+      const whatsapp = document.getElementById("whatsappNumber").value.trim();
+
+      let contactHTML = "";
+      if (messenger || whatsapp) {
+        const messengerLink = messenger ? `https://m.me/${messenger}` : "";
+        const whatsappLink = whatsapp ? `https://wa.me/${whatsapp}` : "";
+        contactHTML = `<div class="chat-override-data" data-messenger-link="${messengerLink}" data-whatsapp-link="${whatsappLink}"></div>`;
+      }
+
+      const html = `<hr>
+<div class="separator scroll-container" style="clear: both;">
+${images}
+</div>
+<hr>
+<b>${condition}</b>
+
+<p>${intro}</p>
+${biddingHTML}
+
+${bundleHTML}
+
+<hr>
+<p>${closing}</p>
+
+${contactHTML}`;
+
+      document.getElementById("output").textContent = html;
+    }
+
+    function copyCode() {
+      const output = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("HTML copied to clipboard!");
+      });
+    }
+  </script>
+</body>
+</html>
